@@ -8,12 +8,17 @@ use Illuminate\View\Component;
 
 class NavItem extends Component
 {
+    public string $label;
+    public string $icon;
+    public string $url;
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct(string $label, string $icon, string $url)
     {
-        //
+        $this->label = $label;
+        $this->icon = $icon;
+        $this->url = $url;
     }
 
     /**
