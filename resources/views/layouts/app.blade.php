@@ -21,7 +21,7 @@
     </head>
     <body>
         <x-header :logoPath='asset("images/logo_vino.png")' />
-        <main>
+        <main class="bg-[var(--bg-body)] h-100">
             @yield('content')
         </main>
         <x-navigation />

@@ -8,49 +8,49 @@
 
 /* Thème global */
 @theme {
+    /* FONT FAMILIES */
     --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif,
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
         "Noto Color Emoji";
-
     --font-main: "Inter", system-ui, sans-serif;
     --font-heading: "Inter", system-ui, sans-serif;
 
-    /* Couleur de Base */
+    /* COLORS */
     --color-primary: #a4161a;
-    --color-primary-hover: #821217; /* Hover */
-    --color-primary-active: #660f13; /* Active */
+    --color-primary-hover: #821217;
+    --color-primary-active: #660f13;
 
-    --icon-color: var(--color-neutral-600);
-    --icon-hover: var(--color-neutral-800);
+    --color-icon: var(--color-neutral-600);
+    --color-icon-hover: var(--color-neutral-800);
 
     --color-danger: #ef4444;
     --color-success: #22c55e;
     --color-warning: #facc15;
 
-    /* Couleurs Neutres */
+    /* NEUTRALS */
     --color-neutral-100: #ffffff;
-    --color-neutral-200: #e5e7eb;
-    --color-neutral-300: #d1d5db;
-    --color-neutral-400: #9ca3af;
-    --color-neutral-500: #6b7280;
-    --color-neutral-600: #4b5563;
-    --color-neutral-700: #374151;
-    --color-neutral-800: #1f2937;
+    --color-neutral-200: #f9fafb;
+    --color-neutral-300: #f3f4f6;
+    --color-neutral-400: #e5e7eb;
+    --color-neutral-500: #d1d5db;
+    --color-neutral-600: #9ca3af;
+    --color-neutral-700: #6b7280;
+    --color-neutral-800: #374151;
     --color-neutral-900: #000000;
 
-    /* UI Globales */
-    --bg-body: var(--color-neutral-300);
-    --bg-card: var(--color-neutral-100);
-    --text-body: var(--color-neutral-700);
-    --text-heading: var(--color-neutral-900);
-    --border-base: var(--color-neutral-400);
+    /* UI COLOR TOKENS (valid with utility classes) */
+    --color-body: var(--color-neutral-300);
+    --color-card: var(--color-neutral-100);
+    --color-text-body: var(--color-neutral-700);
+    --color-text-heading: var(--color-neutral-900);
+    --color-border-base: var(--color-neutral-400);
 
-    /* Ombres */
+    /* SHADOWS */
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
     --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.08);
     --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.12);
 
-    /* Rayon des Bordures */
+    /* RADII */
     --radius-none: 0;
     --radius-sm: 4px;
     --radius-md: 8px;
@@ -58,17 +58,17 @@
     --radius-xl: 20px;
     --radius-full: 999px;
 
-    /* Espacement */
-    --space-1: 4px;
-    --space-2: 8px;
-    --space-3: 12px;
-    --space-4: 16px;
-    --space-5: 20px;
-    --space-6: 24px;
-    --space-8: 32px;
-    --space-12: 48px;
+    /* SPACING */
+    --spacing-1: 4px;
+    --spacing-2: 8px;
+    --spacing-3: 12px;
+    --spacing-4: 16px;
+    --spacing-5: 20px;
+    --spacing-6: 24px;
+    --spacing-8: 32px;
+    --spacing-12: 48px;
 
-    /* Police */
+    /* FONT SIZES */
     --text-xs: 12px;
     --text-sm: 14px;
     --text-base: 16px;
@@ -78,7 +78,7 @@
     --text-3xl: 30px;
     --text-4xl: 36px;
 
-    /* Transition */
-    --transition-fast: 150ms;
-    --transition-base: 250ms;
+    /* TRANSITION DURATIONS */
+    --duration-fast: 150ms;
+    --duration-base: 250ms;
 }
