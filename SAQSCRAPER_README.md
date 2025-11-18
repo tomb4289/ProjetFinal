@@ -19,7 +19,9 @@ Le service utilise l'endpoint GraphQL d'Adobe Commerce (`https://catalog-service
 - Pagination automatique (24 produits par page)
 - Filtres sur les produits disponibles
 - Tri par prix décroissant
-- Support des catégories spécifiques
+- Support des catégories spécifiques via recherche par phrase
+
+**⚠️ Limite de pagination de l'API** : L'API SAQ GraphQL impose une limite de **10 000 produits** maximum par requête de recherche. Lorsque cette limite est atteinte, l'importation s'arrête automatiquement avec le message d'erreur "Pagination is limited to 10000 products". Pour importer l'intégralité du catalogue (~12 600 produits), il faut utiliser des filtres de catégorie pour diviser l'importation en plusieurs requêtes plus petites.
 
 ### 2. Traitement des données
 
@@ -32,6 +34,7 @@ Pour chaque produit récupéré, le service :
   - Téléchargement depuis l'URL SAQ avec gestion des erreurs HTTP
   - Normalisation automatique des URLs (correction des doublons de domaine)
   - Optimisation des images swatch (remplacement 30x30 → 500x500)
+  - **Optimisation** : Ignore le téléchargement des images qui existent déjà localement pour éviter les téléchargements inutiles lors des mises à jour du catalogue
   - Stockage local dans `storage/app/public/products/`
   - Logging détaillé pour le débogage
 
@@ -116,6 +119,15 @@ Pour importer uniquement les produits d'une catégorie particulière :
 php artisan saq:import --categorie=produits/vin-rouge
 ```
 
+**Comment ça fonctionne** : L'API SAQ GraphQL ne supporte pas les chemins de catégorie spécifiques (comme `produits/vin-rouge`) via le filtre `categoryPath`. À la place, le service utilise une **recherche par phrase** dans le champ `phrase` de l'API :
+- `produits/vin-rouge` → recherche avec la phrase `"vin rouge"`
+- `produits/vin-blanc` → recherche avec la phrase `"vin blanc"`
+- `produits/vin-rose` → recherche avec la phrase `"vin rosé"`
+- `produits/champagne` → recherche avec la phrase `"champagne"`
+- `produits/spiritueux` → recherche avec la phrase `"spiritueux"`
+
+Le filtre `categoryPath` reste à `"produits"` pour toutes les recherches, et la catégorisation est effectuée via la recherche par phrase. Cette approche permet de contourner la limitation de l'API qui retourne 0 produits avec des chemins de catégorie spécifiques.
+
 Les catégories disponibles incluent :
 - `produits/vin-rouge`
 - `produits/vin-blanc`
@@ -197,9 +209,18 @@ App\Models\BouteilleCatalogue::join('type_vin', 'bouteille_catalogue.id_type_vin
 
 ## ⚠️ Notes importantes
 
-1. **Respect des limites de l'API** : Utilisez un délai approprié (minimum 2 secondes recommandé) pour éviter d'être bloqué par l'API de la SAQ.
+1. **Limite de pagination de l'API** : L'API SAQ GraphQL impose une limite stricte de **10 000 produits maximum** par requête de recherche. Si vous tentez d'importer tous les produits sans filtre de catégorie (~12 600 produits), l'importation s'arrêtera automatiquement à la page 417 (environ 9 984 produits) avec l'erreur "Pagination is limited to 10000 products". Pour importer l'intégralité du catalogue, vous devez diviser l'importation en plusieurs commandes par catégorie :
+   ```bash
+   php artisan saq:import --categorie=produits/vin-rouge
+   php artisan saq:import --categorie=produits/vin-blanc
+   php artisan saq:import --categorie=produits/vin-rose
+   php artisan saq:import --categorie=produits/champagne
+   php artisan saq:import --categorie=produits/spiritueux
+   ```
 
-2. **Images** : 
+2. **Respect des limites de l'API** : Utilisez un délai approprié (minimum 2 secondes recommandé) pour éviter d'être bloqué par l'API de la SAQ.
+
+3. **Images** : 
    - Les images sont téléchargées et stockées localement dans `storage/app/public/products/`
    - Le service normalise automatiquement les URLs (corrige les doublons de domaine, optimise les miniatures)
    - **IMPORTANT** : Assurez-vous que le lien symbolique `storage` est créé pour permettre l'accès public aux images :
@@ -209,18 +230,19 @@ App\Models\BouteilleCatalogue::join('type_vin', 'bouteille_catalogue.id_type_vin
    - Les chemins sont stockés au format `/storage/products/produit_XXXXX.ext` pour compatibilité avec `asset()`
    - En cas d'échec de téléchargement, l'URL originale SAQ est conservée comme fallback
    - Consultez les logs (`storage/logs/laravel.log`) pour diagnostiquer les problèmes de téléchargement d'images
+   - **Optimisation** : Les images déjà téléchargées sont ignorées lors des mises à jour pour éviter les téléchargements inutiles
 
-3. **Performance** : L'importation complète du catalogue peut prendre plusieurs heures. Utilisez l'option `--limite` pour tester d'abord.
+4. **Performance** : L'importation complète du catalogue peut prendre plusieurs heures. Utilisez l'option `--limite` pour tester d'abord.
 
-4. **Mises à jour** : Relancer la commande mettra à jour les produits existants (basé sur le `code_saQ`) plutôt que de créer des doublons.
+5. **Mises à jour** : Relancer la commande mettra à jour les produits existants (basé sur le `code_saQ`) plutôt que de créer des doublons. Les images existantes ne seront pas re-téléchargées grâce à l'optimisation.
 
-5. **Erreurs** : Consultez les logs Laravel (`storage/logs/laravel.log`) pour diagnostiquer les problèmes d'importation. Les logs incluent :
+6. **Erreurs** : Consultez les logs Laravel (`storage/logs/laravel.log`) pour diagnostiquer les problèmes d'importation. Les logs incluent :
    - Erreurs de requêtes GraphQL
    - Erreurs de téléchargement d'images (avec URL et contexte)
    - Produits importés avec succès
    - Messages de débogage pour le traitement des images
 
-6. **Affichage des images** : Pour afficher les images dans les vues Blade, utilisez `asset($bouteille->url_image)`. Les vues normalisent automatiquement les chemins pour gérer les anciens formats (`storage/products/...` → `/storage/products/...`).
+7. **Affichage des images** : Pour afficher les images dans les vues Blade, utilisez `asset($bouteille->url_image)`. Les vues normalisent automatiquement les chemins pour gérer les anciens formats (`storage/products/...` → `/storage/products/...`).
 
 ## 🛠️ Développement
 

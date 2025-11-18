@@ -26,11 +26,18 @@ class AuthController extends Controller
     {
         // 1) Validation des données envoyées par le formulaire.
         //    La règle "confirmed" attend un champ "password_confirmation".
-        $validated = $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email',
-            'password' => 'required|min:8|confirmed',
-        ]);
+        $validated = $request->validate(
+            [
+                'name'     => 'required|string|min:3|max:255',
+                'email'    => 'required|email|unique:users,email',
+                'password' => 'required|min:8|confirmed',
+            ],
+            [
+                'email.email' => 'Le format du courriel est invalide.',
+                'email.unique' => 'Ce courriel est déjà utilisé pour un autre compte.',
+                'password.confirmed' => 'Le mot de passe de confirmation ne correspond pas.',
+            ]
+        );
 
         // 2) Création de l'utilisateur en BD avec mot de passe hashé.
         $user = User::create([

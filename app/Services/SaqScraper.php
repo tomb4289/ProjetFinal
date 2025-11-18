@@ -118,33 +118,66 @@ class SaqScraper
         try {
             $query = $this->construireQueryProduits();
             
-            $variables = [
-                'phrase' => '',
-                'pageSize' => $pageSize,
-                'currentPage' => $page,
-                'filter' => [
-                    [
-                        'attribute' => 'categoryPath',
-                        'eq' => 'produits'
-                    ],
-                    [
-                        'attribute' => 'availability_front',
-                        'in' => [
-                            'En ligne',
-                            'En succursale',
-                            'Disponible bientôt',
-                            'Bientôt en loterie',
-                            'En loterie'
-                        ]
-                    ],
-                    [
-                        'attribute' => 'visibility',
-                        'in' => [
-                            'Catalog',
-                            'Catalog, Search'
-                        ]
+            $filters = [
+                [
+                    'attribute' => 'categoryPath',
+                    'eq' => $categorie ?? 'produits'
+                ],
+                [
+                    'attribute' => 'availability_front',
+                    'in' => [
+                        'En ligne',
+                        'En succursale',
+                        'Disponible bientôt',
+                        'Bientôt en loterie',
+                        'En loterie'
                     ]
                 ],
+                [
+                    'attribute' => 'visibility',
+                    'in' => [
+                        'Catalog',
+                        'Catalog, Search'
+                    ]
+                ]
+            ];
+
+            // Si la catégorie contient des mots-clés de couleur/type, utiliser une recherche par phrase
+            // car l'API SAQ pourrait ne pas supporter les chemins de catégorie spécifiques comme "produits/vin-rouge"
+            $phrase = '';
+            $categoryPathValue = $categorie ?? 'produits';
+            
+            if ($categorie) {
+                $categorieLower = strtolower($categorie);
+                
+                // Si la catégorie contient des mots-clés, utiliser une recherche par phrase
+                // et remettre le categoryPath à "produits" car les chemins spécifiques ne fonctionnent pas
+                if (strpos($categorieLower, 'rouge') !== false || strpos($categorieLower, 'vin-rouge') !== false) {
+                    $phrase = 'vin rouge';
+                    $categoryPathValue = 'produits';
+                } elseif (strpos($categorieLower, 'blanc') !== false || strpos($categorieLower, 'vin-blanc') !== false) {
+                    $phrase = 'vin blanc';
+                    $categoryPathValue = 'produits';
+                } elseif (strpos($categorieLower, 'rosé') !== false || strpos($categorieLower, 'rose') !== false || strpos($categorieLower, 'vin-rosé') !== false || strpos($categorieLower, 'vin-rose') !== false) {
+                    $phrase = 'vin rosé';
+                    $categoryPathValue = 'produits';
+                } elseif (strpos($categorieLower, 'champagne') !== false) {
+                    $phrase = 'champagne';
+                    $categoryPathValue = 'produits';
+                } elseif (strpos($categorieLower, 'spiritueux') !== false) {
+                    $phrase = 'spiritueux';
+                    $categoryPathValue = 'produits';
+                }
+            }
+            
+            // Mettre à jour le filtre categoryPath avec la valeur correcte
+            $filters[0]['eq'] = $categoryPathValue;
+            
+            $variables = [
+                'phrase' => $phrase,
+                'pageSize' => $pageSize,
+                'currentPage' => $page,
+                'filter' => $filters,
                 'sort' => [
                     [
                         'attribute' => 'price',
@@ -156,13 +189,6 @@ class SaqScraper
                     'userViewHistory' => []
                 ]
             ];
-
-            if ($categorie) {
-                $variables['filter'][] = [
-                    'attribute' => 'categoryPath',
-                    'eq' => $categorie
-                ];
-            }
 
             $response = $this->faireRequeteGraphQL($query, $variables);
             $data = json_decode($response, true);
@@ -458,6 +484,9 @@ GRAPHQL;
      * suppression des doublons de domaine) et optimise les images swatch pour
      * obtenir une meilleure résolution.
      * 
+     * Si l'image existe déjà dans le stockage local, elle n'est pas re-téléchargée
+     * pour éviter les téléchargements inutiles lors des mises à jour du catalogue.
+     * 
      * @param string|null $urlImage URL de l'image à télécharger
      * @param string $codeSaq Code SAQ du produit pour générer le nom de fichier
      * @return string|null Chemin relatif de l'image sauvegardée (ex: 'products/produit_12345.jpg') 
@@ -501,6 +530,13 @@ GRAPHQL;
             // Générer un nom de fichier sécurisé basé sur le code SAQ
             $nomFichier = 'produit_' . preg_replace('/[^a-zA-Z0-9]/', '_', $codeSaq) . '.' . $extension;
             $chemin = 'products/' . $nomFichier;
+
+            // Vérifier si l'image existe déjà dans le stockage local
+            // Si elle existe, on retourne le chemin sans re-télécharger pour optimiser les performances
+            if (Storage::disk('public')->exists($chemin)) {
+                Log::debug("Image déjà existante pour produit {$codeSaq}, téléchargement ignoré: {$chemin}");
+                return $chemin;
+            }
 
             Log::debug("Téléchargement image pour produit {$codeSaq}", [
                 'original_url' => $originalUrl,
