@@ -29,5 +29,5 @@ Route::middleware('auth')->group(function () {
 
 // Temporaire: route de test pour la vue des celliers
 Route::get('/cellierstest', function () {
-    return view('cellar.create');
+    return view('cellar.update');
 });
