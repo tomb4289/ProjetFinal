@@ -458,6 +458,9 @@ GRAPHQL;
      * suppression des doublons de domaine) et optimise les images swatch pour
      * obtenir une meilleure résolution.
      * 
+     * Si l'image existe déjà dans le stockage local, elle n'est pas re-téléchargée
+     * pour éviter les téléchargements inutiles lors des mises à jour du catalogue.
+     * 
      * @param string|null $urlImage URL de l'image à télécharger
      * @param string $codeSaq Code SAQ du produit pour générer le nom de fichier
      * @return string|null Chemin relatif de l'image sauvegardée (ex: 'products/produit_12345.jpg') 
@@ -501,6 +504,13 @@ GRAPHQL;
             // Générer un nom de fichier sécurisé basé sur le code SAQ
             $nomFichier = 'produit_' . preg_replace('/[^a-zA-Z0-9]/', '_', $codeSaq) . '.' . $extension;
             $chemin = 'products/' . $nomFichier;
+
+            // Vérifier si l'image existe déjà dans le stockage local
+            // Si elle existe, on retourne le chemin sans re-télécharger pour optimiser les performances
+            if (Storage::disk('public')->exists($chemin)) {
+                Log::debug("Image déjà existante pour produit {$codeSaq}, téléchargement ignoré: {$chemin}");
+                return $chemin;
+            }
 
             Log::debug("Téléchargement image pour produit {$codeSaq}", [
                 'original_url' => $originalUrl,
