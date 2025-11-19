@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany; 
 use App\Models\Cellier;
 
 class User extends Authenticatable
@@ -52,9 +53,9 @@ class User extends Authenticatable
     /**
      * Un user possède plusieurs celliers.
      */
-    public function celliers()
+    public function celliers(): HasMany
     {
-         return $this->hasMany(Cellier::class, 'user_id', 'id');
+        return $this->hasMany(Cellier::class, 'user_id', 'id');
     }
 
     /**
