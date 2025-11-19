@@ -424,7 +424,9 @@ GRAPHQL;
             'prix' => $prix,
             'description' => $description,
             // Stocker le chemin avec un slash initial pour la compatibilité avec asset()
-            'url_image' => $cheminImage ? '/storage/products/' . basename($cheminImage) : ($urlImage ?: null),
+            // Stocker le chemin relatif sans /storage/ au début (ex: 'products/produit_xxx.jpg')
+            // Le composant utilisera asset('storage/' . $urlImage) pour générer l'URL complète
+            'url_image' => $cheminImage ?: ($urlImage ?: null),
             'volume' => $volume,
             'millesime' => $millesime,
             'region' => $region,
