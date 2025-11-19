@@ -10,7 +10,7 @@
    {{-- Permet l'affichage du bouton Ajouter un vin --}}
    @if ($addWineBtn == true)
       <div class="w-full flex justify-end px-4 pointer-events-auto">
-            <x-primary-btn label="+" rounded="full" class="px-8 py-6 shadow-lg" />
+            <x-primary-btn type="button" label="+" rounded="full" class="px-8 py-6 shadow-lg" />
        </div>
    @endif
 <nav class="w-full bg-card bg- border-t border-border-base shadow-sm flex justify-between">
