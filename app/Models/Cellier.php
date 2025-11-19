@@ -14,13 +14,16 @@ class Cellier extends Model
     // Table associée
     protected $table = 'celliers';
 
-    // On garde les timestamps Laravel (created_at / updated_at)
-    public $timestamps = true;
+    // Désactive les colonnes 'created_at' et 'updated_at' (selon le schéma bd_vino.pdf)
+    public $timestamps = false; 
+
+    // ✔ Garde les timestamps créés par Laravel
+    //public $timestamps = true;
 
     // Colonnes remplissables
     protected $fillable = [
-        'user_id',
         'nom',
+        'id_utilisateur',
     ];
 
     /**
