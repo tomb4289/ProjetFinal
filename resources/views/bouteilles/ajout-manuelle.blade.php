@@ -1,18 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen bg-background pt-24">
-    <div class="max-w-xl mx-auto bg-card border border-border-base rounded-xl shadow-md p-6 space-y-6">
-        <h1 class="text-xl font-bold text-text-title">
-            Ajout manuel d’une bouteille
-        </h1>
+
+    <section class="p-4 sm:w-full max-w-4xl mx-auto">
+        <x-page-header 
+            title="Ajout manuel d’une bouteille" 
+            undertitle="Remplissez le formulaire ci-dessous pour ajouter une bouteille manuellement à votre cellier." 
+        />
 
         <form
             id="form-bouteille-manuelle"
             method="POST"
             action="{{ route('bouteilles.manuelles.store', $cellier) }}"
             novalidate
-            class="space-y-4"
+            class="space-y-4 mt-5"
         >
             @csrf
 
@@ -64,8 +65,8 @@
                 />
             </div>
         </form>
-    </div>
-</div>
+    </section>
+
 
 {{-- ton script JS de validation reste pareil --}}
 @endsection
