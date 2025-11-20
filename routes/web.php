@@ -49,3 +49,23 @@ Route::middleware('auth')->group(function () {
     Route::post('/celliers/{cellier}/bouteilles/ajout', [BouteilleManuelleController::class, 'store'])
         ->name('bouteilles.manuelles.store');
 });
+
+
+Route::patch('/bouteilles/{id}/quantite', function($id, Illuminate\Http\Request $request) {
+    $b = \App\Models\Bouteille::findOrFail($id);
+
+    if ($request->quantite < 0) {
+        return response()->json([
+            'success' => false,
+            'message' => 'La quantité ne peut pas être négative.'
+        ], 422);
+    }
+
+    $b->quantite = $request->quantite;
+    $b->save();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Quantité mise à jour avec succès.'
+    ]);
+})->name('quantite.update');
