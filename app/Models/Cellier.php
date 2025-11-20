@@ -14,16 +14,14 @@ class Cellier extends Model
     // Table associée
     protected $table = 'celliers';
 
-    // Désactive les colonnes 'created_at' et 'updated_at' (selon le schéma bd_vino.pdf)
+    // Désactive les colonnes 'created_at' et 'updated_at' 
     public $timestamps = false; 
 
-    // ✔ Garde les timestamps créés par Laravel
-    //public $timestamps = true;
 
     // Colonnes remplissables
     protected $fillable = [
         'nom',
-        'id_utilisateur',
+        'user_id',
     ];
 
     /**
@@ -34,13 +32,7 @@ class Cellier extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    /**
-     * Alias en français si jamais on l’utilise dans des vues.
-     */
-    public function utilisateur(): BelongsTo
-    {
-        return $this->user();
-    }
+   
 
     /**
      * Le cellier contient plusieurs bouteilles.

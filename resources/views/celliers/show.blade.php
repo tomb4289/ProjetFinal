@@ -36,6 +36,63 @@
                             <div class="flex items-center gap-2 bottle" data-id="{{ $bouteille->id }}">
                                 <button class="btn-minus bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded">−</button>
 
+            <a
+                href="{{ route('bouteilles.manuelles.create', $cellier) }}"
+                class="bg-primary text-white font-bold py-2 px-4 rounded-lg hover:bg-primary-hover transition-colors duration-300 text-sm"
+            >
+                Ajouter une bouteille
+            </a>
+        </div>
+
+        {{-- Liste des bouteilles --}}
+        <div class="bg-card border border-border-base rounded-xl shadow-md p-6">
+            @if($cellier->bouteilles->isEmpty())
+                <p class="text-text-muted">
+                    Ce cellier est encore vide. Utilisez le bouton « Ajouter une bouteille » pour commencer.
+                </p>
+            @else
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    @foreach($cellier->bouteilles as $bouteille)
+                        <div class="border border-border-base rounded-lg p-4 flex flex-col gap-2">
+                            <div class="flex items-center justify-between">
+                                <h2 class="font-semibold text-text-title">
+                                    {{ $bouteille->nom }}
+                                </h2>
+
+                                {{-- Contrôles quantité + badge --}}
+                                <div class="flex items-center gap-2">
+                                    {{-- Bouton - --}}
+                                    <button
+                                        type="button"
+                                        class="w-8 h-8 flex items-center justify-center rounded-full border border-border-base text-sm text-text-body hover:bg-primary hover:text-white transition-colors"
+                                        data-qty-btn
+                                        data-direction="down"
+                                        data-cellier-id="{{ $cellier->id }}"
+                                        data-bottle-id="{{ $bouteille->id }}"
+                                    >
+                                        -
+                                    </button>
+
+                                    {{-- Badge quantité --}}
+                                    <span
+                                        class="inline-flex items-center justify-center rounded-full bg-primary text-white text-xs px-2 py-0.5"
+                                        data-qty-value="{{ $bouteille->id }}"
+                                    >
+                                        x {{ $bouteille->quantite }}
+                                    </span>
+
+                                    {{-- Bouton + --}}
+                                    <button
+                                        type="button"
+                                        class="w-8 h-8 flex items-center justify-center rounded-full border border-border-base text-sm text-text-body hover:bg-primary hover:text-white transition-colors"
+                                        data-qty-btn
+                                        data-direction="up"
+                                        data-cellier-id="{{ $cellier->id }}"
+                                        data-bottle-id="{{ $bouteille->id }}"
+                                    >
+                                        +
+                                    </button>
+                                </div>
                                 <span class="inline-flex items-center justify-center rounded-full bg-primary text-white text-xs px-2 py-0.5">
                                     {{ $bouteille->quantite }}
                                 </span>

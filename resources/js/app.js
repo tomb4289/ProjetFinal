@@ -4,6 +4,7 @@ import "./bootstrap";
 import "./ui/header";
 import "./ui/authForm";
 import "./ui/toggleCellarAction";
+import "./ui/bottleQuantity";
 import "./ui/addWineOptionToggle";
 
 /* ============================================================
