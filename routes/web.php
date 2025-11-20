@@ -61,3 +61,23 @@ Route::middleware('auth')->group(function () {
         [CellierController::class, 'updateBottle']
     )->name('bouteilles.update');
 });
+
+
+Route::patch('/bouteilles/{id}/quantite', function($id, Illuminate\Http\Request $request) {
+    $b = \App\Models\Bouteille::findOrFail($id);
+
+    if ($request->quantite < 0) {
+        return response()->json([
+            'success' => false,
+            'message' => 'La quantité ne peut pas être négative.'
+        ], 422);
+    }
+
+    $b->quantite = $request->quantite;
+    $b->save();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Quantité mise à jour avec succès.'
+    ]);
+})->name('quantite.update');
