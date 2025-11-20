@@ -29,6 +29,7 @@
             :addCellarBtn="$__env->hasSection('add-cellar-btn')" 
             :addWineBtn="$__env->hasSection('add-wine-btn')"
         />
+        <x-toast />
     </body>
 
     </html>
