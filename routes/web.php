@@ -58,4 +58,35 @@ Route::middleware('auth')->group(function () {
         '/celliers/{cellier}/bouteilles/{bouteille}/quantite',
         [BouteilleManuelleController::class, 'updateQuantite']
     )->name('bouteilles.manuelles.quantite');
+    // Suppression de bouteille dans un cellier
+    Route::delete('/celliers/{cellier}/bouteilles/{bouteille}', [CellierController::class, 'deleteBottle'])
+        ->name('bouteilles.delete');
+
+    Route::get('/celliers/{cellier}/bouteilles/{bouteille}/modifier', [CellierController::class, 'editBottle'])
+        ->name('bouteilles.edit');
+
+    Route::put(
+        '/celliers/{cellier}/bouteilles/{bouteille}',
+        [CellierController::class, 'updateBottle']
+    )->name('bouteilles.update');
 });
+
+
+Route::patch('/bouteilles/{id}/quantite', function($id, Illuminate\Http\Request $request) {
+    $b = \App\Models\Bouteille::findOrFail($id);
+
+    if ($request->quantite < 0) {
+        return response()->json([
+            'success' => false,
+            'message' => 'La quantité ne peut pas être négative.'
+        ], 422);
+    }
+
+    $b->quantite = $request->quantite;
+    $b->save();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Quantité mise à jour avec succès.'
+    ]);
+})->name('quantite.update');

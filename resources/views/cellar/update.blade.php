@@ -10,7 +10,7 @@
                 @csrf
                 @method('PUT')
                 <x-input label="Nom du cellier" name="nom" type="text" placeholder="Entrez le nom du cellier" value="{{ old('nom', $cellier->nom) }}" />
-                <x-primary-btn label="Modifier le cellier" type="submit" class="w-full py-3" />
+                <x-primary-btn label="Modifier le cellier" type="submit"/>
             </form>
     </section>
 @endsection

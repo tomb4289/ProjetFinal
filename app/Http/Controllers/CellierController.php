@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use App\Models\Bouteille;
 
 /**
  * Contrôleur pour la gestion des celliers.
@@ -141,6 +142,87 @@ class CellierController extends Controller
         return redirect()
             ->route('cellar.index')
             ->with('success', 'Le cellier a été supprimé.');
+    }
+
+    /**
+     * Supprime une bouteille dans un cellier (pas dans le catalogue).
+     * @param Cellier $cellier Le cellier contenant la bouteille
+     * @param Bouteille $bouteille La bouteille à supprimer
+     */
+    public function deleteBottle(Cellier $cellier, Bouteille $bouteille): RedirectResponse
+    {
+        // Vérifie que le cellier appartient au user
+        $this->authorizeCellier($cellier);
+
+        // Vérifie que la bouteille appartient à CE cellier
+        if ($bouteille->cellier_id !== $cellier->id) {
+            abort(403);
+        }
+
+        // Supprimer la bouteille (dans le cellier seulement)
+        $bouteille->delete();
+
+        return redirect()
+            ->route('cellar.show', $cellier)
+            ->with('success', 'La bouteille a été supprimée du cellier.');
+    }
+    /**
+     * Affiche le formulaire d'édition d'une bouteille manuelle dans un cellier.
+     * 
+     * @param Cellier $cellier Le cellier contenant la bouteille
+     * @param Bouteille $bouteille La bouteille à modifier
+     * @return View La vue du formulaire d'édition de la bouteille
+     */
+    public function editBottle(Cellier $cellier, Bouteille $bouteille): View
+    {
+        $this->authorizeCellier($cellier);
+
+        // Vérifie que la bouteille appartient bien au cellier
+        if ($bouteille->cellier_id !== $cellier->id) {
+            abort(403);
+        }
+
+        // Interdit la modification d’une bouteille du catalogue
+        if ($bouteille->code_saq !== null) {
+            abort(403, 'Cette bouteille vient du catalogue SAQ et ne peut pas être modifiée.');
+        }
+
+        return view('bouteilles.modifier-bouteille', compact('cellier', 'bouteille'));
+    }
+
+    /**
+     * Met à jour une bouteille manuelle dans un cellier.
+     */
+    public function updateBottle(Request $request, Cellier $cellier, Bouteille $bouteille): RedirectResponse
+    {
+        $this->authorizeCellier($cellier);
+
+        // Vérifie que la bouteille appartient bien au cellier
+        if ($bouteille->cellier_id !== $cellier->id) {
+            abort(403);
+        }
+
+        // Interdit la modification d’une bouteille provenant du catalogue
+        if ($bouteille->code_saq !== null) {
+            abort(403, 'Impossible de modifier une bouteille provenant du catalogue SAQ.');
+        }
+
+        // Validation des champs
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+            'quantite' => 'required|integer|min:0',
+            'format' => 'nullable|string|max:25',
+            'pays' => 'nullable|string|max:100',
+            'type' => 'nullable|string|max:100',
+            'commentaire' => 'nullable|string|max:1000',
+        ]);
+
+        // Mise à jour de la bouteille
+        $bouteille->update($validated);
+
+        return redirect()
+            ->route('cellar.show', $cellier->id)
+            ->with('success', 'La bouteille a été mise à jour avec succès.');
     }
 
     /**

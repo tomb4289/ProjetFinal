@@ -9,7 +9,7 @@
             <form action="{{ route('cellar.store') }}" method="POST" class="flex flex-col gap-4">
                 @csrf
                 <x-input label="Nom du cellier" name="nom" type="text" placeholder="Entrez le nom du cellier" />
-                <x-primary-btn label="Créer le cellier" type="submit" class="w-full py-3" />
+                <x-primary-btn label="Ajouter le cellier" type="submit" />
             </form>
     </section>
 @endsection

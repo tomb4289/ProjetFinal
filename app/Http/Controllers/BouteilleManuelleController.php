@@ -49,6 +49,7 @@ class BouteilleManuelleController extends Controller
         // 4) Redirection vers la vue principale du cellier
         return redirect()
             ->route('cellar.show', $cellier)
+            ->route('cellar.index')
             ->with('success', 'Bouteille ajoutée manuellement avec succès.');
     }
 

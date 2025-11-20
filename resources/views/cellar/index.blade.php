@@ -12,7 +12,7 @@
             @forelse ($celliers as $cellier)
         <x-cellar-box 
             :name="$cellier->nom" 
-            :amount="0" 
+            :amount="$cellier->bouteilles->count()" 
             :id="$cellier->id"
         />
     @empty

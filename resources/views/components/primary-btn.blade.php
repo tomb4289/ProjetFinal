@@ -1,3 +1,39 @@
-@props(['label' => 'Click Me', 'type' => 'button', 'route' => '', 'rounded' => 'lg'])
-{{-- Si $route est défini, ajoute un onclick pour rediriger vers la route --}}
-<button @if ($route) onclick="window.location='{{ route($route) }}'" @endif class='bg-primary text-white font-bold py-2 px-4 rounded-{{ $rounded }} hover:bg-primary-hover transition-colors duration-300 {{ $attributes->get('class') }}' id="{{ $attributes->get('id') }}">{{ $label }}</button>
+@props([
+    'label' => 'Click Me',
+    'type' => 'button',     // button | submit | href
+    'route' => null,
+    'rounded' => 'lg',
+    'id' => null,
+])
+
+@php
+    $classes = "bg-primary text-white font-bold py-2 px-4 rounded-{$rounded} 
+                hover:bg-primary-hover transition-colors duration-300 block text-center";
+
+    // Détection automatique :
+    // - si route() est un NAME → on génère un URL
+    // - si c'est déjà une URL → on ne touche pas
+    if ($route) {
+        $href = str_starts_with($route, 'http')
+            ? $route
+            : route($route);
+    } else {
+        $href = '#';
+    }
+@endphp
+
+
+@if ($type === 'href')
+    {{-- Génère un <a> --}}
+    <a href="{{ $href }}"
+       {{ $attributes->merge(['id' => $id, 'class' => $classes]) }}>
+        {{ $label }}
+    </a>
+
+@else
+    {{-- Génère un <button> --}}
+    <button type="{{ $type }}"
+        {{ $attributes->merge(['id' => $id,'class' => $classes]) }}>
+        {{ $label }}
+    </button>
+@endif

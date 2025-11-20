@@ -4,17 +4,19 @@
    {{-- Permet l'affichage du bouton Ajouter un cellier --}}
    @if ($addCellarBtn == true)
       <div class="w-full max-w-md px-4 pointer-events-auto">
-            <x-primary-btn label="+ Créer un nouveau cellier" route="cellar.create" class="w-full py-3 shadow-lg" />
+            <x-primary-btn type="href" label="+ Créer un nouveau cellier" route="cellar.create" class="w-full py-3 shadow-lg" />
        </div>
    @endif
    {{-- Permet l'affichage du bouton Ajouter un vin --}}
    @if ($addWineBtn == true)
       <div class="w-full flex justify-end px-4 pointer-events-auto">
-            <x-primary-btn label="+" rounded="full" class="px-8 py-6 shadow-lg" />
+         <button id="addWineToCellar" class="bg-primary text-card border border-border-base shadow-lg rounded-full p-6 hover:bg-primary-hover transition">
+            <x-dynamic-component :component="'lucide-plus'" class="w-10 h-10"/>
+         </button>
        </div>
    @endif
 <nav class="w-full bg-card bg- border-t border-border-base shadow-sm flex justify-between">
-   <x-nav-item label='Celliers' icon='wine' url="{{ route('cellar.index') }}" />
+   <x-nav-item label='Celliers' icon='wine' url="{{ route('cellar.index') }}" :active="request()->routeIs('cellar.*')" />
    <x-nav-item label='Explorer' icon='compass' url='test' />
    <x-nav-item label='Compte' icon='user' url='test' />
 </nav>
