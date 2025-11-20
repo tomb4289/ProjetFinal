@@ -48,4 +48,14 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/celliers/{cellier}/bouteilles/ajout', [BouteilleManuelleController::class, 'store'])
         ->name('bouteilles.manuelles.store');
+
+
+
+    /**
+     *API de mise à jour rapide de la quantité d’une bouteille manuelle.
+     */
+    Route::patch(
+        '/celliers/{cellier}/bouteilles/{bouteille}/quantite',
+        [BouteilleManuelleController::class, 'updateQuantite']
+    )->name('bouteilles.manuelles.quantite');
 });
