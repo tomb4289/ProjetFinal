@@ -6,29 +6,14 @@
 @section('add-wine-btn', '')
 
 @section('content')
-<div class="min-h-screen bg-background pt-24">
-    <div class="max-w-5xl mx-auto space-y-6">
-        {{-- En-tête du cellier --}}
-        <div class="bg-card border border-border-base rounded-xl shadow-md p-6 flex items-center justify-between">
-            <div>
-                <h1 class="text-2xl font-bold text-text-title">
-                    {{ $cellier->nom }}
-                </h1>
-                <p class="text-sm text-text-muted">
-                    Vue principale du cellier – liste des bouteilles.
-                </p>
-            </div>
-
-            <a
-                href="{{ route('bouteilles.manuelles.create', $cellier->id) }}"
-                class="bg-primary text-white font-bold py-2 px-4 rounded-lg hover:bg-primary-hover transition"
-            >
-                Ajouter une bouteille
-            </a>
-        </div>
+<section class="p-4 pt-2">
+        <x-page-header
+            :title="$cellier->nom"
+            :undertitle="$cellier->bouteilles->count() . ' bouteille' . ($cellier->bouteilles->count() > 1 ? 's' : '')"
+        />
 
         {{-- Liste des bouteilles --}}
-        <div class="bg-card border border-border-base rounded-xl shadow-md p-6">
+        <div class="bg-card border border-border-base rounded-xl shadow-md p-6 mt-4">
             @if ($cellier->bouteilles->isEmpty())
                 <p class="text-text-muted">
                     Ce cellier est encore vide. Utilisez le bouton « Ajouter une bouteille » pour commencer.
@@ -132,7 +117,7 @@
             @endif
         </div>
     </div>
-</div>
+</section>
 
 {{-- Fenêtre flottante "Ajouter un vin" --}}
 <div
