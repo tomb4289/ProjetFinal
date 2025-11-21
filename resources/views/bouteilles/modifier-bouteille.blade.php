@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+{{-- Formulaire de modification manuelle d'une bouteille --}}
 <div class="min-h-screen bg-background pt-24">
     <section class="p-4 sm:w-full max-w-4xl mx-auto">
         <div class="bg-card border border-border-base rounded-xl shadow-md p-6 space-y-6">

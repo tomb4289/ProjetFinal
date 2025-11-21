@@ -1,3 +1,4 @@
+{{-- Props permis --}}
 @props(['name'=>'Cellier', 'amount' => '0', 'id' => ''])
 
 <div class="cellar-box relative p-3 bg-card rounded-lg shadow-md border border-border-base hover:shadow-sm transition-all duration-300">

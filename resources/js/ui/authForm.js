@@ -55,13 +55,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const mode = document.body.dataset.mode;
     mode === "register" ? showRegister() : showLogin();
 
-    // Clics
+    // addEventListener pour le bouton de connexion
     btnLogin.addEventListener("click", () => {
         formLogin.reset();
         clearForm(formLogin);
         showLogin();
     });
 
+    // addEventListener pour le bouton d'inscription
     btnRegister.addEventListener("click", () => {
         formRegister.reset();
         clearForm(formRegister);

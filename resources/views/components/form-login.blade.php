@@ -1,3 +1,4 @@
+{{-- Formulaire de connexion --}}
 <form method="POST" action="{{ route('login') }}" class="flex flex-col gap-4 {{ $attributes->get('class') }}" id="{{ $attributes->get('id') }}">
     @csrf
     <x-input 

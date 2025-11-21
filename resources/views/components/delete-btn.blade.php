@@ -1,5 +1,5 @@
 @props(['route' => null, 'id' => null])
-
+{{-- Bouton de suppression avec confirmation --}}
 <form 
     action="{{ $route }}" 
     method="POST"

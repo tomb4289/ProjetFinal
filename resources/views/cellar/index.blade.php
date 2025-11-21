@@ -15,6 +15,7 @@
             :amount="$cellier->bouteilles->count()" 
             :id="$cellier->id"
         />
+        {{-- Si vide, affiche un message --}}
     @empty
         <div class="col-span-full p-6 text-center text-text-muted bg-card rounded-lg border border-border-base">
             Vous n'avez aucun cellier pour le moment.

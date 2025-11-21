@@ -7,6 +7,7 @@
     'required' => false,
 ])
 
+{{-- Champ de formulaire réutilisable --}}
 <div class="flex flex-col gap-1">
     @if($label)
         <label for="{{ $name }}" class="text-sm font-medium text-text-muted">

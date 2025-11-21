@@ -9,8 +9,12 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
+// Service pour scraper et importer le catalogue de la SAQ
+// Utilise l'API GraphQL de la SAQ pour récupérer les données des produits
+// et les stocker dans la base de données locale
 class SaqScraper
 {
+    
     private $client;
     private $baseUrl = 'https://www.saq.com';
     private $graphqlEndpoint = 'https://catalog-service.adobe.io/graphql';
@@ -61,6 +65,7 @@ class SaqScraper
         return bin2hex(random_bytes(16));
     }
 
+    // Importe le catalogue de la SAQ avec options de catégorie, limite et délai entre les requêtes
     public function importerCatalogue($categorie = null, $limite = null, $delai = 2)
     {
         $this->delaiRequete = $delai;
@@ -112,7 +117,7 @@ class SaqScraper
             throw $e;
         }
     }
-
+// Récupère les produits via l'API GraphQL de la SAQ avec pagination et filtres
     private function obtenirProduitsGraphQL($page = 1, $pageSize = 24, $categorie = null, &$totalCount = null)
     {
         try {
@@ -197,7 +202,7 @@ class SaqScraper
                 Log::error("Erreurs GraphQL", ['errors' => $data['errors'], 'full_response' => $data]);
                 return [];
             }
-
+            // Vérifier la structure de la réponse
             if (isset($data['data']['productSearch'])) {
                 $productSearch = $data['data']['productSearch'];
                 if (isset($productSearch['total_count'])) {

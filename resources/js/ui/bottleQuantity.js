@@ -1,10 +1,12 @@
+// Gestion des quantités de bouteilles dans la cave
 document.addEventListener("DOMContentLoaded", () => {
+    // Sélection des boutons de quantité
     const buttons = document.querySelectorAll(".qty-btn");
     if (!buttons.length) return;
 
     const csrfMeta = document.querySelector('meta[name="csrf-token"]');
     const csrfToken = csrfMeta ? csrfMeta.getAttribute("content") : "";
-
+    // Ajout des écouteurs d'événements aux boutons
     buttons.forEach((btn) => {
         btn.addEventListener("click", () => {
             const url        = btn.dataset.url;
@@ -22,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const oldText = display.textContent;
             display.textContent = "x ...";
-
+            // Appel API pour mettre à jour la quantité
             fetch(url, {
                 method: "PATCH",
                 headers: {

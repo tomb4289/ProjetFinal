@@ -5,12 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+// Modèle représentant une bouteille dans le catalogue
 class BouteilleCatalogue extends Model
 {
     use HasFactory;
 
     protected $table = 'bouteille_catalogue';
 
+    // Champs pouvant être assignés en masse
     protected $fillable = [
         'code_saQ',
         'nom',
@@ -24,6 +26,7 @@ class BouteilleCatalogue extends Model
         'date_import',
     ];
 
+    // Définition des types de données pour certains attributs
     protected function casts(): array
     {
         return [
@@ -33,6 +36,7 @@ class BouteilleCatalogue extends Model
         ];
     }
 
+    // Relations Eloquent
     public function pays()
     {
         return $this->belongsTo(Pays::class, 'id_pays');

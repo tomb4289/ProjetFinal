@@ -1,11 +1,13 @@
 @extends('layouts.app')
 @section('title', 'Modifier Celliers')
 
-
+{{-- Formulaire de modification d'un cellier --}}
 @section('content')
     <section class="p-4 pt-2">
+        {{-- Insertion du composant d'en-tête de page --}}
         <x-page-header title="Modifier Celliers" />
         <div class="mt-6">
+            {{-- Formulaire de modification d'un cellier --}}
             <form action="{{ route('cellar.update', $cellier->id) }}" method="POST" class="flex flex-col gap-4">
                 @csrf
                 @method('PUT')

@@ -1,3 +1,5 @@
+{{-- Mise en page principale avec barre de navigation --}}
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>

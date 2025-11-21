@@ -14,10 +14,12 @@
 
         {{-- Liste des bouteilles --}}
         <div class="bg-card border border-border-base rounded-xl shadow-md p-6 mt-4">
+            {{-- Si vide, affiche un message --}}
             @if ($cellier->bouteilles->isEmpty())
                 <p class="text-text-muted">
                     Ce cellier est encore vide. Utilisez le bouton « Ajouter une bouteille » pour commencer.
                 </p>
+            {{-- Sinon affiche la liste des bouteilles --}}
             @else
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     @foreach ($cellier->bouteilles as $bouteille)

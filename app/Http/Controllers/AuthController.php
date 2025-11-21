@@ -82,7 +82,7 @@ class AuthController extends Controller
      */
     public function showLoginForm(): View
     {
-        // Même vue que pour l'inscription, mais avec le mode "login".
+        // Même vue que pour l'inscription, mais avec le mode "login" pour afficher directement le formulaire 'connexion'.
         return view('auth.auth', ['mode' => 'login']);
     }
 

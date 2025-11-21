@@ -4,7 +4,7 @@
     'title' => '',
     'subtitle' => '',
 ])
-
+{{-- Bouton avec icône et texte --}}
 <a href="{{ $href }}" class="h-24 flex items-center gap-4 p-4 rounded-lg bg-card hover:bg-card-hover shadow-sm border border-border-base transition">
     
     {{-- Icône --}}
