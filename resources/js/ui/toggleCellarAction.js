@@ -5,28 +5,33 @@ if (cellarToggleActionBtn) {
     cellarToggleActionBtn.addEventListener("click", () => {
         clicked = !clicked;
         if (clicked) {
+            // Utiliser des classes Tailwind existantes au lieu de bg-focus et border-muted
             cellarToggleActionBtn.classList.add(
-                "bg-focus",
-                "border-muted",
+                "bg-blue-600",
+                "border-blue-600",
                 "border"
             );
             cellarBoxes.forEach((box) => {
                 box.classList.add("animate-shake");
-                box.querySelector(".cellar-action-btns").classList.remove(
-                    "hidden"
-                );
+                const actionBtns = box.querySelector(".cellar-action-btns");
+                // VÉRIFICATION : s'assurer que l'élément existe avant d'accéder à classList
+                if (actionBtns) {
+                    actionBtns.classList.remove("hidden");
+                }
             });
         } else {
             cellarToggleActionBtn.classList.remove(
-                "bg-focus",
-                "border-muted",
+                "bg-blue-600",
+                "border-blue-600",
                 "border"
             );
             cellarBoxes.forEach((box) => {
                 box.classList.remove("animate-shake");
-                box.querySelector(".cellar-action-btns").classList.add(
-                    "hidden"
-                );
+                const actionBtns = box.querySelector(".cellar-action-btns");
+                // VÉRIFICATION : s'assurer que l'élément existe avant d'accéder à classList
+                if (actionBtns) {
+                    actionBtns.classList.add("hidden");
+                }
             });
         }
     });

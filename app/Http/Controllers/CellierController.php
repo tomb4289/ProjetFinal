@@ -19,20 +19,16 @@ class CellierController extends Controller
 {
     /**
      * Affiche la liste de tous les celliers de l'utilisateur connecté.
-     * 
-     * Les celliers sont triés par date de création décroissante (les plus récents en premier).
-     * 
-     * @return View La vue contenant la liste des celliers
      */
     public function index(): View
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        $celliers = $user->celliers()
-            ->orderByDesc('created_at')
+          $celliers = $user->celliers()
+            ->orderBy('nom')
             ->get();
 
-        // NOTE : le projet utilise la vue "cellar.index"
         return view('cellar.index', compact('celliers'));
     }
 
@@ -59,12 +55,12 @@ class CellierController extends Controller
     {
         $validated = $request->validate([
             'nom' => 'required|string|max:255',
-            // 'description' => 'nullable|string',
+           
         ]);
 
         $request->user()->celliers()->create([
             'nom' => $validated['nom'],
-            // 'description' => $validated['description'] ?? null,
+            
         ]);
 
         return redirect()

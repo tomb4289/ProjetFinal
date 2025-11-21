@@ -49,6 +49,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/celliers/{cellier}/bouteilles/ajout', [BouteilleManuelleController::class, 'store'])
         ->name('bouteilles.manuelles.store');
 
+
+
+    /**
+     *API de mise à jour rapide de la quantité d’une bouteille manuelle.
+     */
+    Route::patch(
+        '/celliers/{cellier}/bouteilles/{bouteille}/quantite',
+        [BouteilleManuelleController::class, 'updateQuantite']
+    )->name('bouteilles.manuelles.quantite');
     // Suppression de bouteille dans un cellier
     Route::delete('/celliers/{cellier}/bouteilles/{bouteille}', [CellierController::class, 'deleteBottle'])
         ->name('bouteilles.delete');
@@ -61,3 +70,11 @@ Route::middleware('auth')->group(function () {
         [CellierController::class, 'updateBottle']
     )->name('bouteilles.update');
 });
+
+
+
+Route::patch(
+    '/celliers/{cellier}/bouteilles/{bouteille}/quantite',
+    [BouteilleManuelleController::class, 'updateQuantite']
+)->name('bouteilles.quantite.update');
+
