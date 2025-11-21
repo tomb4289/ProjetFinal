@@ -32,6 +32,6 @@ class AccueilController extends Controller
             ->limit(10)
             ->get();
 
-        return view('welcome', compact('bouteilles'));
+        return view('bouteilles.catalogue', compact('bouteilles'));
     }
 }

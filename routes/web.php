@@ -6,7 +6,7 @@ use App\Http\Controllers\CellierController;
 use App\Http\Controllers\AccueilController;
 use App\Http\Controllers\BouteilleManuelleController;
 
-Route::get('/', [AccueilController::class, 'index'])->name('welcome');
+Route::get('/', [AccueilController::class, 'index'])->name('bouteille.catalogue');
 
 // Routes accessibles seulement aux invités (non connectés)
 Route::middleware('guest')->group(function () {
