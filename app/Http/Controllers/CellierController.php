@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use App\Models\User;
+use App\Models\BouteilleCatalogue;
 use App\Models\Bouteille;
 
 /**
@@ -25,7 +27,7 @@ class CellierController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-          $celliers = $user->celliers()
+        $celliers = $user->celliers()
             ->orderBy('nom')
             ->get();
 
@@ -55,12 +57,12 @@ class CellierController extends Controller
     {
         $validated = $request->validate([
             'nom' => 'required|string|max:255',
-           
+
         ]);
 
         $request->user()->celliers()->create([
             'nom' => $validated['nom'],
-            
+
         ]);
 
         return redirect()
@@ -223,6 +225,36 @@ class CellierController extends Controller
         return redirect()
             ->route('cellar.show', $cellier->id)
             ->with('success', 'La bouteille a été mise à jour avec succès.');
+    }
+
+    public function ajoutBouteilleApi(Request $request)
+    {
+        // 1. Trouver la bouteille dans le catalogue
+        $catalogBottle = BouteilleCatalogue::find($request->bottle_id);
+
+        if (!$catalogBottle) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Bouteille du catalogue non trouvée'
+            ], 404);
+        }
+
+        // 2. Créer une copie dans la table "bouteilles"
+        $new = new Bouteille();
+        $new->cellier_id = $request->cellar_id;
+        $new->nom = $catalogBottle->nom;
+        $new->pays = $catalogBottle->pays;
+        $new->format = $catalogBottle->format;
+        $new->quantite = $request->quantity;
+        $new->prix = $catalogBottle->prix;
+
+        $new->save(); // <-- INSERT dans la bonne BD
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Bouteille ajoutée avec succès',
+            'data' => $new
+        ]);
     }
 
 

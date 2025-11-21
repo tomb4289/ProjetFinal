@@ -49,11 +49,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/celliers/{cellier}/bouteilles/ajout', [BouteilleManuelleController::class, 'store'])
         ->name('bouteilles.manuelles.store');
 
+    Route::post('/api/ajout/cellier', [CellierController::class, 'ajoutBouteilleApi'])->name('api.ajout.cellier');
 
     // Pour Recuperer les cellier du user
     Route::get('/api/celliers', function () {
         return $user = auth()->user()->celliers()->withCount('bouteilles')->get();
     })->name('api.celliers');
+
+
 
 
     /**
