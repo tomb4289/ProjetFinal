@@ -17,4 +17,27 @@ class CatalogueController extends Controller
 
         return view('bouteilles.catalogue', compact('bouteilles'));
     }
+
+    public function search(Request $request)
+    {
+        $query = BouteilleCatalogue::with(['pays', 'typeVin']);
+
+        if ($request->search) {
+            $query->where('nom', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->pays) {
+            $query->where('pays_id', $request->pays);
+        }
+
+        if ($request->type) {
+            $query->where('type_vin_id', $request->type);
+        }
+
+        $bouteilles = $query->paginate(10);
+
+        return response()->json([
+            'html' => view('bouteilles._catalogue_list', compact('bouteilles'))->render()
+        ]);
+    }
 }
