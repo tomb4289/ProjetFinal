@@ -25,7 +25,7 @@
                 min="1"
                 max="10"
                 value="1"
-                class="flex-1"
+                class="flex-1 text-center border border-gray-300 rounded-lg px-2 py-1"
             />
 
             <button 

@@ -17,7 +17,7 @@
    @endif
 <nav class="w-full bg-card bg- border-t border-border-base shadow-sm flex justify-between">
    <x-nav-item label='Celliers' icon='wine' url="{{ route('cellar.index') }}" :active="request()->routeIs('cellar.*')" />
-   <x-nav-item label='Explorer' icon='compass' url='test' />
+   <x-nav-item label='Explorer' icon='compass' url="{{ route('bouteille.catalogue') }}" :active="request()->routeIs('bouteille.catalogue')" />
    <x-nav-item label='Compte' icon='user' url='test' />
 </nav>
 </section>
