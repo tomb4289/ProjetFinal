@@ -1,6 +1,6 @@
 @props(['id' => '', 'nom' => '', 'image' => null, 'prix' => '', 'userId' => null])
 {{-- Carte de bouteille --}}
-<div class='flex flex-col justify-between bg-card rounded-lg shadow-md hover:shadow-sm transition-all duration-300 overflow-hidden'>
+<a href="{{ route('catalogue.show', $id) }}" class='flex flex-col justify-between bg-card rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden cursor-pointer'>
     
     <picture class='w-full h-32 overflow-hidden bg-neutral-400 flex items-center justify-center'>
         @if ($image === null)
@@ -12,7 +12,7 @@
     <div class='p-4 flex flex-col gap-2'>
         <span class='truncate font-semibold text-text-title text-md'>{{ $nom }}</span>
         <span class='text-text-muted'>{{ $prix }} $</span>
-        <form class="flex gap-3 flex-row-reverse flex-wrap justify-end add-to-cellar-form">
+        <form class="flex gap-3 flex-row-reverse flex-wrap justify-end add-to-cellar-form stop-link-propagation">
             <input 
                 type="hidden" 
                 name="bottle_id" 
@@ -37,4 +37,4 @@
             </button>
 </form>
     </div>
-</div>
+</a>

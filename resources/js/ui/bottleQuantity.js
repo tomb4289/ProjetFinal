@@ -1,9 +1,7 @@
 // Gestion des quantités de bouteilles dans la cave
-document.addEventListener("DOMContentLoaded", () => {
-    // Sélection des boutons de quantité
-    const buttons = document.querySelectorAll(".qty-btn");
-    if (!buttons.length) return;
-
+// Sélection des boutons de quantité
+const buttons = document.querySelectorAll(".qty-btn");
+if (buttons.length) {
     const csrfMeta = document.querySelector('meta[name="csrf-token"]');
     const csrfToken = csrfMeta ? csrfMeta.getAttribute("content") : "";
     // Ajout des écouteurs d'événements aux boutons
@@ -55,4 +53,4 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
         });
     });
-});
+}

@@ -10,6 +10,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     @foreach($bouteilles as $bouteille)
                         <x-bouteille-card
+                            :id="$bouteille->id"
                             :nom="$bouteille->nom"
                             :type="$bouteille->typeVin?->nom"
                             :millesime="$bouteille->millesime"

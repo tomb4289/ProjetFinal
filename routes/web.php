@@ -31,6 +31,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/catalogue/search', [CatalogueController::class, 'search'])
         ->name('catalogue.search');
 
+    // Détails d'une bouteille du catalogue
+    Route::get('/catalogue/{bouteilleCatalogue}', [CatalogueController::class, 'show'])
+        ->name('catalogue.show');
+
     // Liste des celliers
     Route::get('/celliers', [CellierController::class, 'index'])->name('cellar.index');
 
@@ -81,6 +85,23 @@ Route::middleware('auth')->group(function () {
         '/celliers/{cellier}/bouteilles/{bouteille}',
         [CellierController::class, 'updateBottle']
     )->name('bouteilles.update');
+
+    // Affichage des détails d'une bouteille
+    Route::get(
+        '/celliers/{cellier}/bouteilles/{bouteille}',
+        [CellierController::class, 'showBottle']
+    )->name('bouteilles.show');
+
+    // Gestion des notes de dégustation
+    Route::get(
+        '/celliers/{cellier}/bouteilles/{bouteille}/note',
+        [CellierController::class, 'editNote']
+    )->name('bouteilles.note.edit');
+
+    Route::put(
+        '/celliers/{cellier}/bouteilles/{bouteille}/note',
+        [CellierController::class, 'updateNote']
+    )->name('bouteilles.note.update');
 });
 
 

@@ -1,10 +1,10 @@
 // Model pour la confirmation de suppression
-document.addEventListener("DOMContentLoaded", () => {
-    // Sélection des éléments du DOM
-    const modal = document.getElementById("confirmModal");
-    const form = document.getElementById("confirmForm");
-    const cancel = document.getElementById("confirmCancel");
+// Sélection des éléments du DOM
+const modal = document.getElementById("confirmModal");
+const form = document.getElementById("confirmForm");
+const cancel = document.getElementById("confirmCancel");
 
+if (modal && form && cancel) {
     // Ajout des écouteurs d'événements aux boutons de suppression
     document.querySelectorAll(".use-confirm").forEach((btn) => {
         btn.addEventListener("click", () => {
@@ -24,4 +24,4 @@ document.addEventListener("DOMContentLoaded", () => {
             modal.classList.add("hidden");
         }
     });
-});
+}

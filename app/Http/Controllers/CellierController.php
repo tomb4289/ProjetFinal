@@ -245,7 +245,7 @@ class CellierController extends Controller
             abort(403);
         }
 
-        // Interdit la modification d’une bouteille provenant du catalogue
+        // Interdit la modification d'une bouteille provenant du catalogue
         if ($bouteille->code_saq !== null) {
             abort(403, 'Impossible de modifier une bouteille provenant du catalogue SAQ.');
         }
@@ -266,6 +266,120 @@ class CellierController extends Controller
         return redirect()
             ->route('cellar.show', $cellier->id)
             ->with('success', 'La bouteille a été mise à jour avec succès.');
+    }
+
+    /**
+     * Affiche toutes les informations détaillées d'une bouteille.
+     * 
+     * Affiche le nom, type, pays, millésime, prix, quantité, date d'ajout et image.
+     * La section notes de dégustation sera ajoutée plus tard.
+     * 
+     * @param Cellier $cellier Le cellier contenant la bouteille
+     * @param Bouteille $bouteille La bouteille à afficher
+     * @return View La vue contenant les détails de la bouteille
+     */
+    public function showBottle(Cellier $cellier, Bouteille $bouteille): View
+    {
+        $this->authorizeCellier($cellier);
+
+        // Vérifie que la bouteille appartient bien au cellier
+        if ($bouteille->cellier_id !== $cellier->id) {
+            abort(403);
+        }
+
+        // Essayer de trouver une bouteille correspondante dans le catalogue
+        // pour récupérer les informations supplémentaires (type, millésime, image)
+        $bouteilleCatalogue = BouteilleCatalogue::where('nom', $bouteille->nom)
+            ->with(['typeVin', 'pays'])
+            ->first();
+
+        // Préparer les données à afficher
+        $donnees = [
+            'nom' => $bouteille->nom,
+            'pays' => $bouteille->pays,
+            'prix' => $bouteille->prix,
+            'quantite' => $bouteille->quantite,
+            'date_ajout' => $bouteille->created_at,
+            'format' => $bouteille->format,
+            'type' => null,
+            'millesime' => null,
+            'image' => null,
+            'note_degustation' => $bouteille->note_degustation,
+            'rating' => $bouteille->rating,
+        ];
+
+        // Si une bouteille du catalogue correspond, récupérer les infos supplémentaires
+        if ($bouteilleCatalogue) {
+            $donnees['type'] = $bouteilleCatalogue->typeVin ? $bouteilleCatalogue->typeVin->nom : null;
+            $donnees['millesime'] = $bouteilleCatalogue->millesime;
+            $donnees['image'] = $bouteilleCatalogue->image; // Utilise l'accessor getImageAttribute()
+            
+            // Si le pays n'est pas défini dans la bouteille, utiliser celui du catalogue
+            if (!$donnees['pays'] && $bouteilleCatalogue->pays) {
+                $donnees['pays'] = $bouteilleCatalogue->pays->nom;
+            }
+        }
+
+        return view('bouteilles.details', [
+            'cellier' => $cellier,
+            'bouteille' => $bouteille,
+            'donnees' => $donnees,
+        ]);
+    }
+
+    /**
+     * Affiche le formulaire d'édition des notes de dégustation d'une bouteille.
+     * 
+     * @param Cellier $cellier Le cellier contenant la bouteille
+     * @param Bouteille $bouteille La bouteille dont on veut modifier les notes
+     * @return View La vue du formulaire d'édition des notes
+     */
+    public function editNote(Cellier $cellier, Bouteille $bouteille): View
+    {
+        $this->authorizeCellier($cellier);
+
+        // Vérifie que la bouteille appartient bien au cellier
+        if ($bouteille->cellier_id !== $cellier->id) {
+            abort(403);
+        }
+
+        return view('bouteilles.edit-note', compact('cellier', 'bouteille'));
+    }
+
+    /**
+     * Met à jour les notes de dégustation d'une bouteille.
+     * 
+     * Valide les données et s'assure que l'utilisateur ne peut modifier
+     * que les notes de ses propres bouteilles.
+     * 
+     * @param Request $request La requête HTTP contenant les notes
+     * @param Cellier $cellier Le cellier contenant la bouteille
+     * @param Bouteille $bouteille La bouteille à modifier
+     * @return RedirectResponse Redirection vers la fiche détaillée avec un message de succès
+     */
+    public function updateNote(Request $request, Cellier $cellier, Bouteille $bouteille): RedirectResponse
+    {
+        $this->authorizeCellier($cellier);
+
+        // Vérifie que la bouteille appartient bien au cellier
+        if ($bouteille->cellier_id !== $cellier->id) {
+            abort(403);
+        }
+
+        // Validation des notes de dégustation et du rating
+        $validated = $request->validate([
+            'note_degustation' => 'nullable|string|max:5000',
+            'rating' => 'nullable|integer|min:0|max:10',
+        ]);
+
+        // Mise à jour des notes et du rating
+        $bouteille->update([
+            'note_degustation' => $validated['note_degustation'] ?? null,
+            'rating' => $validated['rating'] ?? null,
+        ]);
+
+        return redirect()
+            ->route('bouteilles.show', [$cellier, $bouteille]);
     }
 
     // Ajout de bouteille du catalogue au cellier via API

@@ -1,74 +1,76 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const addToCellarBtns = document.querySelectorAll(".add-to-cellar-btn");
-    const closeBtn = document.getElementById("closeAddWine");
-    const cellarSheet = document.getElementById("addWineBtnContainer");
+const boutonsAjouterCellier = document.querySelectorAll(".add-to-cellar-btn");
+const boutonFermer = document.getElementById("closeAddWine");
+const panneauCellier = document.getElementById("addWineBtnContainer");
 
-    let preloaded = null;
-    let activeBottleId = null;
-    let activeQuantity = 1;
+// Vérifier que les éléments existent avant de continuer
+if (boutonFermer && panneauCellier) {
+
+    let celliersPrecharges = null;
+    let idBouteilleActive = null;
+    let quantiteActive = 1;
 
     // Charge les celliers une seule fois
-    preloadCellars();
+    prechargerCelliers();
 
-    async function preloadCellars() {
-        preloaded = await getCellars();
+    async function prechargerCelliers() {
+        celliersPrecharges = await obtenirCelliers();
     }
 
-    closeBtn.addEventListener("click", closeSheet);
+    boutonFermer.addEventListener("click", fermerPanneau);
 
-    // Ouvrir le sheet quand on clique sur Ajouter
+    // Ouvrir le panneau quand on clique sur Ajouter
     document.addEventListener("click", (e) => {
-        const btn = e.target.closest(".add-to-cellar-btn");
-        if (!btn) return; // pas un bouton ajouter
+        const bouton = e.target.closest(".add-to-cellar-btn");
+        if (!bouton) return; // pas un bouton ajouter
 
         e.preventDefault();
 
-        const form = btn.closest("form");
+        const formulaire = bouton.closest("form");
 
-        activeBottleId = form.querySelector('input[name="bottle_id"]').value;
-        activeQuantity =
-            parseInt(form.querySelector('input[name="quantity"]').value) || 1;
+        idBouteilleActive = formulaire.querySelector('input[name="bottle_id"]').value;
+        quantiteActive =
+            parseInt(formulaire.querySelector('input[name="quantity"]').value) || 1;
 
-        openSheet();
+        ouvrirPanneau();
     });
 
-    async function openSheet() {
-        cellarSheet.classList.remove("translate-y-full");
-        populateCellarOptions(preloaded);
+    async function ouvrirPanneau() {
+        panneauCellier.classList.remove("translate-y-full");
+        peuplerOptionsCelliers(celliersPrecharges);
     }
 
-    function closeSheet() {
-        cellarSheet.classList.add("translate-y-full");
+    function fermerPanneau() {
+        panneauCellier.classList.add("translate-y-full");
     }
 
-    async function getCellars() {
-        const response = await fetch("/api/celliers");
-        return response.json();
+    async function obtenirCelliers() {
+        const reponse = await fetch("/api/celliers");
+        return reponse.json();
     }
 
-    function populateCellarOptions(cellars) {
-        const cellarList = document.getElementById("cellar-list");
-        cellarList.innerHTML = "";
+    function peuplerOptionsCelliers(celliers) {
+        const listeCelliers = document.getElementById("cellar-list");
+        listeCelliers.innerHTML = "";
 
-        cellars.forEach((cellar) => {
-            cellarList.innerHTML += `
+        celliers.forEach((cellier) => {
+            listeCelliers.innerHTML += `
                 <a 
                     href="#"
                     class="cellar-box block p-3 bg-card rounded-lg shadow-md border border-border-base hover:shadow-sm cursor-pointer"
-                    data-cellar-id="${cellar.id}"
-                    data-bottle-id="${activeBottleId}"
-                    data-quantity="${activeQuantity}"
+                    data-cellar-id="${cellier.id}"
+                    data-bottle-id="${idBouteilleActive}"
+                    data-quantity="${quantiteActive}"
                 >
                     <div class="flex justify-between">
                         <div class="flex flex-col gap-1">
                             <h2 class="text-2xl font-semibold">${
-                                cellar.nom
+                                cellier.nom
                             }</h2>
                             ${
-                                cellar.bouteilles_count == 0
+                                cellier.bouteilles_count == 0
                                     ? `<p class="text-gray-400 italic">Aucune bouteille</p>`
-                                    : `${cellar.bouteilles_count} Bouteille${
-                                          cellar.bouteilles_count > 1 ? "s" : ""
+                                    : `${cellier.bouteilles_count} Bouteille${
+                                          cellier.bouteilles_count > 1 ? "s" : ""
                                       }`
                             }
                         </div>
@@ -78,34 +80,50 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Clique sur un cellier dans le sheet
+    // Clique sur un cellier dans le panneau
     document.addEventListener("click", async (e) => {
-        const box = e.target.closest(".cellar-box");
-        if (!box) return;
+        const boite = e.target.closest(".cellar-box");
+        if (!boite) return;
+        
+        // Ne prévenir le comportement par défaut que si c'est un cellar-box du modal (avec data-cellar-id)
+        // Cela permet aux liens cellar-box normaux de la page d'index de fonctionner normalement
+        if (!boite.dataset.cellarId) return;
 
         e.preventDefault();
 
-        const csrfToken = document.querySelector(
+        const jetonCsrf = document.querySelector(
             'meta[name="csrf-token"]'
         ).content;
 
-        const cellarId = box.dataset.cellarId;
-        const bottleId = box.dataset.bottleId;
-        const quantity = box.dataset.quantity;
+        const idCellier = boite.dataset.cellarId;
+        const idBouteille = boite.dataset.bottleId;
+        const quantite = boite.dataset.quantity;
 
-        await fetch("/api/ajout/cellier", {
+        const reponse = await fetch("/api/ajout/cellier", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "X-CSRF-TOKEN": csrfToken,
+                "X-CSRF-TOKEN": jetonCsrf,
             },
             body: JSON.stringify({
-                cellar_id: cellarId,
-                bottle_id: bottleId,
-                quantity: quantity,
+                cellar_id: idCellier,
+                bottle_id: idBouteille,
+                quantity: quantite,
             }),
         });
 
-        closeSheet();
+        const donnees = await reponse.json();
+        
+        if (donnees.success) {
+            if (window.showToast) {
+                window.showToast(donnees.message || "Bouteille ajoutée avec succès", "success");
+            }
+        } else {
+            if (window.showToast) {
+                window.showToast(donnees.message || "Erreur lors de l'ajout", "error");
+            }
+        }
+
+        fermerPanneau();
     });
-});
+}

@@ -9,11 +9,16 @@
     'volume' => null,
     'prix' => null,
     'codeSaq' => null,
-    'url' => null
+    'url' => null,
+    'id' => null
 ])
 
 {{-- Carte de bouteille avec tous les détails --}}
-<div class="bg-card border border-border-base rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 flex max-w-[500px]">
+@if($id)
+    <a href="{{ route('catalogue.show', $id) }}" class="bg-card border border-border-base rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 flex max-w-[500px] cursor-pointer">
+@else
+    <div class="bg-card border border-border-base rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 flex max-w-[500px]">
+@endif
     {{-- Image de la bouteille à gauche --}}
     <div class="relative w-32 sm:w-40 flex-shrink-0 bg-gray-50 flex items-center justify-center overflow-hidden">
         @if($urlImage)
@@ -99,5 +104,9 @@
             @endif
         </div>
     </div>
+@if($id)
+    </a>
+@else
 </div>
+@endif
 

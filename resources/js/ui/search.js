@@ -3,51 +3,55 @@ const paysFilter = document.getElementById("paysFilter");
 const typeFilter = document.getElementById("typeFilter");
 const container = document.getElementById("catalogueContainer");
 
-// Debouce, pour limiter la fréquence des appels AJAX lors de la saisie rapide. Ajoute un delais avant de fetch.
-function debounce(fn, delay = 300) {
-    let timer;
-    return (...args) => {
-        clearTimeout(timer);
-        timer = setTimeout(() => fn(...args), delay);
-    };
-}
+// Vérifier que les éléments existent avant de continuer
+if (searchInput && paysFilter && typeFilter && container) {
 
-function fetchCatalogue(url = "/catalogue/search") {
-    const params = new URLSearchParams({
-        search: searchInput.value,
-        pays: paysFilter.value,
-        type: typeFilter.value,
-    });
+    // Debouce, pour limiter la fréquence des appels AJAX lors de la saisie rapide. Ajoute un delais avant de fetch.
+    function debounce(fn, delay = 300) {
+        let timer;
+        return (...args) => {
+            clearTimeout(timer);
+            timer = setTimeout(() => fn(...args), delay);
+        };
+    }
 
-    fetch(`${url}?${params.toString()}`)
-        .then((res) => res.json())
-        .then((data) => {
-            container.innerHTML = data.html;
-
-            // Re-bind pagination links for AJAX
-            bindPaginationLinks();
+    function fetchCatalogue(url = "/catalogue/search") {
+        const params = new URLSearchParams({
+            search: searchInput.value,
+            pays: paysFilter.value,
+            type: typeFilter.value,
         });
-}
 
-const debouncedFetch = debounce(fetchCatalogue, 300);
+        fetch(`${url}?${params.toString()}`)
+            .then((res) => res.json())
+            .then((data) => {
+                container.innerHTML = data.html;
 
-// Search input
-searchInput.addEventListener("input", () => debouncedFetch());
+                // Re-bind pagination links for AJAX
+                bindPaginationLinks();
+            });
+    }
 
-// Filters
-paysFilter.addEventListener("change", () => debouncedFetch());
-typeFilter.addEventListener("change", () => debouncedFetch());
+    const debouncedFetch = debounce(fetchCatalogue, 300);
 
-// AJAX Pagination
-function bindPaginationLinks() {
-    const links = container.querySelectorAll("a[href*='page=']");
-    links.forEach((link) => {
-        link.addEventListener("click", function (e) {
-            e.preventDefault();
-            fetchCatalogue(this.href);
+    // Search input
+    searchInput.addEventListener("input", () => debouncedFetch());
+
+    // Filters
+    paysFilter.addEventListener("change", () => debouncedFetch());
+    typeFilter.addEventListener("change", () => debouncedFetch());
+
+    // AJAX Pagination
+    function bindPaginationLinks() {
+        const links = container.querySelectorAll("a[href*='page=']");
+        links.forEach((link) => {
+            link.addEventListener("click", function (e) {
+                e.preventDefault();
+                fetchCatalogue(this.href);
+            });
         });
-    });
-}
+    }
 
-// Bind on load
-bindPaginationLinks();
+    // Bind on load
+    bindPaginationLinks();
+}

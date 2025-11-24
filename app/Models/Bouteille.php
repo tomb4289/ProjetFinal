@@ -18,7 +18,9 @@ class Bouteille extends Model
         'pays',       
         'format',     
         'quantite',  
-        'prix',       
+        'prix',
+        'note_degustation',
+        'rating',
     ];
 
     /**
@@ -28,6 +30,7 @@ class Bouteille extends Model
     {
         return [
             'prix' => 'decimal:2',
+            'rating' => 'integer',
         ];
     }
 

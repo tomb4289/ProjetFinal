@@ -35,6 +35,7 @@
         />
         <x-toast />
         <x-confirm-delete-modal />
+        <x-modal-pick-cellar />
     </body>
 
     </html>

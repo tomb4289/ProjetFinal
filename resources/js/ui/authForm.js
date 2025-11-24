@@ -1,10 +1,12 @@
-document.addEventListener("DOMContentLoaded", () => {
-    // Recupération des éléments
-    const btnLogin = document.getElementById("loginBtn");
-    const btnRegister = document.getElementById("registerBtn");
+// Recupération des éléments
+const btnLogin = document.getElementById("loginBtn");
+const btnRegister = document.getElementById("registerBtn");
 
-    const formLogin = document.getElementById("loginForm");
-    const formRegister = document.getElementById("registerForm");
+const formLogin = document.getElementById("loginForm");
+const formRegister = document.getElementById("registerForm");
+
+// Vérifier que les éléments existent avant de continuer
+if (btnLogin && btnRegister && formLogin && formRegister) {
 
     // Fonctions d'affichage du formulaire login
     function showLogin() {
@@ -68,4 +70,4 @@ document.addEventListener("DOMContentLoaded", () => {
         clearForm(formRegister);
         showRegister();
     });
-});
+}

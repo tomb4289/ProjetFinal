@@ -9,6 +9,8 @@ import "./ui/addWineOptionToggle";
 import "./ui/confirmDelete";
 import "./ui/addToCellar";
 import "./ui/search";
+import "./ui/stopLinkPropagation";
+import "./ui/starRating";
 
 /* ============================================================
    MODULE : Toasts – Petites notifications

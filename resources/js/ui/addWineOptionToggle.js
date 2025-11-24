@@ -1,11 +1,10 @@
-document.addEventListener("DOMContentLoaded", () => {
-    // Sélection des éléments du DOM
-    const panel = document.getElementById("addWineBtnContainer");
-    const openBtn = document.getElementById("addWineToCellar");
-    const closeBtn = document.getElementById("closeAddWine");
+// Sélection des éléments du DOM
+const panel = document.getElementById("addWineBtnContainer");
+const openBtn = document.getElementById("addWineToCellar");
+const closeBtn = document.getElementById("closeAddWine");
 
-    // Vérification de l'existence des éléments
-    if (!panel || !openBtn || !closeBtn) return;
+// Vérification de l'existence des éléments
+if (panel && openBtn && closeBtn) {
     // Ajout des écouteurs d'événements pour ouvrir et fermer le panneau
     openBtn.addEventListener("click", () => {
         panel.classList.remove("translate-y-full");
@@ -17,4 +16,4 @@ document.addEventListener("DOMContentLoaded", () => {
         panel.classList.add("translate-y-full");
         panel.classList.remove("translate-y-0");
     });
-});
+}

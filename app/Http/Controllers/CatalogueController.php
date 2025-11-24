@@ -44,4 +44,34 @@ class CatalogueController extends Controller
             'html' => view('bouteilles._catalogue_list', compact('bouteilles'))->render()
         ]);
     }
+
+    /**
+     * Affiche les détails d'une bouteille du catalogue.
+     * 
+     * @param BouteilleCatalogue $bouteilleCatalogue La bouteille du catalogue à afficher
+     * @return \Illuminate\View\View La vue contenant les détails de la bouteille
+     */
+    public function show(BouteilleCatalogue $bouteilleCatalogue)
+    {
+        // Charger les relations nécessaires
+        $bouteilleCatalogue->load(['pays', 'typeVin']);
+
+        // Préparer les données à afficher
+        $donnees = [
+            'nom' => $bouteilleCatalogue->nom,
+            'pays' => $bouteilleCatalogue->pays ? $bouteilleCatalogue->pays->nom : null,
+            'prix' => $bouteilleCatalogue->prix,
+            'format' => $bouteilleCatalogue->volume,
+            'type' => $bouteilleCatalogue->typeVin ? $bouteilleCatalogue->typeVin->nom : null,
+            'millesime' => $bouteilleCatalogue->millesime,
+            'image' => $bouteilleCatalogue->image,
+            'region' => $bouteilleCatalogue->region,
+            'code_saq' => $bouteilleCatalogue->code_saQ,
+        ];
+
+        return view('bouteilles.details', [
+            'bouteilleCatalogue' => $bouteilleCatalogue,
+            'donnees' => $donnees,
+        ]);
+    }
 }
