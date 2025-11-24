@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 namespace App\Http\Controllers;
 
@@ -19,6 +19,20 @@ use App\Models\Bouteille;
  */
 class CellierController extends Controller
 {
+    /**
+     * Critères de tri autorisés pour les bouteilles d'un cellier.
+     * Clé = valeur reçue dans l'URL (?sort=nom), valeur = colonne réelle en BD.
+     */
+    private array $allowedBottleSorts = [
+        'nom'      => 'nom',
+        'pays'     => 'pays',
+        'type'     => 'type',
+        'quantite' => 'quantite',
+        'format'   => 'format',
+        'prix'     => 'prix',
+        'date_ajout' => 'created_at'
+    ];
+
     /**
      * Affiche la liste de tous les celliers de l'utilisateur connecté.
      */
@@ -57,12 +71,10 @@ class CellierController extends Controller
     {
         $validated = $request->validate([
             'nom' => 'required|string|max:255',
-
         ]);
 
         $request->user()->celliers()->create([
             'nom' => $validated['nom'],
-
         ]);
 
         return redirect()
@@ -71,7 +83,8 @@ class CellierController extends Controller
     }
 
     /**
-     * PV-13 : Affiche les détails d'un cellier spécifique avec ses bouteilles.
+     * Affiche les détails d'un cellier spécifique avec ses bouteilles,
+     * en appliquant éventuellement un tri sur les bouteilles.
      * 
      * Vérifie que le cellier appartient bien à l'utilisateur connecté
      * avant d'afficher les détails.
@@ -83,11 +96,38 @@ class CellierController extends Controller
     {
         $this->authorizeCellier($cellier);
 
-        // On charge les bouteilles liées pour la vue principale
-        $cellier->load('bouteilles');
 
-        // On utilise ta vue PV-13
-        return view('celliers.show', compact('cellier'));
+        // 1. Récupérer les paramètres de tri depuis la requête
+        $sort = request()->query('sort', 'nom');           
+        $direction = request()->query('direction', 'asc'); 
+
+        // 2. Validation du critère de tri (colonne)
+        if (!array_key_exists($sort, $this->allowedBottleSorts)) {
+            $sort = 'nom';
+        }
+
+        // 3. Validation du sens de tri
+        $direction = strtolower($direction);
+        if (!in_array($direction, ['asc', 'desc'], true)) {
+            $direction = 'asc';
+        }
+
+        // 4. Récupérer la vraie colonne SQL à partir de la config
+        $sortColumn = $this->allowedBottleSorts[$sort];
+
+        // 5. Charger les bouteilles triées via la relation Eloquent
+        $cellier->load(['bouteilles' => function ($query) use ($sortColumn, $direction) {
+            $query->orderBy($sortColumn, $direction);
+        }]);
+
+        
+
+        // On envoie aussi sort/direction à la vue 
+        return view('celliers.show', [
+            'cellier'   => $cellier,
+            'sort'      => $sort,
+            'direction' => $direction,
+        ]);
     }
 
     /**
@@ -168,6 +208,7 @@ class CellierController extends Controller
             ->route('cellar.show', $cellier)
             ->with('success', 'La bouteille a été supprimée du cellier.');
     }
+
     /**
      * Affiche le formulaire d'édition d'une bouteille manuelle dans un cellier.
      * 
@@ -227,7 +268,6 @@ class CellierController extends Controller
             ->with('success', 'La bouteille a été mise à jour avec succès.');
     }
 
-
     // Ajout de bouteille du catalogue au cellier via API
     public function ajoutBouteilleApi(Request $request)
     {
@@ -279,7 +319,6 @@ class CellierController extends Controller
             'data' => $new
         ]);
     }
-
 
     /**
      * Vérifie que le cellier appartient bien à l'utilisateur connecté.
