@@ -12,7 +12,7 @@
     <div class='p-4 flex flex-col gap-2'>
         <span class='truncate font-semibold text-text-title text-md'>{{ $nom }}</span>
         <span class='text-text-muted'>{{ $prix }} $</span>
-        <form class="flex flex-row-reverse justify-end add-to-cellar-form">
+        <form class="flex gap-3 flex-row-reverse flex-wrap justify-end add-to-cellar-form">
             <input 
                 type="hidden" 
                 name="bottle_id" 
@@ -25,12 +25,12 @@
                 min="1"
                 max="10"
                 value="1"
-                class="w-16 ml-2"
+                class="flex-1"
             />
 
             <button 
                 type="submit"
-                class="flex-1 add-to-cellar-btn bg-primary text-white rounded-lg px-4 py-2"
+                class="flex-3 add-to-cellar-btn bg-primary active:bg-primary-active hover:bg-primary-hover animation duration-200 text-white rounded-lg px-4 py-2"
                 data-bottle-id="{{ $id }}"
             >
                 Ajouter

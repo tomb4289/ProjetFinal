@@ -4,13 +4,13 @@
 ])
 
 {{-- Composant de recherche et filtres --}}
-<div {{ $attributes->merge(['class' => '']) }}>
+<div {{ $attributes->merge(['class' => 'mt-4']) }}>
     <x-input 
         type="text" 
         name="searchInput"
         placeholder="Rechercher..." 
     />
-    <div class="flex gap-3 mb-4">
+    <div class="flex gap-3 my-4">
         <select id="paysFilter" class="border px-3 py-2 rounded">
             <option value="">Pays</option>
             @foreach($pays as $p)
