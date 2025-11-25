@@ -6,7 +6,7 @@
         @if ($image === null)
             <p>Aucune Image</p>
         @else
-            <img src='{{ $image }}' alt='Image de la bouteille {{ $nom }}' class='w-full h-full object-cover hover:scale-105 transition-transform duration-300'/>
+            <img src='{{ $image }}' alt='Image de la bouteille {{ $nom }}' class='w-full h-full object-contain object-center hover:scale-105 transition-transform duration-300'/>
         @endif
     </picture>
     <div class='p-4 flex flex-col gap-2'>
