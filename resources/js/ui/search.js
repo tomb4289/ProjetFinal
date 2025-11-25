@@ -23,7 +23,7 @@ function fetchCatalogue(url = "/catalogue/search") {
         .then((res) => res.json())
         .then((data) => {
             container.innerHTML = data.html;
-
+            
             // Re-bind pagination links for AJAX
             bindPaginationLinks();
         });

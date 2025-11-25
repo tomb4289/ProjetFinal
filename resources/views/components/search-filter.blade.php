@@ -10,7 +10,7 @@
         name="searchInput"
         placeholder="Rechercher..." 
     />
-    <div class="flex gap-3 my-4">
+    <div class="flex gap-3 my-4 flex-wrap">
         <select id="paysFilter" class="border px-3 py-2 rounded-lg">
             <option value="">Toutes les Pays</option>
             @foreach($pays as $p)
