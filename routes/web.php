@@ -7,6 +7,7 @@ use App\Http\Controllers\AccueilController;
 use App\Http\Controllers\CatalogueController;
 use App\Http\Controllers\BouteilleManuelleController;
 use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Auth;
 
 
 
@@ -64,7 +65,10 @@ Route::middleware('auth')->group(function () {
         return $user = auth()->user()->celliers()->withCount('bouteilles')->get();
     })->name('api.celliers');
 
-
+    
+    // Recherche des bouteilles dans un cellier.
+    Route::get('/celliers/{cellier}/search', [CellierController::class, 'search'])
+        ->name('celliers.search');
 
 
     /**
@@ -74,6 +78,7 @@ Route::middleware('auth')->group(function () {
         '/celliers/{cellier}/bouteilles/{bouteille}/quantite',
         [BouteilleManuelleController::class, 'updateQuantite']
     )->name('bouteilles.manuelles.quantite');
+    
     // Suppression de bouteille dans un cellier
     Route::delete('/celliers/{cellier}/bouteilles/{bouteille}', [CellierController::class, 'deleteBottle'])
         ->name('bouteilles.delete');
@@ -118,5 +123,4 @@ Route::middleware('auth')->group(function () {
     Route::get('/profil', [ProfileController::class, 'index'])->name('profile.index');
     Route::post('/profil/update-info', [ProfileController::class, 'updateInfo'])->name('profile.updateInfo');
     Route::post('/profil/update-password', [ProfileController::class, 'updatePassword'])->name('profile.updatePassword');
-
-    });
+});
