@@ -11,6 +11,7 @@ import "./ui/addToCellar";
 import "./ui/search";
 import "./ui/stopLinkPropagation";
 import "./ui/starRating";
+import './ui/cellier-search'; 
 
 /* ============================================================
    MODULE : Toasts – Petites notifications
