@@ -13,7 +13,7 @@ class CatalogueController extends Controller
     {
 
         $bouteilles = BouteilleCatalogue::with(['pays', 'typeVin'])
-            ->orderBy('date_import', 'desc')
+            ->orderBy('nom')
             ->paginate(10);
 
         $pays = Pays::orderBy('nom')->get();
@@ -48,6 +48,15 @@ class CatalogueController extends Controller
         if ($request->millesime) {
             $query->where('millesime', $request->millesime);
         }
+
+        if ($request->prix_min && $request->prix_max) {
+            $query->whereBetween('prix', [$request->prix_min, $request->prix_max]);
+        } elseif ($request->prix_min) {
+            $query->where('prix', '>=', $request->prix_min);
+        } elseif ($request->prix_max) {
+            $query->where('prix', '<=', $request->prix_max);
+        }
+
 
         $bouteilles = $query->paginate(10);
 

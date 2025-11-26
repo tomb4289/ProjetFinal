@@ -13,7 +13,7 @@
         placeholder="Rechercher..." 
     />
     {{-- Boite de suggestions de recherche --}}
-    <div id="suggestionsBox" class="absolute left-0 right-0 bg-white border border-border-base rounded-lg shadow-md hidden z-50 h-50 overflow-y-auto">
+    <div id="suggestionsBox" class="absolute left-0 right-0 bg-white border border-border-base rounded-lg shadow-md hidden z-50 max-h-50 overflow-y-auto">
     </div>
     </div>
     
@@ -38,5 +38,20 @@
                 <option value="{{ $t->id }}">{{ $t->nom }}</option>
             @endforeach
         </select>
+
+        <div>
+            <x-input 
+                type="number" 
+                name="priceMin"
+                placeholder="Prix min" 
+                class="w-24"
+            />
+            <x-input 
+                type="number" 
+                name="priceMax"
+                placeholder="Prix max" 
+                class="w-24 mt-2"
+            />
+        </div>
     </div>
 </div>
