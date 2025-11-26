@@ -13,16 +13,18 @@ class Bouteille extends Model
      * Attributs remplissables en création/mise à jour.
      */
     protected $fillable = [
-        'cellier_id', 
-        'nom',        
-        'pays',       
-        'format',     
-        'quantite',  
-        'prix',
+        'cellier_id',
+        'nom',
+        'pays',
+        'type',
+        'format',
+        'quantite',
+        'prix',          
+        'code_saq',
+        'millesime',
         'note_degustation',
         'rating',
     ];
-
     /**
      * Ici on force le prix à être un décimal avec 2 chiffres
      */
@@ -42,8 +44,5 @@ class Bouteille extends Model
         return $this->belongsTo(Cellier::class);
     }
 
-    public function addToCellier(Cellier $cellier, array $attributes)
-    {
-        
-    }   
+    public function addToCellier(Cellier $cellier, array $attributes) {}
 }
