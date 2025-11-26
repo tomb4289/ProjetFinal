@@ -5,10 +5,13 @@
     'value' => null,
     'placeholder' => '',
     'required' => false,
+    'min' => null,
+    'max' => null,
+    "size" => null,
 ])
 
 {{-- Champ de formulaire réutilisable --}}
-<div class="flex flex-col gap-1">
+<div class="flex flex-col gap-1 flex-1 {{ $size === 'full' ? 'flex-1' : '' }}">
     @if($label)
         <label for="{{ $name }}" class="text-sm font-medium text-text-muted">
             {{ $label }}
@@ -22,8 +25,11 @@
         value="{{ old($name, $value) }}"
         placeholder="{{ $placeholder }}"
         {{ $required ? 'required' : '' }}
+        {{ $min !== null ? 'min=' . $min : '' }}
+        {{ $max !== null ? 'max=' . $max : '' }}
 
         class="
+            {{ $attributes -> get('class') }}
             w-full
             rounded-lg
             px-3 py-2
@@ -34,6 +40,7 @@
             {{ $errors->has($name) ? 'border-red-500 bg-red-50' : 'border-muted' }}
             focus:ring-color-focus
             focus:ring-1
+            
         "
     />        
 

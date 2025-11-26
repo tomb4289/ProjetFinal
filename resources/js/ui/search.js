@@ -4,9 +4,60 @@ const paysFilter = document.getElementById("paysFilter");
 const typeFilter = document.getElementById("typeFilter");
 const millesimeFilter = document.getElementById("millesimeFilter");
 const container = document.getElementById("catalogueContainer");
+const priceMinFilter = document.getElementById("priceMin");
+const priceMaxFilter = document.getElementById("priceMax");
+const sortFilter = document.getElementById("sortFilter");
+const resetFiltersBtn = document.getElementById("resetFiltersBtn");
+
+// Tooggle des options de tri
+const sortOptionsBtn = document.getElementById("sortOptionsBtn");
+const filtersContainer = document.getElementById("filtersContainer");
+const filtersOverlay = document.getElementById("filtersOverlay");
+const dragHandle = document.getElementById("dragHandle");
 
 const suggestionsBox = document.getElementById("suggestionsBox");
 let suggestionTimeout = null;
+
+// Fonction de reset des filtres
+function resetFilters() {
+    paysFilter.value = "";
+    typeFilter.value = "";
+    millesimeFilter.value = "";
+    priceMinFilter.value = "";
+    priceMaxFilter.value = "";
+    sortFilter.value = "";
+    searchInput.value = "";
+    fetchCatalogue();
+}
+
+// Fonction de toggle des options de tri
+function toggleSortOptions() {
+    if (filtersContainer.classList.contains("hidden")) {
+        filtersOverlay.classList.remove("hidden");
+
+        filtersContainer.classList.remove("hidden");
+
+        setTimeout(() => {
+            filtersOverlay.classList.add("opacity-50");
+            filtersContainer.classList.remove("translate-y-[100%]");
+            filtersContainer.classList.add("translate-y-0");
+        }, 10);
+    } else {
+        filtersContainer.classList.remove("translate-y-0");
+        filtersContainer.classList.add("translate-y-[100%]");
+        filtersOverlay.classList.remove("opacity-50");
+
+        setTimeout(() => {
+            filtersOverlay.classList.add("hidden");
+            filtersContainer.classList.add("hidden");
+        }, 500);
+    }
+}
+
+// Evenements pour toggle les options de tri
+sortOptionsBtn.addEventListener("click", toggleSortOptions);
+filtersOverlay.addEventListener("click", toggleSortOptions);
+dragHandle.addEventListener("click", toggleSortOptions);
 
 // Debouce, pour limiter la fréquence des appels AJAX lors de la saisie rapide. Ajoute un delais avant de fetch.
 function debounce(fn, delay = 300) {
@@ -19,19 +70,24 @@ function debounce(fn, delay = 300) {
 
 // Fonction principale pour fetch le catalogue avec les filtres
 function fetchCatalogue(url = "/catalogue/search") {
+    // deconstruction des values du filtre sortBy
+    const [sortBy, sortDirection] = sortFilter.value.split("-");
+
     const params = new URLSearchParams({
         search: searchInput.value,
         pays: paysFilter.value,
         type: typeFilter.value,
         millesime: millesimeFilter.value,
+        prix_min: priceMinFilter.value,
+        prix_max: priceMaxFilter.value,
+        sort_by: sortBy,
+        sort_direction: sortDirection,
     });
 
     // Construire l'URL finale avec les paramètres de requête
     const finalUrl = url.includes("?")
         ? `${url}&${params.toString()}`
         : `${url}?${params.toString()}`;
-
-    console.log(finalUrl);
 
     // Faire la requête AJAX
     fetch(finalUrl)
@@ -88,6 +144,15 @@ millesimeFilter.addEventListener("change", () => debouncedFetch());
 // Filtres
 paysFilter.addEventListener("change", () => debouncedFetch());
 typeFilter.addEventListener("change", () => debouncedFetch());
+
+// Filtres de prix
+priceMinFilter.addEventListener("input", () => debouncedFetch());
+priceMaxFilter.addEventListener("input", () => debouncedFetch());
+
+sortFilter.addEventListener("change", () => debouncedFetch());
+
+// Reset des filtres
+resetFiltersBtn.addEventListener("click", resetFilters);
 
 searchInput.addEventListener("input", function () {
     const query = this.value.trim();

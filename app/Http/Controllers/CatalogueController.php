@@ -57,6 +57,14 @@ class CatalogueController extends Controller
             $query->where('prix', '<=', $request->prix_max);
         }
 
+        $sortBy = $request->sort_by;
+        $sortDirection = $request->sort_direction;
+
+        if ($sortBy && in_array($sortDirection, ['asc', 'desc'])) {
+            $query->orderBy($sortBy, $sortDirection);
+        }
+
+
 
         $bouteilles = $query->paginate(10);
 
