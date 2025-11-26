@@ -228,8 +228,8 @@
                     <div class="flex gap-3 mt-6 pt-6 border-t border-border-base">
                         <x-back-btn :route="$backRoute" :label="$backLabel" />
                         
-                        {{-- Bouton modifier (seulement pour les bouteilles du cellier) --}}
-                        @if(!$isCatalogue)
+                        {{-- Bouton modifier (seulement pour les bouteilles du cellier ajoutées manuellement, sans code SAQ) --}}
+                        @if(!$isCatalogue && empty($bouteille->code_saq))
                             <x-edit-btn
                                 :route="route('bouteilles.edit', [$cellier, $bouteille])"
                                 label="Modifier"
