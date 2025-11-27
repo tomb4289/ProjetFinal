@@ -18,7 +18,7 @@
             class="p-2 bg-card border border-muted rounded-lg hover:bg-gray-100"
         ><x-dynamic-component :component="'lucide-sliders-horizontal'" class="w-6 stroke-text-heading "/></button>
         {{-- Boite de suggestions de recherche --}}
-        <div id="suggestionsBox" class="absolute left-0 right-0 bg-white border border-border-base rounded-lg shadow-md hidden z-50 max-h-50 overflow-y-auto">
+        <div id="suggestionsBox" class="absolute left-0 top-full bg-white border border-border-base rounded-lg shadow-md hidden z-50 max-h-50 overflow-y-auto">
         </div>
     </div>
 
