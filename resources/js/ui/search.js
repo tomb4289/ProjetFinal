@@ -1,23 +1,23 @@
-// Récupération des éléments du DOM 
-const searchInput       = document.getElementById("searchInput");
-const paysFilter        = document.getElementById("paysFilter");
-const typeFilter        = document.getElementById("typeFilter");
-const millesimeFilter   = document.getElementById("millesimeFilter");
-const container         = document.getElementById("catalogueContainer");
-const priceMinFilter    = document.getElementById("priceMin");
-const priceMaxFilter    = document.getElementById("priceMax");
-const sortFilter        = document.getElementById("sortFilter");
-const resetFiltersBtn   = document.getElementById("resetFiltersBtn");
-const applyFiltersBtn   = document.getElementById("applyFiltersBtn");
+// Récupération des éléments du DOM
+const searchInput = document.getElementById("searchInput");
+const paysFilter = document.getElementById("paysFilter");
+const typeFilter = document.getElementById("typeFilter");
+const millesimeFilter = document.getElementById("millesimeFilter");
+const container = document.getElementById("catalogueContainer");
+const priceMinFilter = document.getElementById("priceMin");
+const priceMaxFilter = document.getElementById("priceMax");
+const sortFilter = document.getElementById("sortFilter");
+const resetFiltersBtn = document.getElementById("resetFiltersBtn");
+const applyFiltersBtn = document.getElementById("applyFiltersBtn");
 
 // Toggle des options de tri / filtres
-const sortOptionsBtn    = document.getElementById("sortOptionsBtn");
-const filtersContainer  = document.getElementById("filtersContainer");
-const filtersOverlay    = document.getElementById("filtersOverlay");
-const dragHandle        = document.getElementById("dragHandle");
+const sortOptionsBtn = document.getElementById("sortOptionsBtn");
+const filtersContainer = document.getElementById("filtersContainer");
+const filtersOverlay = document.getElementById("filtersOverlay");
+const dragHandle = document.getElementById("dragHandle");
 
-const suggestionsBox    = document.getElementById("suggestionsBox");
-let suggestionTimeout   = null;
+const suggestionsBox = document.getElementById("suggestionsBox");
+let suggestionTimeout = null;
 
 // Fonction de reset des filtres
 function resetFilters() {
@@ -33,13 +33,13 @@ function resetFilters() {
         return;
     }
 
-    paysFilter.value      = "";
-    typeFilter.value      = "";
+    paysFilter.value = "";
+    typeFilter.value = "";
     millesimeFilter.value = "";
-    priceMinFilter.value  = "";
-    priceMaxFilter.value  = "";
-    sortFilter.value      = "";
-    searchInput.value     = "";
+    priceMinFilter.value = "";
+    priceMaxFilter.value = "";
+    sortFilter.value = "date_import-desc";
+    searchInput.value = "";
 
     // On relance le catalogue sans aucun filtre
     fetchCatalogue();
@@ -104,13 +104,13 @@ function fetchCatalogue(url = "/catalogue/search") {
     }
 
     const params = new URLSearchParams({
-        search:       searchInput.value || "",
-        pays:         paysFilter?.value || "",
-        type:         typeFilter?.value || "",
-        millesime:    millesimeFilter?.value || "",
-        prix_min:     priceMinFilter?.value || "",
-        prix_max:     priceMaxFilter?.value || "",
-        sort_by:      sortBy,
+        search: searchInput.value || "",
+        pays: paysFilter?.value || "",
+        type: typeFilter?.value || "",
+        millesime: millesimeFilter?.value || "",
+        prix_min: priceMinFilter?.value || "",
+        prix_max: priceMaxFilter?.value || "",
+        sort_by: sortBy,
         sort_direction: sortDirection,
     });
 
@@ -212,8 +212,8 @@ if (searchInput) {
 //  bouton "Appliquer les filtres"
 if (applyFiltersBtn) {
     applyFiltersBtn.addEventListener("click", () => {
-        fetchCatalogue();     // on applique tous les filtres en même temps
-        toggleSortOptions();  // on ferme le panneau après application
+        fetchCatalogue(); // on applique tous les filtres en même temps
+        toggleSortOptions(); // on ferme le panneau après application
     });
 }
 

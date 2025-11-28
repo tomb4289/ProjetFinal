@@ -54,7 +54,7 @@
         <div class="flex gap-3 my-4 flex-wrap flex-col sm:flex-row">
             {{-- Select pour trier --}}
             <select id="sortFilter" class="border px-5 py-3 rounded-lg flex-1">
-                <option value="" selected>Trier par...</option>
+                <option value="date_import-desc" selected>Trier par...</option>
                 <option value="prix-asc">Prix (le moins cher)</option>
                 <option value="prix-desc">Prix (le plus cher)</option>
                 <option value="nom-asc">Nom (A - Z)</option>
@@ -119,11 +119,11 @@
             </div>
 
             {{-- Boutons en bas : Réinitialiser + Appliquer --}}
-            <div class="flex gap-3 mt-4">
+            <div class="flex gap-3 mt-4 flex-1 sm:flex-0">
                 <button
                     id="resetFiltersBtn"
                     type="button"
-                    class="px-4 py-2 bg-card border border-danger text-danger rounded-lg hover:bg-danger-hover hover:text-white transition"
+                    class="flex-1 px-4 py-2 bg-card border border-danger text-danger rounded-lg hover:bg-danger-hover hover:text-white transition"
                 >
                     Réinitialiser
                 </button>
@@ -131,9 +131,9 @@
                 <button
                     id="applyFiltersBtn"
                     type="button"
-                    class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition"
+                    class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition"
                 >
-                    Appliquer les filtres
+                    Filtrer
                 </button>
             </div>
         </div>
