@@ -16,9 +16,9 @@
     --font-heading: "Inter", system-ui, sans-serif;
 
     /* COLORS */
-    --color-primary: #a4161a;
-    --color-primary-hover: #821217;
-    --color-primary-active: #660f13;
+    --color-primary: #7a1f3d;
+    --color-primary-hover: #8c2546;
+    --color-primary-active: #611831;
 
     --color-icon: var(--color-neutral-600);
     --color-icon-hover: var(--color-neutral-800);
@@ -107,3 +107,5 @@
 
     --animate-shake: shake 0.4s ease-in-out infinite;
 }
+
+@custom-viewport --bp-750 (width >= 750px);
