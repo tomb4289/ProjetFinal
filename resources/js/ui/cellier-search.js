@@ -1,37 +1,42 @@
 // Recherche + filtres dans le CELLER
 
-const cellarSearchBar       = document.getElementById("cellar-search-bar");
-const cellarContainer       = document.getElementById("cellarBottlesContainer");
+const cellarSearchBar = document.getElementById("cellar-search-bar");
+const cellarContainer = document.getElementById("cellarBottlesContainer");
 
-const cellarSearchInput     = document.getElementById("cellarSearchInput");
-const cellarPaysFilter      = document.getElementById("cellarPaysFilter");
-const cellarTypeFilter      = document.getElementById("cellarTypeFilter");
+const cellarSearchInput = document.getElementById("cellarSearchInput");
+const cellarPaysFilter = document.getElementById("cellarPaysFilter");
+const cellarTypeFilter = document.getElementById("cellarTypeFilter");
 const cellarMillesimeFilter = document.getElementById("cellarMillesimeFilter");
 
 // Panneau de filtres (UI façon catalogue)
-const cellarSortOptionsBtn   = document.getElementById("cellarSortOptionsBtn");
-const cellarFiltersContainer = document.getElementById("cellarFiltersContainer");
-const cellarFiltersOverlay   = document.getElementById("cellarFiltersOverlay");
-const cellarDragHandle       = document.getElementById("cellarDragHandle");
-const cellarResetFiltersBtn  = document.getElementById("resetCellarFilters");
-const closeCellarFiltersBtn  = document.getElementById("closeCellarFilters");
+const cellarSortOptionsBtn = document.getElementById("cellarSortOptionsBtn");
+const cellarFiltersContainer = document.getElementById(
+    "cellarFiltersContainer"
+);
+const cellarFiltersOverlay = document.getElementById("cellarFiltersOverlay");
+const cellarDragHandle = document.getElementById("cellarDragHandle");
+const cellarResetFiltersBtn = document.getElementById("resetCellarFilters");
+const closeCellarFiltersBtn = document.getElementById("closeCellarFilters");
 
 if (cellarSearchBar && cellarContainer) {
     console.log("cellier-search.js chargé ✅");
 
-    const baseSearchUrl    = cellarSearchBar.dataset.searchUrl;
-    const currentSort      = cellarSearchBar.dataset.sort || "nom";
+    const baseSearchUrl = cellarSearchBar.dataset.searchUrl;
+    const currentSort = cellarSearchBar.dataset.sort || "nom";
     const currentDirection = cellarSearchBar.dataset.direction || "asc";
 
     // --- TOGGLE PANNEAU FILTRES (simple : juste hidden / pas hidden) ---
     function openCellarFilters() {
-        if (cellarFiltersOverlay)   cellarFiltersOverlay.classList.remove("hidden");
-        if (cellarFiltersContainer) cellarFiltersContainer.classList.remove("hidden");
+        if (cellarFiltersOverlay)
+            cellarFiltersOverlay.classList.remove("hidden");
+        if (cellarFiltersContainer)
+            cellarFiltersContainer.classList.remove("hidden");
     }
 
     function closeCellarFilters() {
-        if (cellarFiltersOverlay)   cellarFiltersOverlay.classList.add("hidden");
-        if (cellarFiltersContainer) cellarFiltersContainer.classList.add("hidden");
+        if (cellarFiltersOverlay) cellarFiltersOverlay.classList.add("hidden");
+        if (cellarFiltersContainer)
+            cellarFiltersContainer.classList.add("hidden");
     }
 
     if (cellarSortOptionsBtn) {
@@ -59,11 +64,11 @@ if (cellarSearchBar && cellarContainer) {
     // --- FETCH DES BOUTEILLES DU CELLIER ---
     function fetchCellar(url) {
         const params = new URLSearchParams({
-            nom:       cellarSearchInput     ? cellarSearchInput.value     : "",
-            pays:      cellarPaysFilter      ? cellarPaysFilter.value      : "",
-            type:      cellarTypeFilter      ? cellarTypeFilter.value      : "",
+            nom: cellarSearchInput ? cellarSearchInput.value : "",
+            pays: cellarPaysFilter ? cellarPaysFilter.value : "",
+            type: cellarTypeFilter ? cellarTypeFilter.value : "",
             millesime: cellarMillesimeFilter ? cellarMillesimeFilter.value : "",
-            sort:      currentSort,
+            sort: currentSort,
             direction: currentDirection,
         });
 
@@ -84,23 +89,31 @@ if (cellarSearchBar && cellarContainer) {
 
     // --- Écouteurs sur les champs de recherche / filtres ---
     if (cellarSearchInput) {
-        cellarSearchInput.addEventListener("input", () => debouncedFetchCellar());
+        cellarSearchInput.addEventListener("input", () =>
+            debouncedFetchCellar()
+        );
     }
     if (cellarPaysFilter) {
-        cellarPaysFilter.addEventListener("input", () => debouncedFetchCellar());
+        cellarPaysFilter.addEventListener("input", () =>
+            debouncedFetchCellar()
+        );
     }
     if (cellarTypeFilter) {
-        cellarTypeFilter.addEventListener("input", () => debouncedFetchCellar());
+        cellarTypeFilter.addEventListener("input", () =>
+            debouncedFetchCellar()
+        );
     }
     if (cellarMillesimeFilter) {
-        cellarMillesimeFilter.addEventListener("input", () => debouncedFetchCellar());
+        cellarMillesimeFilter.addEventListener("input", () =>
+            debouncedFetchCellar()
+        );
     }
 
     // --- Reset des filtres ---
     function resetCellarFilters() {
-        if (cellarSearchInput)     cellarSearchInput.value = "";
-        if (cellarPaysFilter)      cellarPaysFilter.value = "";
-        if (cellarTypeFilter)      cellarTypeFilter.value = "";
+        if (cellarSearchInput) cellarSearchInput.value = "";
+        if (cellarPaysFilter) cellarPaysFilter.value = "";
+        if (cellarTypeFilter) cellarTypeFilter.value = "";
         if (cellarMillesimeFilter) cellarMillesimeFilter.value = "";
         fetchCellar();
     }

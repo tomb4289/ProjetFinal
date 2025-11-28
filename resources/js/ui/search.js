@@ -20,8 +20,17 @@ let suggestionTimeout = null;
 
 // Fonction de reset des filtres
 function resetFilters() {
-    if (!paysFilter || !typeFilter || !millesimeFilter || !priceMinFilter || !priceMaxFilter || !sortFilter || !searchInput) return;
-    
+    if (
+        !paysFilter ||
+        !typeFilter ||
+        !millesimeFilter ||
+        !priceMinFilter ||
+        !priceMaxFilter ||
+        !sortFilter ||
+        !searchInput
+    )
+        return;
+
     paysFilter.value = "";
     typeFilter.value = "";
     millesimeFilter.value = "";
@@ -35,7 +44,7 @@ function resetFilters() {
 // Fonction de toggle des options de tri
 function toggleSortOptions() {
     if (!filtersContainer || !filtersOverlay) return;
-    
+
     if (filtersContainer.classList.contains("hidden")) {
         filtersOverlay.classList.remove("hidden");
 
@@ -81,7 +90,7 @@ function debounce(fn, delay = 300) {
 // Fonction principale pour fetch le catalogue avec les filtres
 function fetchCatalogue(url = "/catalogue/search") {
     if (!container || !searchInput || !sortFilter) return;
-    
+
     // deconstruction des values du filtre sortBy
     const [sortBy, sortDirection] = sortFilter.value.split("-");
 
@@ -116,7 +125,7 @@ function fetchCatalogue(url = "/catalogue/search") {
 // Rendu des suggestions
 function renderSuggestions(items) {
     if (!suggestionsBox) return;
-    
+
     // Si pas de suggestions, cacher la boite
     if (items.length === 0) {
         suggestionsBox.classList.add("hidden");
@@ -154,7 +163,7 @@ const debouncedFetch = debounce(fetchCatalogue, 300);
 // Recherche - seulement si les éléments existent
 if (searchInput) {
     searchInput.addEventListener("input", () => debouncedFetch());
-    
+
     searchInput.addEventListener("input", function () {
         const query = this.value.trim();
 
@@ -211,7 +220,10 @@ if (resetFiltersBtn) {
 // Clic en dehors de la boite de suggestions pour la cacher
 if (searchInput && suggestionsBox) {
     document.addEventListener("click", (e) => {
-        if (!searchInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
+        if (
+            !searchInput.contains(e.target) &&
+            !suggestionsBox.contains(e.target)
+        ) {
             suggestionsBox.classList.add("hidden");
         }
     });

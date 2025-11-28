@@ -41,12 +41,12 @@
     @endif
     
     <div class='p-4 flex flex-col gap-2'>
-        <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center justify-between gap-2 flex-wrap">
             <span class='truncate font-semibold text-text-title text-md'>{{ $nom }}</span>
             
             @if($isCellierMode)
                 {{-- Contrôles quantité + badge --}}
-                <div class="flex items-center gap-2 stop-link-propagation">
+                <div class="flex  items-center gap-2 stop-link-propagation">
                     {{-- Bouton - --}}
                     <button
                         type="button"
