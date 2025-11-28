@@ -41,8 +41,10 @@
     @endif
     
     <div class='p-4 flex flex-col gap-2'>
-        <div class="flex items-center justify-between gap-2 flex-wrap">
-            <span class='truncate font-semibold text-text-title text-md'>{{ $nom }}</span>
+        <div class="flex flex-col items-start  gap-2 ">
+            <span class="font-semibold text-text-title text-lg truncate overflow-hidden text-ellipsis whitespace-nowrap w-full block">
+            {{ $nom }}
+            </span>
             
             @if($isCellierMode)
                 {{-- Contrôles quantité + badge --}}
@@ -94,13 +96,6 @@
                     <p>
                         <span class="font-medium text-text-body">Pays :</span>
                         {{ $pays }}
-                    </p>
-                @endif
-
-                @if ($format)
-                    <p>
-                        <span class="font-medium text-text-body">Format :</span>
-                        {{ $format }}
                     </p>
                 @endif
 

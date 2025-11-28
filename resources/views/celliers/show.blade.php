@@ -78,7 +78,7 @@
 
     {{-- CONTENEUR MIS À JOUR PAR LE JS (AJAX) --}}
     <div id="cellarBottlesContainer">
-        <div class="bg-card border border-border-base rounded-xl shadow-md p-6 mt-4">
+        <div>
             @if ($cellier->bouteilles->isEmpty())
                 @if ($hasFilters)
                     <p class="text-text-muted">
