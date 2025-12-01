@@ -18,7 +18,16 @@
 @endphp
 
 {{-- Carte de bouteille --}}
-<div class='flex flex-col justify-between bg-card rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden' role="article" aria-label="Carte de la bouteille {{ $nom }}">
+<div class='relative flex flex-col justify-between bg-card rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden' role="article" aria-label="Carte de la bouteille {{ $nom }}">
+    
+    @if($isCellierMode)
+        <x-dropdown-action 
+            :id="$bouteilleId" 
+            :deleteUrl="route('bouteilles.delete', [$cellierId, $bouteilleId])" 
+            :editUrl="empty($codeSaq) ? route('bouteilles.edit', [$cellierId, $bouteilleId]) : null" 
+        />
+    @endif
+
     {{-- Image cliquable --}}
     @if($isCatalogueMode)
         <a href="{{ route('catalogue.show', $id) }}" class="flex flex-col" aria-label="Voir les détails de {{ $nom }}">
@@ -41,14 +50,14 @@
     @endif
     
     <div class='p-4 flex flex-col gap-2'>
-        <div class="flex flex-col items-start  gap-2 ">
+        <div class="flex flex-col items-start gap-2 ">
             <span class="font-semibold text-text-title text-lg truncate overflow-hidden text-ellipsis whitespace-nowrap w-full block" title="{{ $nom }}">
             {{ $nom }}
             </span>
             
             @if($isCellierMode)
                 {{-- Contrôles quantité + badge --}}
-                <div class="flex  items-center gap-2 stop-link-propagation" role="group" aria-label="Contrôle de la quantité">
+                <div class="flex items-center gap-2 stop-link-propagation" role="group" aria-label="Contrôle de la quantité">
                     {{-- Bouton - --}}
                     <button
                         type="button"
@@ -96,16 +105,8 @@
         @if($isCellierMode)
             {{-- Informations supplémentaires pour le mode cellier --}}
             <div class="text-sm text-text-muted space-y-1">
-                @if ($pays)
-                    <p>
-                        <span class="font-medium text-text-body">Pays :</span>
-                        {{ $pays }}
-                    </p>
-                @endif
-
                 @if (!is_null($prix))
-                    <p>
-                        <span class="font-medium text-text-body">Prix :</span>
+                    <p class="text-md">
                         {{ number_format($prix, 2, ',', ' ') }} $
                     </p>
                 @endif
@@ -116,8 +117,8 @@
         @endif
 
         {{-- Actions --}}
-        <div class="flex gap-2 {{ $isCellierMode ? 'mt-auto' : 'flex-row-reverse flex-wrap justify-end' }}">
-            @if($isCatalogueMode)
+        @if($isCatalogueMode)
+            <div class="flex gap-2 flex-row-reverse flex-wrap justify-end">
                 {{-- Formulaire d'ajout au cellier --}}
                 <form class="flex gap-3 flex-row-reverse flex-wrap justify-end add-to-cellar-form w-full" aria-label="Ajouter au cellier">
                     <input 
@@ -145,23 +146,7 @@
                         Ajouter
                     </button>
                 </form>
-            @else
-                {{-- Boutons edit/delete pour le mode cellier --}}
-                <x-delete-btn 
-                    :route="route('bouteilles.delete', [
-                        'cellier'   => $cellierId,
-                        'bouteille' => $bouteilleId,
-                    ])"
-                />
-
-                {{-- Afficher le bouton Modifier uniquement pour les bouteilles ajoutées manuellement (sans code SAQ) --}}
-                @if (empty($codeSaq))
-                    <x-edit-btn
-                        :route="route('bouteilles.edit', [$cellierId, $bouteilleId])"
-                        label="Modifier"
-                    />
-                @endif
-            @endif
-        </div>
+            </div>
+        @endif
     </div>
 </div>

@@ -14,7 +14,7 @@
         || request()->filled('prix_max');
 @endphp
 
-<div class="bg-card border border-border-base rounded-xl shadow-md p-6 mt-4" role="region" aria-label="Contenu du cellier">
+<div class="" role="region" aria-label="Contenu du cellier">
     @if ($bottles->isEmpty())
         @if ($hasFilters)
             <p class="text-text-muted" role="status">
