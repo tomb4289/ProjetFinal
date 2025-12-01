@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class ListeAchat extends Model
 {
     protected $table = 'liste_achat';
-    protected $fillable = ['user_id','bouteille_catalogue_id','quantite','achete'];
+    protected $fillable = [
+        'user_id',
+        'bouteille_catalogue_id',
+        'quantite',
+        'achete',
+    ];
 
     public function user()
     {
