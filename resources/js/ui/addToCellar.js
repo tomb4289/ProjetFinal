@@ -86,7 +86,7 @@ if (boutonFermer && panneauCellier) {
                 <p class="text-gray-400 italic">
                     Vous n'avez pas encore de cellier. Veuillez en créer un d'abord.
                 </p>
-                <a href="/celliers/create" class="bg-primary text-white px-4 py-2 rounded-lg w-40 text-center">Créer un cellier</a>
+                <a href="/celliers/create" class="bg-button-default text-white px-4 py-2 rounded-lg w-40 text-center hover:bg-button-hover transition">Créer un cellier</a>
             `;
             return;
         }

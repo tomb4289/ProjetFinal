@@ -131,7 +131,7 @@
                 <button
                     id="applyFiltersBtn"
                     type="button"
-                    class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition"
+                    class="flex-1 px-4 py-2 bg-button-default text-white rounded-lg hover:bg-button-hover transition"
                 >
                     Filtrer
                 </button>

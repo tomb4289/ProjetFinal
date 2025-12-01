@@ -215,7 +215,7 @@
 
                                 <button 
                                     type="submit"
-                                    class="add-to-cellar-btn bg-primary active:bg-primary-active hover:bg-primary-hover animation duration-200 text-white rounded-lg px-6 py-2 font-medium"
+                                    class="add-to-cellar-btn bg-button-default active:bg-primary-active hover:bg-button-hover animation duration-200 text-white rounded-lg px-6 py-2 font-medium"
                                     data-bottle-id="{{ $bouteilleCatalogue->id }}"
                                 >
                                     Ajouter au cellier
