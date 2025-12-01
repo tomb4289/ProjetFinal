@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 namespace App\Models;
 
@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany; 
 use App\Models\Cellier;
+use App\Models\ListeAchat;
+
 
 class User extends Authenticatable
 {
@@ -24,6 +26,8 @@ class User extends Authenticatable
         'email',
         'password',
         'is_admin',
+        'is_active',
+        'last_login_at',
     ];
 
     /**
@@ -47,6 +51,8 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password'          => 'hashed',
             'is_admin'          => 'boolean',
+            'is_active'         => 'boolean',
+            'last_login_at'     => 'datetime',
         ];
     }
 
@@ -59,10 +65,27 @@ class User extends Authenticatable
     }
 
     /**
-     * Helper simple pour vérifier le rôle admin.
+     * Liste d'achat liée à l'utilisateur.
+     */
+    public function listeAchat(): HasMany
+    {
+        return $this->hasMany(ListeAchat::class, 'user_id', 'id');
+    }
+
+
+    /**
+     * Vérifier le rôle admin.
      */
     public function isAdmin(): bool
     {
         return (bool) $this->is_admin;
+    }
+
+    /**
+     * Helper pour vérifier si l'usager est actif.
+     */
+    public function isActive(): bool
+    {
+        return (bool) $this->is_active;
     }
 }

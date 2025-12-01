@@ -19,6 +19,10 @@
     --color-primary: #7a1f3d;
     --color-primary-hover: #8c2546;
     --color-primary-active: #611831;
+    
+    /* Button colors - mauve grisé par défaut, rouge vin au hover */
+    --color-button-default: #a5a0aa;
+    --color-button-hover: var(--color-primary);
 
     --color-icon: var(--color-neutral-600);
     --color-icon-hover: var(--color-neutral-800);

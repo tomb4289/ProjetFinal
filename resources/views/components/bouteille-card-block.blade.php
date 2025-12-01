@@ -52,7 +52,7 @@
                     {{-- Bouton - --}}
                     <button
                         type="button"
-                        class="qty-btn bottle-qty-minus inline-flex items-center justify-center w-7 h-7 rounded-full border border-border-base text-primary hover:bg-primary/10"
+                        class="qty-btn bottle-qty-minus inline-flex items-center justify-center w-7 h-7 rounded-full border border-border-base text-button-default hover:text-button-hover hover:bg-button-hover/10 transition"
                         data-url="{{ route('bouteilles.quantite.update', [$cellierId, $bouteilleId]) }}"
                         data-direction="down"
                         data-bouteille="{{ $bouteilleId }}"
@@ -78,7 +78,7 @@
                     {{-- Bouton + --}}
                     <button
                         type="button"
-                        class="qty-btn bottle-qty-plus inline-flex items-center justify-center w-7 h-7 rounded-full border border-border-base text-primary hover:bg-primary/10"
+                        class="qty-btn bottle-qty-plus inline-flex items-center justify-center w-7 h-7 rounded-full border border-border-base text-button-default hover:text-button-hover hover:bg-button-hover/10 transition"
                         data-url="{{ route('bouteilles.quantite.update', [$cellierId, $bouteilleId]) }}"
                         data-direction="up"
                         data-bouteille="{{ $bouteilleId }}"
@@ -138,7 +138,7 @@
 
                     <button 
                         type="button"
-                        class="flex-3 add-to-cellar-btn bg-primary active:bg-primary-active hover:bg-primary-hover animation duration-200 text-white rounded-lg px-4 py-2"
+                        class="flex-3 add-to-cellar-btn bg-button-default active:bg-primary-active hover:bg-button-hover animation duration-200 text-white rounded-lg px-4 py-2"
                         data-bottle-id="{{ $id }}"
                         aria-label="Ajouter {{ $nom }} au cellier"
                     >

@@ -8,8 +8,8 @@
 ])
 {{-- Bouton principal --}}
 @php
-    $classes = "bg-primary text-white font-bold py-2 px-4 rounded-{$rounded} 
-                hover:bg-primary-hover transition-colors duration-300 block text-center";
+    $classes = "bg-button-default text-white font-bold py-2 px-4 rounded-{$rounded} 
+                hover:bg-button-hover transition-colors duration-300 block text-center";
 
     // Détection automatique :
     if ($route) {

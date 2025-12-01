@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -7,9 +7,9 @@ use App\Http\Controllers\AccueilController;
 use App\Http\Controllers\CatalogueController;
 use App\Http\Controllers\BouteilleManuelleController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Auth;
-
-
+use App\Models\User;
 
 // Routes accessibles seulement aux invités (non connectés)
 Route::middleware('guest')->group(function () {
@@ -36,7 +36,6 @@ Route::middleware('auth')->group(function () {
     // Suggestions de recherche
     Route::get('/catalogue/suggest', [CatalogueController::class, 'suggest']);
 
-
     // Détails d'une bouteille du catalogue
     Route::get('/catalogue/{bouteilleCatalogue}', [CatalogueController::class, 'show'])
         ->name('catalogue.show');
@@ -56,7 +55,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/celliers/{cellier}', [CellierController::class, 'destroy'])->name('cellar.destroy');
 
     // Ajout manuel de bouteille 
-
     Route::get('/celliers/{cellier}/bouteilles/ajout', [BouteilleManuelleController::class, 'create'])
         ->name('bouteilles.manuelles.create');
 
@@ -64,20 +62,24 @@ Route::middleware('auth')->group(function () {
         ->name('bouteilles.manuelles.store');
 
     Route::post('/api/ajout/cellier', [CellierController::class, 'ajoutBouteilleApi'])->name('api.ajout.cellier');
-
-    // Pour Recuperer les cellier du user
+    
+    // Pour récupérer les celliers du user
     Route::get('/api/celliers', function () {
-        return $user = auth()->user()->celliers()->withCount('bouteilles')->withSum('bouteilles as total_bouteilles', 'quantite')->get();
-    })->name('api.celliers');
+        /** @var User $user */   
+        $user = Auth::user();
 
+        return $user->celliers()
+            ->withCount('bouteilles')
+            ->withSum('bouteilles as total_bouteilles', 'quantite')
+            ->get();
+    })->name('api.celliers');
 
     // Recherche des bouteilles dans un cellier.
     Route::get('/celliers/{cellier}/search', [CellierController::class, 'search'])
         ->name('celliers.search');
 
-
     /**
-     *API de mise à jour rapide de la quantité d'une bouteille.
+     * API de mise à jour rapide de la quantité d'une bouteille.
      */
     Route::patch(
         '/celliers/{cellier}/bouteilles/{bouteille}/quantite',
@@ -114,11 +116,30 @@ Route::middleware('auth')->group(function () {
     )->name('bouteilles.note.update');
 });
 
-
+// PROFIL (toujours protégé par auth)
 Route::middleware('auth')->group(function () {
-
-    // PROFIL
     Route::get('/profil', [ProfileController::class, 'index'])->name('profile.index');
     Route::post('/profil/update-info', [ProfileController::class, 'updateInfo'])->name('profile.updateInfo');
     Route::post('/profil/update-password', [ProfileController::class, 'updatePassword'])->name('profile.updatePassword');
 });
+
+// Routes d'administration (réservées aux admins)
+Route::middleware(['auth', 'is_admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+
+        // Liste des usagers
+        Route::get('/users', [AdminController::class, 'index'])->name('users.index');
+
+        // Détails d'un usager
+        Route::get('/users/{id}', [AdminController::class, 'show'])->name('users.show');
+
+        // Activer / désactiver un usager
+        Route::post('/users/{id}/toggle-active', [AdminController::class, 'toggleActive'])
+            ->name('users.toggle-active');
+
+        // Supprimer un usager
+        Route::delete('/users/{id}', [AdminController::class, 'destroy'])
+            ->name('users.destroy');
+    });
