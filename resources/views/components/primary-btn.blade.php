@@ -23,14 +23,16 @@
 @if ($type === 'href')
     {{-- Génère un <a> --}}
     <a href="{{ $href }}"
-       {{ $attributes->merge(['id' => $id, 'class' => $classes]) }}>
+       {{ $attributes->merge(['id' => $id, 'class' => $classes]) }}
+       aria-label="{{ $label }}">
         {{ $label }}
     </a>
 
 @else
     {{-- Génère un <button> --}}
     <button type="{{ $type }}"
-        {{ $attributes->merge(['id' => $id,'class' => $classes]) }}>
+        {{ $attributes->merge(['id' => $id,'class' => $classes]) }}
+        aria-label="{{ $label }}">
         {{ $label }}
     </button>
 @endif

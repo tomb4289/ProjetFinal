@@ -10,11 +10,9 @@
 
         <title>@yield('title', "Vino")</title>
 
-        <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
 
-        <!-- Styles / Scripts -->
         @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
             @vite(['resources/css/app.css', 'resources/js/app.js'])
         @else
@@ -27,9 +25,11 @@
     </head>
     <body class="bg-body">
         <x-header :logoPath='asset("images/logo_vino.png")' />
-        <main class="bg-body mb-30">
+        
+        <main class="bg-body mb-30" role="main" aria-label="Contenu principal">
             @yield('content')
         </main>
+        
         {{-- Envoie quelle bouton a afficher sur la page. Voir navigation.blade.php --}}
         <x-navigation 
             :addCellarBtn="$__env->hasSection('add-cellar-btn')" 

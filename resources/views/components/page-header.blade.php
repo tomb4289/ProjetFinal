@@ -1,6 +1,9 @@
 @props(['title'=>'titre', 'undertitle' => '', 'actionBtn' => false])
 {{-- En-tête de page --}}
-<header class="mt-header flex flex-wrap justify-between items-center">
+<header 
+    class="mt-header flex flex-wrap justify-between items-center" 
+    aria-label="En-tête de la page"
+>
 <div>
     <h1 class="text-3xl font-bold font-heading text-heading">{{ $title }}</h1>
     {{-- Sous-titre de la page si présent --}}

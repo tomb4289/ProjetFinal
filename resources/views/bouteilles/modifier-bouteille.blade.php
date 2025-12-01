@@ -2,7 +2,7 @@
 
 @section('content')
 {{-- Formulaire de modification manuelle d'une bouteille --}}
-<div class="min-h-screen bg-background pt-24">
+<div class="min-h-screen bg-background pt-24" role="region" aria-label="Modification manuelle d'une bouteille">
     <section class="p-4 sm:w-full max-w-4xl mx-auto">
         <div class="bg-card border border-border-base rounded-xl shadow-md p-6 space-y-6">
 
@@ -19,6 +19,7 @@
                 action="{{ route('bouteilles.update', [$cellier, $bouteille]) }}"
                 novalidate
                 class="space-y-4 mt-5"
+                aria-label="Formulaire de modification des détails de la bouteille"
             >
                 @csrf
                 @method('PUT')

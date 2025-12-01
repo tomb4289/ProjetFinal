@@ -1,5 +1,11 @@
 {{-- Formulaire d'inscription --}}
-<form method="POST" action="{{ route('register') }}" class="flex flex-col gap-4 {{ $attributes->get('class') }}" id="{{ $attributes->get('id') }}">
+<form 
+    method="POST" 
+    action="{{ route('register') }}" 
+    class="flex flex-col gap-4 {{ $attributes->get('class') }}" 
+    id="{{ $attributes->get('id') }}"
+    aria-label="Formulaire d'inscription"
+>
     @csrf
 
     <x-input 

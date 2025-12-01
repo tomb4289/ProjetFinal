@@ -7,11 +7,9 @@
 
         <title>@yield('title', "Vino")</title>
 
-        <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
 
-        <!-- Styles / Scripts -->
         @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
             @vite(['resources/css/app.css', 'resources/js/app.js'])
         @else
@@ -25,9 +23,9 @@
     {{-- Formulaire login par default --}}
     <body data-mode="{{ $mode ?? 'login' }}"> 
         {{-- Height fixer temporaire --}}
-        <main class="bg-body ">
+        <main class="bg-body" role="main" aria-label="Contenu principal">
             @yield('content')
         </main>
     </body>
 
-    </html>
+</html>

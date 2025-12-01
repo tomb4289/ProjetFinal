@@ -10,7 +10,7 @@
 @endphp
 
 @section('content')
-<div class="min-h-screen bg-background pt-24">
+<div class="min-h-screen bg-background pt-24" role="main" aria-label="Détails de la bouteille">
     <section class="p-4 sm:w-full max-w-4xl mx-auto">
         <div class="bg-card border border-border-base rounded-xl shadow-md p-6 space-y-6">
             
@@ -27,7 +27,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 
                 {{-- Image de la bouteille --}}
-                <div class="flex items-center justify-center bg-gray-50 rounded-lg p-8 min-h-[400px]">
+                <div class="flex items-center justify-center bg-gray-50 rounded-lg p-8 min-h-[400px]" >
                     @if($donnees['image'])
                         @php
                             // Normaliser le chemin de l'image
@@ -45,12 +45,12 @@
                         @endphp
                         <img 
                             src="{{ $imageUrl }}" 
-                            alt="{{ $donnees['nom'] }}" 
+                            alt="Bouteille {{ $donnees['nom'] }}" 
                             class="max-w-full max-h-[400px] object-contain"
                         >
                     @else
-                        <div class="text-center text-text-muted">
-                            <svg class="w-24 h-24 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="text-center text-text-muted" role="status">
+                            <svg class="w-24 h-24 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
                             <p class="text-sm">Aucune image disponible</p>
@@ -115,7 +115,7 @@
                         @if($donnees['prix'])
                             <div class="border-b border-border-base pb-3">
                                 <span class="text-sm font-medium text-text-muted uppercase tracking-wide">Prix</span>
-                                <p class="text-lg text-text-body mt-1 font-semibold">
+                                <p class="text-lg text-text-body mt-1 font-semibold" aria-label="{{ number_format($donnees['prix'], 2, ',', ' ') }} dollars">
                                     {{ number_format($donnees['prix'], 2, ',', ' ') }} $
                                 </p>
                             </div>
@@ -159,6 +159,7 @@
                                 <a 
                                     href="{{ route('bouteilles.note.edit', [$cellier, $bouteille]) }}"
                                     class="text-sm text-primary hover:underline"
+                                    aria-label="{{ (isset($donnees['note_degustation']) && $donnees['note_degustation']) || (isset($donnees['rating']) && $donnees['rating']) ? 'Modifier votre évaluation' : 'Ajouter une évaluation' }}"
                                 >
                                     {{ (isset($donnees['note_degustation']) && $donnees['note_degustation']) || (isset($donnees['rating']) && $donnees['rating']) ? 'Modifier' : 'Ajouter' }}
                                 </a>
@@ -192,7 +193,7 @@
                     {{-- Formulaire d'ajout au cellier (seulement pour les bouteilles du catalogue) --}}
                     @if($isCatalogue)
                         <div class="mt-6 pt-6 border-t border-border-base">
-                            <form class="flex gap-3 flex-row flex-wrap items-end add-to-cellar-form">
+                            <form class="flex gap-3 flex-row flex-wrap items-end add-to-cellar-form" aria-label="Ajouter au cellier">
                                 <input 
                                     type="hidden" 
                                     name="bottle_id" 
@@ -210,6 +211,7 @@
                                         max="10"
                                         value="1"
                                         class="w-full text-center border border-border-base rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                                        aria-label="Quantité à ajouter"
                                     />
                                 </div>
 

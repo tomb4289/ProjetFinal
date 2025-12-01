@@ -1,6 +1,6 @@
 @props(['addCellarBtn' => false, 'addWineBtn' => false])
 {{-- Barre de navigation principale --}}
-<section class="w-full fixed bottom-0 left-0 flex flex-col gap-4 items-center z-10">
+<section class="w-full fixed bottom-0 left-0 flex flex-col gap-4 items-center z-10" aria-label="Barre d'actions et de navigation">
    {{-- Permet l'affichage du bouton Ajouter un cellier --}}
    @if ($addCellarBtn == true)
       <div class="w-full max-w-md px-4 pointer-events-auto">
@@ -10,12 +10,16 @@
    {{-- Permet l'affichage du bouton Ajouter un vin --}}
    @if ($addWineBtn == true)
       <div class="w-full flex justify-end px-4 pointer-events-auto">
-         <button id="addWineToCellar" class="bg-primary text-card border border-border-base shadow-lg rounded-full p-6 hover:bg-primary-hover transition">
+         <button 
+            id="addWineToCellar" 
+            class="bg-primary text-card border border-border-base shadow-lg rounded-full p-6 hover:bg-primary-hover transition"
+            aria-label="Ajouter un vin"
+         >
             <x-dynamic-component :component="'lucide-plus'" class="w-10 h-10"/>
          </button>
        </div>
    @endif
-<nav class="w-full bg-card bg- border-t border-border-base shadow-sm flex justify-between">
+<nav class="w-full bg-card bg- border-t border-border-base shadow-sm flex justify-between" aria-label="Menu principal">
    <x-nav-item label='Celliers' icon='wine' url="{{ route('cellar.index') }}" :active="request()->routeIs('cellar.*')" />
    <x-nav-item label='Explorer' icon='compass' url="{{ route('bouteille.catalogue') }}" :active="request()->routeIs('bouteille.catalogue')" />
    <x-nav-item label='Compte' icon='user' url="{{ route('profile.index') }}" :active="request()->routeIs('profile.*')" />

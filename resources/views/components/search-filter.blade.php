@@ -7,7 +7,7 @@
 ])
 
 {{-- Composant de recherche et filtres (réutilisable cellier + catalogue) --}}
-<div {{ $attributes->merge(['class' => 'mt-4 mb-4']) }}>
+<div {{ $attributes->merge(['class' => 'mt-4 mb-4']) }} role="search" aria-label="Barre de recherche et filtres">
     <div class="relative flex gap-5 items-center"> 
         <x-input 
             type="text" 
@@ -21,6 +21,9 @@
             id="sortOptionsBtn" 
             type="button"
             class="p-2 bg-card border border-muted rounded-lg hover:bg-gray-100"
+            aria-label="Ouvrir les options de tri et de filtre"
+            aria-haspopup="dialog"
+            aria-expanded="false"
         >
             <x-dynamic-component :component="'lucide-sliders-horizontal'" class="w-6 stroke-text-heading" />
         </button>
@@ -29,6 +32,8 @@
         <div
             id="suggestionsBox"
             class="absolute left-0 top-full bg-white border border-border-base rounded-lg shadow-md hidden z-50 max-h-50 overflow-y-auto"
+            role="listbox"
+            aria-label="Suggestions de recherche"
         ></div>
     </div>
 
@@ -36,6 +41,7 @@
     <div
         id="filtersOverlay"
         class="fixed inset-0 bg-black z-40 hidden transition-opacity duration-300 ease-in-out opacity-0"
+        aria-hidden="true"
     ></div>
 
     {{-- Panneau de filtres / tri (bottom sheet) --}}
@@ -43,17 +49,20 @@
         id="filtersContainer" 
         class="rounded-t-3xl fixed bottom-0 left-0 w-full h-[75vh] bg-card p-6 shadow-2xl z-50
                transform translate-y-[100%] transition-transform duration-500 ease-in-out hidden overflow-y-auto"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="filter-title"
     >
-        <div id="dragHandle" class="w-20 h-2 bg-gray-200 rounded-full mx-auto mb-4"></div>
+        <div id="dragHandle" class="w-20 h-2 bg-gray-200 rounded-full mx-auto mb-4" aria-hidden="true"></div>
 
         <div class="flex justify-between items-center my-6">
-            <h3 class="text-xl font-bold">Options de filtre</h3>
+            <h3 id="filter-title" class="text-xl font-bold">Options de filtre</h3>
         </div>
 
         {{-- Contenu des filtres --}}
         <div class="flex gap-3 my-4 flex-wrap flex-col sm:flex-row">
             {{-- Select pour trier --}}
-            <select id="sortFilter" class="border px-5 py-3 rounded-lg flex-1">
+            <select id="sortFilter" class="border px-5 py-3 rounded-lg flex-1" aria-label="Trier par">
                 <option value="date_import-desc" selected>Trier par...</option>
                 <option value="prix-asc">Prix (le moins cher)</option>
                 <option value="prix-desc">Prix (le plus cher)</option>
@@ -64,7 +73,7 @@
             </select>
 
             {{-- Select pour Pays --}}
-            <select id="paysFilter" class="border px-5 py-3 rounded-lg">
+            <select id="paysFilter" class="border px-5 py-3 rounded-lg" aria-label="Filtrer par pays">
                 <option value="">Tous les pays</option>
                 @foreach($pays as $p)
                     @php
@@ -76,7 +85,7 @@
             </select>
 
             {{-- Select pour Millésime --}}
-            <select id="millesimeFilter" class="border px-5 py-3 rounded-lg">
+            <select id="millesimeFilter" class="border px-5 py-3 rounded-lg" aria-label="Filtrer par millésime">
                 <option value="">Tous les millésimes</option>
                 @foreach($millesimes as $m)
                     <option value="{{ $m->millesime }}">{{ $m->millesime }}</option>
@@ -84,7 +93,7 @@
             </select>
 
             {{-- Select pour Type --}}
-            <select id="typeFilter" class="border px-5 py-3 rounded-lg">
+            <select id="typeFilter" class="border px-5 py-3 rounded-lg" aria-label="Filtrer par type de vin">
                 <option value="">Tous les types</option>
                 @foreach($types as $t)
                     @php
@@ -96,7 +105,7 @@
             </select>
 
             {{-- Inputs pour Prix min / max --}}
-            <div class="flex w-full">
+            <div class="flex w-full" role="group" aria-label="Plage de prix">
                 <x-input 
                     type="number" 
                     name="priceMin"
@@ -106,7 +115,7 @@
                     size="full"
                     class="w-24 px-5 py-3 flex-1"
                 />
-                <span class="mx-2 self-center">-</span>
+                <span class="mx-2 self-center" aria-hidden="true">-</span>
                 <x-input 
                     type="number" 
                     name="priceMax"
@@ -124,6 +133,7 @@
                     id="resetFiltersBtn"
                     type="button"
                     class="flex-1 px-4 py-2 bg-card border border-danger text-danger rounded-lg hover:bg-danger-hover hover:text-white transition"
+                    aria-label="Réinitialiser tous les filtres"
                 >
                     Réinitialiser
                 </button>
@@ -132,6 +142,7 @@
                     id="applyFiltersBtn"
                     type="button"
                     class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition"
+                    aria-label="Appliquer les filtres sélectionnés"
                 >
                     Filtrer
                 </button>

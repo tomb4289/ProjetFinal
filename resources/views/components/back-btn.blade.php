@@ -24,7 +24,8 @@
 
 <a href="{{ $href }}" {{ $attributes->merge(['class' => $classes]) }}>
     @if ($icon)
-        <x-lucide-arrow-left class="w-4 h-4" />
+        {{-- Ajout de aria-hidden="true" pour que l'icône décorative soit ignorée par les lecteurs d'écran --}}
+        <x-lucide-arrow-left class="w-4 h-4" aria-hidden="true" />
     @endif
 
     {{ $label }}

@@ -27,6 +27,11 @@
         {{ $required ? 'required' : '' }}
         {{ $min !== null ? 'min=' . $min : '' }}
         {{ $max !== null ? 'max=' . $max : '' }}
+        
+        {{-- Accessibilité --}}
+        aria-required="{{ $required ? 'true' : 'false' }}"
+        aria-invalid="{{ $errors->has($name) ? 'true' : 'false' }}"
+        @if($errors->has($name)) aria-describedby="error-{{ $name }}" @endif
 
         class="
             {{ $attributes -> get('class') }}
@@ -45,7 +50,8 @@
     />        
 
     @error($name)
-        <p class="text-red-600 text-sm">{{ $message }}</p>
+        {{-- role="alert" assure que l'erreur est lue immédiatement par le lecteur d'écran --}}
+        <p id="error-{{ $name }}" role="alert" class="text-red-600 text-sm">{{ $message }}</p>
     @enderror
 
 </div>

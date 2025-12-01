@@ -5,10 +5,15 @@
     'subtitle' => '',
 ])
 {{-- Bouton avec icône et texte --}}
-<a href="{{ $href }}" class="h-24 flex items-center gap-4 p-4 rounded-lg bg-card hover:bg-card-hover shadow-sm border border-border-base transition">
+<a 
+    href="{{ $href }}" 
+    class="h-24 flex items-center gap-4 p-4 rounded-lg bg-card hover:bg-card-hover shadow-sm border border-border-base transition"
+    aria-label="{{ $title }} : {{ $subtitle }}"
+>
     
     {{-- Icône --}}
-    <div class="bg-neutral-800 text-white w-12 h-12 flex items-center justify-center rounded-full">
+    {{-- Ajout de aria-hidden="true" sur le conteneur parent pour masquer l'icône décorative --}}
+    <div class="bg-neutral-800 text-white w-12 h-12 flex items-center justify-center rounded-full" aria-hidden="true">
         <x-dynamic-component :component="'lucide-' . $icon" class="w-6 h-6 aspect-square" />
     </div>
 

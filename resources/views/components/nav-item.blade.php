@@ -1,7 +1,11 @@
 @props(['active' => false])
 
 {{-- Élément de navigation --}}
-<a href="{{ $url }}" class="group py-3 px-5 transition-colors duration-400 hover:bg-neutral-300 flex-1 flex justify-center active:bg-neutral-400">
+<a 
+    href="{{ $url }}" 
+    class="group py-3 px-5 transition-colors duration-400 hover:bg-neutral-300 flex-1 flex justify-center active:bg-neutral-400"
+    aria-current="{{ $active ? 'page' : 'false' }}"
+>
     <div class="flex flex-col items-center">
 
         <x-dynamic-component :component="'lucide-' . $icon" class="w-8 stroke-icon transition-colors duration-400 delay-75 group-hover:stroke-icon-hover {{ $active ? 'stroke-primary' : '' }} group-active:stroke-neutral-600"/>

@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen bg-background pt-24">
+<div class="min-h-screen bg-background pt-24" role="formulaire-ajout-manuelle">
     {{-- Conteneur centré --}}
-    <section class="p-4 sm:w-full max-w-4xl mx-auto">
-        <div class="bg-card border border-border-base rounded-xl shadow-md p-6 space-y-6">
+    <section class="p-4 sm:w-full max-w-4xl mx-auto" role="section-formulaire-ajout-manuelle">
+        <div class="bg-card border border-border-base rounded-xl shadow-md p-6 space-y-6" >
 
             {{-- En-tête avec le composant de ton ami --}}
             <x-page-header 
@@ -19,6 +19,7 @@
                 action="{{ route('bouteilles.manuelles.store', $cellier) }}"
                 novalidate
                 class="space-y-4 mt-5"
+                role="form"
             >
                 @csrf
 

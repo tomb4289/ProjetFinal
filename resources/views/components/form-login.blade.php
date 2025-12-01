@@ -1,5 +1,11 @@
 {{-- Formulaire de connexion --}}
-<form method="POST" action="{{ route('login') }}" class="flex flex-col gap-4 {{ $attributes->get('class') }}" id="{{ $attributes->get('id') }}">
+<form 
+    method="POST" 
+    action="{{ route('login') }}" 
+    class="flex flex-col gap-4 {{ $attributes->get('class') }}" 
+    id="{{ $attributes->get('id') }}"
+    aria-label="Formulaire de connexion"
+>
     @csrf
     <x-input 
         label="Adresse courriel" 
