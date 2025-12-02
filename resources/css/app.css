@@ -19,7 +19,7 @@
     --color-primary: #7a1f3d;
     --color-primary-hover: #8c2546;
     --color-primary-active: #611831;
-    
+
     /* Button colors - mauve grisé par défaut, rouge vin au hover */
     --color-button-default: #a5a0aa;
     --color-button-hover: var(--color-primary);
@@ -113,3 +113,28 @@
 }
 
 @custom-viewport --bp-750 (width >= 750px);
+
+.vino-fill-rect {
+    fill: #722f37; /* Wine Color */
+    /* Animation: Change height from 0 to 1100 (covering the glass) */
+    animation: fillUp 2s ease-in-out infinite;
+}
+
+/* Styling the glass outline */
+.glass-outline {
+    fill: none; /* Make the glass hollow */
+    stroke: #4a1a1a; /* Dark outline */
+    stroke-width: 20; /* Thickness of the glass wall */
+}
+
+@keyframes fillUp {
+    0% {
+        height: 0;
+    }
+    50% {
+        height: 1200px; /* High enough to cover the top of the path (y=930) */
+    }
+    100% {
+        height: 0;
+    }
+}

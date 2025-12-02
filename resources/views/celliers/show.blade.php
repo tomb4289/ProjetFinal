@@ -10,7 +10,6 @@
         :title="$cellier->nom"
         :undertitle="$undertitle"
     />
-
     {{-- Composant de recherche / filtres / tri (mode cellier) --}}
     <x-search-filter
         :pays="$pays"
@@ -19,7 +18,7 @@
         mode="cellier" 
         data-search-url="{{ route('celliers.search', $cellier) }}"
         data-target-container="cellarBottlesContainer"
-        class="mt-3 mb-4"
+        class="mt-3 mb-8"
     />
 
     {{-- Conteneur mis à jour par AJAX --}}

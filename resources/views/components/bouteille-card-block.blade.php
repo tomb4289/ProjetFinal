@@ -49,62 +49,15 @@
         </a>
     @endif
     
-    <div class='p-4 flex flex-col gap-2'>
-        <div class="flex flex-col items-start gap-2 ">
-            <span class="font-semibold text-text-title text-lg truncate overflow-hidden text-ellipsis whitespace-nowrap w-full block" title="{{ $nom }}">
+    <div class='p-3 sm:p-4 flex flex-col gap-2'>
+        <div class="flex flex-col items-start  ">
+            <span class="font-semibold text-text-title text-sm sm:text-lg truncate overflow-hidden text-ellipsis whitespace-nowrap w-full block" title="{{ $nom }}">
             {{ $nom }}
             </span>
-            
+
             @if($isCellierMode)
-                {{-- Contrôles quantité + badge --}}
-                <div class="flex items-center gap-2 stop-link-propagation" role="group" aria-label="Contrôle de la quantité">
-                    {{-- Bouton - --}}
-                    <button
-                        type="button"
-                        class="qty-btn bottle-qty-minus inline-flex items-center justify-center w-7 h-7 rounded-full border border-border-base text-button-default hover:text-button-hover hover:bg-button-hover/10 transition"
-                        data-url="{{ route('bouteilles.quantite.update', [$cellierId, $bouteilleId]) }}"
-                        data-direction="down"
-                        data-bouteille="{{ $bouteilleId }}"
-                        data-qty-btn
-                        data-cellier-id="{{ $cellierId }}"
-                        data-bottle-id="{{ $bouteilleId }}"
-                        aria-label="Diminuer la quantité"
-                    >
-                        –
-                    </button>
-
-                    {{-- Badge quantité --}}
-                    <div
-                        class="qty-display bottle-qty-value inline-flex items-center justify-center rounded-full bg-primary text-white text-xs px-2 py-0.5 min-w-16 text-center"
-                        data-bouteille="{{ $bouteilleId }}"
-                        data-qty-value="{{ $bouteilleId }}"
-                        aria-label="Quantité actuelle : {{ $quantite ?? 1 }}"
-                        role="status"
-                    >
-                        x {{ $quantite ?? 1 }}
-                    </div>
-
-                    {{-- Bouton + --}}
-                    <button
-                        type="button"
-                        class="qty-btn bottle-qty-plus inline-flex items-center justify-center w-7 h-7 rounded-full border border-border-base text-button-default hover:text-button-hover hover:bg-button-hover/10 transition"
-                        data-url="{{ route('bouteilles.quantite.update', [$cellierId, $bouteilleId]) }}"
-                        data-direction="up"
-                        data-bouteille="{{ $bouteilleId }}"
-                        data-qty-btn
-                        data-cellier-id="{{ $cellierId }}"
-                        data-bottle-id="{{ $bouteilleId }}"
-                        aria-label="Augmenter la quantité"
-                    >
-                        +
-                    </button>
-                </div>
-            @endif
-        </div>
-
-        @if($isCellierMode)
             {{-- Informations supplémentaires pour le mode cellier --}}
-            <div class="text-sm text-text-muted space-y-1">
+            <div class="text-sm text-text-muted mb-4">
                 @if (!is_null($prix))
                     <p class="text-md">
                         {{ number_format($prix, 2, ',', ' ') }} $
@@ -115,6 +68,58 @@
             {{-- Prix simple pour le mode catalogue --}}
             <span class='text-text-muted' aria-label="Prix : {{ $prix }} dollars">{{ $prix }} $</span>
         @endif
+            
+           @if($isCellierMode)
+            {{-- Contrôles quantité + badge (Responsive Capsule) --}}
+            <div 
+                class="flex items-center justify-between bg-neutral-50 border border-border-base rounded-full p-0.5 sm:p-1 shadow-sm stop-link-propagation w-full max-w-[120px] sm:max-w-[150px]" 
+                role="group" 
+                aria-label="Contrôle de la quantité"
+            >
+                {{-- Bouton - --}}
+                <button
+                    type="button"
+                    class="qty-btn bottle-qty-minus flex-shrink-0 flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full text-text-muted hover:text-danger hover:bg-white hover:shadow-sm transition-all duration-200 active:scale-95 disabled:opacity-50"
+                    data-url="{{ route('bouteilles.quantite.update', [$cellierId, $bouteilleId]) }}"
+                    data-direction="down"
+                    data-bouteille="{{ $bouteilleId }}"
+                    data-qty-btn
+                    data-cellier-id="{{ $cellierId }}"
+                    data-bottle-id="{{ $bouteilleId }}"
+                    aria-label="Diminuer la quantité"
+                >
+                    {{-- Icône responsive : un peu plus petite sur mobile --}}
+                    <x-dynamic-component :component="'lucide-minus'" class="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                </button>
+
+                {{-- Badge quantité --}}
+                <div
+                    class="qty-display bottle-qty-value text-xs sm:text-sm font-bold text-text-heading flex-1 text-center select-none px-1"
+                    data-bouteille="{{ $bouteilleId }}"
+                    data-qty-value="{{ $bouteilleId }}"
+                    aria-label="Quantité actuelle : {{ $quantite ?? 1 }}"
+                    role="status"
+                >
+                    {{ $quantite ?? 1 }}
+                </div>
+
+                {{-- Bouton + --}}
+                <button
+                    type="button"
+                    class="qty-btn bottle-qty-plus flex-shrink-0 flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full text-text-muted hover:text-primary hover:bg-white hover:shadow-sm transition-all duration-200 active:scale-95"
+                    data-url="{{ route('bouteilles.quantite.update', [$cellierId, $bouteilleId]) }}"
+                    data-direction="up"
+                    data-bouteille="{{ $bouteilleId }}"
+                    data-qty-btn
+                    data-cellier-id="{{ $cellierId }}"
+                    data-bottle-id="{{ $bouteilleId }}"
+                    aria-label="Augmenter la quantité"
+                >
+                    <x-dynamic-component :component="'lucide-plus'" class="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                </button>
+            </div>
+        @endif
+        </div>
 
         {{-- Actions --}}
         @if($isCatalogueMode)

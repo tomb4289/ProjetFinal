@@ -7,8 +7,8 @@ if (buttons.length) {
     // Ajout des écouteurs d'événements aux boutons
     buttons.forEach((btn) => {
         btn.addEventListener("click", () => {
-            const url        = btn.dataset.url;
-            const direction  = btn.dataset.direction;
+            const url = btn.dataset.url;
+            const direction = btn.dataset.direction;
             const bouteilleId = btn.dataset.bouteille;
 
             const display = document.querySelector(
@@ -16,12 +16,21 @@ if (buttons.length) {
             );
 
             if (!url || !direction || !display) {
-                console.error("Données manquantes pour la mise à jour de quantité.");
+                console.error(
+                    "Données manquantes pour la mise à jour de quantité."
+                );
                 return;
             }
 
             const oldText = display.textContent;
-            display.textContent = "x ...";
+            // Indicateur de chargement (Spinner)
+            display.innerHTML = `
+                <div 
+                    class="inline-block w-6 h-6 border-2 border-neutral-200 border-t-primary rounded-full animate-spin" 
+                    role="status" 
+                    aria-label="Loading..."
+                ></div>
+            `;
             // Appel API pour mettre à jour la quantité
             fetch(url, {
                 method: "PATCH",
@@ -42,7 +51,7 @@ if (buttons.length) {
                 .then((data) => {
                     console.log("Données JSON:", data);
                     if (data.success && typeof data.quantite !== "undefined") {
-                        display.textContent = `x ${data.quantite}`;
+                        display.textContent = `${data.quantite}`;
                     } else {
                         display.textContent = oldText;
                     }
