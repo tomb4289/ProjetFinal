@@ -121,10 +121,23 @@ class CellierController extends Controller
         $user = Auth::user();
 
         $celliers = $user->celliers()
+            ->withCount('bouteilles')
             ->orderBy('nom')
             ->get();
 
-        return view('cellar.index', compact('celliers'));
+        // Vérifier si on doit afficher le tip pour un nouvel utilisateur
+        $showWelcomeTip = false;
+        $welcomeTipCellierId = null;
+        
+        if ($celliers->count() === 1) {
+            $cellier = $celliers->first();
+            if ($cellier->nom === 'Mon cellier' && $cellier->bouteilles_count === 0) {
+                $showWelcomeTip = true;
+                $welcomeTipCellierId = $cellier->id;
+            }
+        }
+
+        return view('cellar.index', compact('celliers', 'showWelcomeTip', 'welcomeTipCellierId'));
     }
 
     /**

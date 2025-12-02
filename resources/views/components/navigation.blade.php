@@ -9,11 +9,19 @@
    @endif
    {{-- Permet l'affichage du bouton Ajouter un vin --}}
    @if ($addWineBtn == true)
+<<<<<<< HEAD
    <div class="w-full flex justify-end px-4 pointer-events-auto">
       <button id="addWineToCellar" class="bg-button-default text-card border border-border-base shadow-lg rounded-full p-6 hover:bg-button-hover transition">
          <x-dynamic-component :component="'lucide-plus'" class="w-10 h-10" />
       </button>
    </div>
+=======
+      <div class="w-full flex justify-end px-4 pointer-events-auto">
+         <button id="addWineToCellar" class="group bg-button-default text-card border-2 border-primary shadow-lg rounded-full p-6 hover:bg-button-hover transition">
+            <x-dynamic-component :component="'lucide-plus'" class="w-10 h-10 stroke-primary group-hover:stroke-white transition"/>
+         </button>
+       </div>
+>>>>>>> 77a613acb7f77fbf7acb6cea608e8ab9c8aefe35
    @endif
    <nav class="w-full bg-card bg- border-t border-border-base shadow-sm flex justify-between" aria-label="Menu principal">
       <x-nav-item label='Celliers' icon='wine' url="{{ route('cellar.index') }}" :active="request()->routeIs('cellar.*')" />

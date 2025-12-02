@@ -1,7 +1,7 @@
-@props(['title'=>'titre', 'undertitle' => '', 'actionBtn' => false])
+@props(['title'=>'titre', 'undertitle' => '', 'actionBtn' => false, 'marginTop' => 'mt-header'])
 {{-- En-tête de page --}}
 <header 
-    class="mt-header flex flex-wrap justify-between items-center" 
+    class="{{ $marginTop }} flex flex-wrap justify-between items-center" 
     aria-label="En-tête de la page"
 >
 <div>

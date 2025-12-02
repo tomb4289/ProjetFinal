@@ -12,12 +12,13 @@
 @section('content')
 <div class="min-h-screen bg-background pt-24" role="main" aria-label="Détails de la bouteille">
     <section class="p-4 sm:w-full max-w-4xl mx-auto">
-        <div class="bg-card border border-border-base rounded-xl shadow-md p-6 space-y-6">
+        <div class="bg-card border border-border-base rounded-xl shadow-md p-6">
             
             {{-- En-tête avec bouton retour --}}
             <div class="flex items-center justify-between mb-6">
                 <x-page-header 
                     title="Détails de la bouteille" 
+                    marginTop="m-0"
                     :undertitle="$isCatalogue ? 'Informations complètes sur cette bouteille du catalogue' : 'Informations complètes sur cette bouteille'" 
                 />
                 <x-back-btn :route="$backRoute" />
@@ -197,7 +198,7 @@
                                     value="{{ $bouteilleCatalogue->id }}"
                                 >
 
-                                <div class="flex-1 min-w-[120px]">
+                                <div class=" min-w-[120px]">
                                     <label class="block text-sm font-medium text-text-muted mb-2">
                                         Quantité
                                     </label>
@@ -207,14 +208,14 @@
                                         min="1"
                                         max="10"
                                         value="1"
-                                        class="w-full text-center border border-border-base rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                                        class="w-20 text-center border border-border-base rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
                                         aria-label="Quantité à ajouter"
                                     />
                                 </div>
 
                                 <button 
                                     type="submit"
-                                    class="add-to-cellar-btn bg-button-default active:bg-primary-active hover:bg-button-hover animation duration-200 text-white rounded-lg px-6 py-2 font-medium"
+                                    class="add-to-cellar-btn flex-1 bg-button-default border-2 border-primary text-primary font-bold py-2 px-4 rounded-lg hover:bg-button-hover hover:text-white active:bg-primary-active transition-colors duration-300 block text-center"
                                     data-bottle-id="{{ $bouteilleCatalogue->id }}"
                                 >
                                     Ajouter au cellier

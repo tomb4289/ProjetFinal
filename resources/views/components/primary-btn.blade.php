@@ -8,7 +8,7 @@
 ])
 {{-- Bouton principal --}}
 @php
-    $classes = "bg-card border-2 border-primary text-primary font-bold py-2 px-4 rounded-{$rounded} 
+    $classes = "bg-button-default border-2 border-primary text-primary font-bold py-2 px-4 rounded-{$rounded} 
                 hover:bg-button-hover hover:text-white active:bg-primary-active transition-colors duration-300 block text-center";
 
     // Détection automatique :

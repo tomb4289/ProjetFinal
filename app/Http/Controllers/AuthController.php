@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Cellier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -61,6 +62,12 @@ class AuthController extends Controller
             'name'     => $validated['name'],
             'email'    => $validated['email'],
             'password' => Hash::make($validated['password']),
+        ]);
+
+        // 2.5) Création d'un cellier par défaut pour le nouvel utilisateur.
+        Cellier::create([
+            'nom'    => 'Mon cellier',
+            'user_id' => $user->id,
         ]);
 
         // 3) Connexion automatique de l'utilisateur après inscription.
