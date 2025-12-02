@@ -85,8 +85,8 @@
                             </div>
                         @endif
 
-                        {{-- Région (seulement pour le catalogue) --}}
-                        @if($isCatalogue && isset($donnees['region']) && $donnees['region'])
+                        {{-- Région --}}
+                        @if(isset($donnees['region']) && $donnees['region'])
                             <div class="border-b border-border-base pb-3">
                                 <span class="text-sm font-medium text-text-muted uppercase tracking-wide">Région</span>
                                 <p class="text-lg text-text-body mt-1">{{ $donnees['region'] }}</p>

@@ -16,7 +16,7 @@
                             :millesime="$bouteille->millesime"
                             :urlImage="$bouteille->url_image"
                             :pays="$bouteille->pays?->nom"
-                            :region="$bouteille->region"
+                            :region="$bouteille->region?->nom"
                             :volume="$bouteille->volume"
                             :prix="$bouteille->prix"
                             :codeSaq="$bouteille->code_saQ"

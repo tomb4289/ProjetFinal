@@ -2,6 +2,7 @@
 const searchInput = document.getElementById("searchInput");
 const paysFilter = document.getElementById("paysFilter");
 const typeFilter = document.getElementById("typeFilter");
+const regionFilter = document.getElementById("regionFilter");
 const millesimeFilter = document.getElementById("millesimeFilter");
 const container = document.getElementById("catalogueContainer");
 const priceMinFilter = document.getElementById("priceMin");
@@ -35,6 +36,7 @@ function resetFilters() {
 
     paysFilter.value = "";
     typeFilter.value = "";
+    if (regionFilter) regionFilter.value = "";
     millesimeFilter.value = "";
     priceMinFilter.value = "";
     priceMaxFilter.value = "";
@@ -107,6 +109,7 @@ function fetchCatalogue(url = "/catalogue/search") {
         search: searchInput.value || "",
         pays: paysFilter?.value || "",
         type: typeFilter?.value || "",
+        region: regionFilter?.value || "",
         millesime: millesimeFilter?.value || "",
         prix_min: priceMinFilter?.value || "",
         prix_max: priceMaxFilter?.value || "",

@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Cellier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use App\Models\User;
 use App\Models\BouteilleCatalogue;
 use App\Models\Pays;
 use App\Models\TypeVin;
+use App\Models\Region;
 use App\Models\Bouteille;
 
 /**
@@ -60,6 +62,21 @@ class CellierController extends Controller
 
         if ($request->filled('millesime')) {
             $query->where('millesime', 'like', '%' . $request->millesime . '%');
+        }
+
+        if ($request->filled('region')) {
+            // Filtrer par région via la relation avec le catalogue
+            // On cherche les bouteilles qui ont un code_saq ou un nom correspondant à une bouteille du catalogue avec cette région
+            $query->whereExists(function ($subquery) use ($request) {
+                $subquery->select(DB::raw(1))
+                    ->from('bouteille_catalogue')
+                    ->where(function ($q) {
+                        $q->whereColumn('bouteille_catalogue.code_saQ', 'bouteilles.code_saq')
+                          ->orWhereColumn('bouteille_catalogue.nom', 'bouteilles.nom');
+                    })
+                    ->join('regions', 'bouteille_catalogue.id_region', '=', 'regions.id')
+                    ->where('regions.nom', $request->region);
+            });
         }
 
         if ($request->filled('prix_min')) {
@@ -164,10 +181,12 @@ class CellierController extends Controller
 
         $cellier->setRelation('bouteilles', $bouteilles);
 
-        // liste complète des pays / types / millésimes
+        // liste complète des pays / types / millésimes / régions
         $pays = Pays::orderBy('nom')->get();
 
         $types = TypeVin::orderBy('nom')->get();
+
+        $regions = Region::orderBy('nom')->get();
 
         $millesimes = BouteilleCatalogue::select('millesime')
             ->whereNotNull('millesime')
@@ -190,6 +209,7 @@ class CellierController extends Controller
             'undertitle'  => $undertitle,
             'pays'        => $pays,
             'types'       => $types,
+            'regions'     => $regions,
             'millesimes'  => $millesimes,
         ]);
     }
@@ -334,7 +354,7 @@ class CellierController extends Controller
         }
 
         $bouteilleCatalogue = BouteilleCatalogue::where('nom', $bouteille->nom)
-            ->with(['typeVin', 'pays'])
+            ->with(['typeVin', 'pays', 'region'])
             ->first();
 
         $donnees = [
@@ -358,6 +378,10 @@ class CellierController extends Controller
 
             if (!$donnees['pays'] && $bouteilleCatalogue->pays) {
                 $donnees['pays'] = $bouteilleCatalogue->pays->nom;
+            }
+
+            if ($bouteilleCatalogue->region) {
+                $donnees['region'] = $bouteilleCatalogue->region->nom;
             }
         }
 

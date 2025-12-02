@@ -6,18 +6,20 @@ use Illuminate\Http\Request;
 use App\Models\BouteilleCatalogue;
 use App\Models\Pays;
 use App\Models\TypeVin;
+use App\Models\Region;
 
 class CatalogueController extends Controller
 {
     public function index()
     {
 
-        $bouteilles = BouteilleCatalogue::with(['pays', 'typeVin'])
+        $bouteilles = BouteilleCatalogue::with(['pays', 'typeVin', 'region'])
             ->orderBy('date_import', 'desc')
             ->paginate(10);
 
         $pays = Pays::orderBy('nom')->get();
         $types = TypeVin::orderBy('nom')->get();
+        $regions = Region::orderBy('nom')->get();
         $millesimes = BouteilleCatalogue::select('millesime')
             ->whereNotNull('millesime')
             ->distinct()
@@ -26,12 +28,12 @@ class CatalogueController extends Controller
 
         $count = $bouteilles->total();
 
-        return view('bouteilles.catalogue', compact('bouteilles', 'pays', 'types', 'millesimes', 'count'));
+        return view('bouteilles.catalogue', compact('bouteilles', 'pays', 'types', 'regions', 'millesimes', 'count'));
     }
 
     public function search(Request $request)
     {
-        $query = BouteilleCatalogue::with(['pays', 'typeVin']);
+        $query = BouteilleCatalogue::with(['pays', 'typeVin', 'region']);
 
         if ($request->search) {
             $query->where('nom', 'like', '%' . $request->search . '%');
@@ -43,6 +45,10 @@ class CatalogueController extends Controller
 
         if ($request->type) {
             $query->where('id_type_vin', $request->type);
+        }
+
+        if ($request->region) {
+            $query->where('id_region', $request->region);
         }
 
         if ($request->millesime) {
@@ -85,7 +91,7 @@ class CatalogueController extends Controller
     public function show(BouteilleCatalogue $bouteilleCatalogue)
     {
         // Charger les relations nécessaires
-        $bouteilleCatalogue->load(['pays', 'typeVin']);
+        $bouteilleCatalogue->load(['pays', 'typeVin', 'region']);
 
         // Préparer les données à afficher
         $donnees = [
@@ -96,7 +102,7 @@ class CatalogueController extends Controller
             'type' => $bouteilleCatalogue->typeVin ? $bouteilleCatalogue->typeVin->nom : null,
             'millesime' => $bouteilleCatalogue->millesime,
             'image' => $bouteilleCatalogue->image,
-            'region' => $bouteilleCatalogue->region,
+            'region' => $bouteilleCatalogue->region ? $bouteilleCatalogue->region->nom : null,
             'code_saq' => $bouteilleCatalogue->code_saQ,
         ];
 

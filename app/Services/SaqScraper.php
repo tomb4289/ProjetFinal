@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\BouteilleCatalogue;
 use App\Models\Pays;
 use App\Models\TypeVin;
+use App\Models\Region;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -434,7 +435,7 @@ GRAPHQL;
             'url_image' => $cheminImage ?: ($urlImage ?: null),
             'volume' => $volume,
             'millesime' => $millesime,
-            'region' => $region,
+            'region_nom' => $region,
             'pays_nom' => $pays,
             'type_vin_nom' => $typeVin,
             'date_import' => now(),
@@ -591,6 +592,14 @@ GRAPHQL;
             $typeVin = TypeVin::firstOrCreate(['nom' => $donneesProduit['type_vin_nom']]);
         }
 
+        $region = null;
+        if (!empty($donneesProduit['region_nom'])) {
+            $region = Region::firstOrCreate(
+                ['nom' => $donneesProduit['region_nom']],
+                ['date_creation' => now()]
+            );
+        }
+
         BouteilleCatalogue::updateOrCreate(
             ['code_saQ' => $donneesProduit['code_saQ']],
             [
@@ -599,7 +608,7 @@ GRAPHQL;
                 'url_image' => $donneesProduit['url_image'],
                 'volume' => $donneesProduit['volume'],
                 'millesime' => $donneesProduit['millesime'],
-                'region' => $donneesProduit['region'],
+                'id_region' => $region ? $region->id : null,
                 'id_pays' => $pays ? $pays->id : null,
                 'id_type_vin' => $typeVin ? $typeVin->id : null,
                 'date_import' => $donneesProduit['date_import'],
