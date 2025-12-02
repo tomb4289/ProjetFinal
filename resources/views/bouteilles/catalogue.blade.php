@@ -4,7 +4,7 @@
 @section('content')
 <section class="p-4" role="section-catalogue-bouteilles">
 <x-page-header title="Catalogue des bouteilles" />
-<x-search-filter :pays="$pays" :types="$types" :millesimes="$millesimes" />
+<x-search-filter :pays="$pays" :types="$types" :regions="$regions" :millesimes="$millesimes" />
  <div id="catalogueContainer">
         @include('bouteilles._catalogue_list', ['bouteilles' => $bouteilles])
 

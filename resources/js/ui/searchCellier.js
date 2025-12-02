@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const searchInput      = document.getElementById("searchInput");
     const paysFilter       = document.getElementById("paysFilter");
     const typeFilter       = document.getElementById("typeFilter");
+    const regionFilter     = document.getElementById("regionFilter");
     const millesimeFilter  = document.getElementById("millesimeFilter");
     const priceMinFilter   = document.getElementById("priceMin");
     const priceMaxFilter   = document.getElementById("priceMax");
@@ -108,6 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
             nom:       searchInput?.value || "",
             pays:      paysFilter?.value || "",
             type:      typeFilter?.value || "",
+            region:    regionFilter?.value || "",
             millesime: millesimeFilter?.value || "",
             sort,
             direction,
@@ -148,6 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (searchInput)     searchInput.addEventListener("input", () => debouncedFetch());
     if (paysFilter)      paysFilter.addEventListener("change", () => debouncedFetch());
     if (typeFilter)      typeFilter.addEventListener("change", () => debouncedFetch());
+    if (regionFilter)    regionFilter.addEventListener("change", () => debouncedFetch());
     if (millesimeFilter) millesimeFilter.addEventListener("change", () => debouncedFetch());
     if (sortFilter)      sortFilter.addEventListener("change", () => debouncedFetch());
     if (priceMinFilter)  priceMinFilter.addEventListener("input", () => debouncedFetch());
@@ -159,6 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (searchInput)     searchInput.value = "";
             if (paysFilter)      paysFilter.value = "";
             if (typeFilter)      typeFilter.value = "";
+            if (regionFilter)   regionFilter.value = "";
             if (millesimeFilter) millesimeFilter.value = "";
             if (priceMinFilter)  priceMinFilter.value = "";
             if (priceMaxFilter)  priceMaxFilter.value = "";
