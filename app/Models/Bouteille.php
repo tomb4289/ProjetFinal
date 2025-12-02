@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Bouteille extends Model
 {
@@ -49,6 +50,14 @@ class Bouteille extends Model
     public function cellier(): BelongsTo
     {
         return $this->belongsTo(Cellier::class, 'cellier_id');
+    }
+
+    /**
+     * Une bouteille peut avoir plusieurs partages.
+     */
+    public function partages(): HasMany
+    {
+        return $this->hasMany(Partage::class, 'bouteille_id');
     }
 
     /**
