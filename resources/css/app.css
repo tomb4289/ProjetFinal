@@ -162,6 +162,12 @@
     transform: rotate(-15deg);
 }
 
+
+.text-button-default {
+    color: #7a1634; 
+}
+
+
 @custom-viewport --bp-750 (width >= 750px);
 
 .vino-fill-rect {

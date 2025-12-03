@@ -1,38 +1,33 @@
 {{-- resources/views/admin/users/show.blade.php --}}
 @extends('layouts.app')
 
-@section('title', 'Détails de l’usager')
+@section('title', "Détails de l’usager")
 
 @section('content')
-<div class="max-w-6xl mx-auto px-4 space-y-6">
+<div class="max-w-6xl mx-auto px-4 mt-8 space-y-6">
+
+    <x-back-btn
+        route="admin.users.index"
+        label="Retour à la liste"
+        class="pt-20" />
 
 
-    <div class="flex items-center justify-between gap-4">
-        <x-page-header
-            :title="'Usager #'.$user->id.' – '.$user->name"
-            subtitle="Détails du compte et actions d’administration."
-        />
-
-        {{-- Bouton retour vers la liste --}}
-        <x-primary-btn
-            type="href"
-            route="admin.users.index"
-            label="Retour à la liste"
-            class="w-auto"
-        />
-    </div>
+    {{-- Titre de la page --}}
+    <x-page-header 
+        :title="'Usager #'.$user->id.' – '.$user->name"
+        subtitle="Détails du compte et actions d’administration." />
 
     {{-- Messages flash --}}
     @if(session('success'))
-        <div class="bg-green-100 text-green-800 text-sm px-4 py-2 rounded-lg">
-            {{ session('success') }}
-        </div>
+    <div class="bg-green-100 text-green-800 text-sm px-4 py-2 rounded-lg">
+        {{ session('success') }}
+    </div>
     @endif
 
     @if(session('error'))
-        <div class="bg-red-100 text-red-800 text-sm px-4 py-2 rounded-lg">
-            {{ session('error') }}
-        </div>
+    <div class="bg-red-100 text-red-800 text-sm px-4 py-2 rounded-lg">
+        {{ session('error') }}
+    </div>
     @endif
 
     <div class="grid gap-6 md:grid-cols-2">
@@ -43,7 +38,9 @@
             <dl class="text-sm space-y-2">
                 <div>
                     <dt class="font-medium text-text-muted">Nom</dt>
-                    <dd>{{ $user->name }}</dd>
+                    <dd class="font-semibold text-button-default">
+                        {{ $user->name }}
+                    </dd>
                 </div>
 
                 <div>
@@ -107,8 +104,7 @@
 
                 <x-primary-btn
                     type="submit"
-                    :label="$user->is_active ? 'Désactiver le compte' : 'Activer le compte'"
-                />
+                    :label="$user->is_active ? 'Désactiver le compte' : 'Activer le compte'" />
             </form>
 
             {{-- Supprimer --}}
@@ -127,15 +123,15 @@
         <h2 class="text-lg font-semibold mb-3">Celliers de l’usager</h2>
 
         @if ($user->celliers->isEmpty())
-            <p class="text-sm text-text-muted">Cet usager n’a aucun cellier.</p>
+        <p class="text-sm text-text-muted">Cet usager n’a aucun cellier.</p>
         @else
-            <ul class="text-sm list-disc pl-5 space-y-1">
-                @foreach($user->celliers as $cellier)
-                    <li>
-                        {{ $cellier->nom ?? 'Cellier sans nom' }} (ID: {{ $cellier->id }})
-                    </li>
-                @endforeach
-            </ul>
+        <ul class="text-sm list-disc pl-5 space-y-1">
+            @foreach($user->celliers as $cellier)
+            <li>
+                {{ $cellier->nom ?? 'Cellier sans nom' }} (ID: {{ $cellier->id }})
+            </li>
+            @endforeach
+        </ul>
         @endif
     </div>
 
