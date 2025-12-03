@@ -5,7 +5,7 @@
     'editUrl' => null,
 ])
 
-<div class="group absolute top-0 right-0 p-2 cursor-pointer z-10 hover:z-[100] focus-within:z-[100]">
+<div class="group absolute top-0 right-0 p-2 cursor-pointer z-20 ">
 
     {{-- Bouton --}}
     <button class="cursor-pointer" aria-haspopup="true" aria-label="Options">
@@ -14,7 +14,7 @@
 
     {{-- Menu Déroulant --}}
     <div id="dropdownActionBtn-{{ $id }}" 
-        class="hidden group-hover:block group-focus-within:block absolute right-0 top-6 z-50 p-2 rounded-lg border border-border-base bg-card min-w-[120px] shadow-lg"
+        class="hidden group-hover:block group-focus-within:block absolute right-0 top-6 z-40 p-2 rounded-lg border border-border-base bg-card min-w-[120px] shadow-lg"
         role="menu"
     >
         {{-- Option Modifier --}}

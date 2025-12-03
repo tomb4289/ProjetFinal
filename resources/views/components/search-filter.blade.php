@@ -63,7 +63,7 @@
         {{-- Contenu des filtres --}}
         <div class="flex gap-3 my-4 flex-wrap flex-col sm:flex-row">
             {{-- Select pour trier --}}
-            <select id="sortFilter" class="border px-5 py-3 rounded-lg flex-1" aria-label="Trier par">
+            <select id="sortFilter" class="border w-full px-5 py-2 rounded-lg flex-1" aria-label="Trier par">
                 <option value="date_import-desc" selected>Trier par...</option>
                 <option value="prix-asc">Prix (le moins cher)</option>
                 <option value="prix-desc">Prix (le plus cher)</option>
@@ -74,7 +74,7 @@
             </select>
 
             {{-- Select pour Pays --}}
-            <select id="paysFilter" class="border px-5 py-3 rounded-lg" aria-label="Filtrer par pays">
+            <select id="paysFilter" class="border w-full px-5 py-2 rounded-lg" aria-label="Filtrer par pays">
                 <option value="">Tous les pays</option>
                 @foreach($pays as $p)
                     @php
@@ -86,7 +86,7 @@
             </select>
 
             {{-- Select pour Millésime --}}
-            <select id="millesimeFilter" class="border px-5 py-3 rounded-lg" aria-label="Filtrer par millésime">
+            <select id="millesimeFilter" class="border w-full px-5 py-2 rounded-lg" aria-label="Filtrer par millésime">
                 <option value="">Tous les millésimes</option>
                 @foreach($millesimes as $m)
                     <option value="{{ $m->millesime }}">{{ $m->millesime }}</option>
@@ -94,7 +94,7 @@
             </select>
 
             {{-- Select pour Type --}}
-            <select id="typeFilter" class="border px-5 py-3 rounded-lg" aria-label="Filtrer par type de vin">
+            <select id="typeFilter" class="border w-full px-5 py-2 rounded-lg" aria-label="Filtrer par type de vin">
                 <option value="">Tous les types</option>
                 @foreach($types as $t)
                     @php
@@ -107,7 +107,7 @@
 
             {{-- Select pour Région --}}
             @if(isset($regions) && !empty($regions))
-                <select id="regionFilter" class="border px-5 py-3 rounded-lg" aria-label="Filtrer par région">
+                <select id="regionFilter" class="border w-full px-5 py-2 rounded-lg" aria-label="Filtrer par région">
                     <option value="">Toutes les régions</option>
                     @foreach($regions as $r)
                         @php
@@ -128,7 +128,7 @@
                     placeholder="Prix min" 
                     min="0"
                     size="full"
-                    class="w-24 px-5 py-3 flex-1"
+                    class="w-24 px-5 py-2 flex-1"
                 />
                 <span class="mx-2 self-center" aria-hidden="true">-</span>
                 <x-input 
@@ -138,7 +138,7 @@
                     size="full"
                     placeholder="Prix max" 
                     min="0"
-                    class="w-24 px-5 py-3 flex-1"
+                    class="w-24 px-5 py-2 flex-1"
                 />
             </div>
 

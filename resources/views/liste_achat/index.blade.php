@@ -10,15 +10,12 @@
 
     {{-- État vide --}}
     @if ($items->isEmpty())
-        <div class="flex flex-col items-center mt-20 text-center opacity-80">
-git add             <p class="text-lg font-medium text-gray-700">
-                Votre liste d’achat est vide.
-            </p>
-
-            <p class="text-sm text-gray-500 mt-1">
-                Ajoutez des bouteilles depuis le catalogue ou vos celliers.
-            </p>
-        </div>
+       <x-empty-state 
+           title="Votre liste d’achat est vide" 
+           subtitle="Ajoutez des bouteilles à votre liste pour planifier vos achats futurs."
+           actionLabel="Explorer le catalogue"
+           actionUrl="{{ route('bouteille.catalogue') }}"
+       />
     @endif
 
 

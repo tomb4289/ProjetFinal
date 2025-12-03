@@ -3,7 +3,10 @@
     <span class="font-semibold">{{ $count }}</span> résultat{{ $count > 1 ? 's' : '' }} trouvé{{ $count > 1 ? 's' : '' }}
 </p>   
  {{-- La grille --}}
-    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mt-6" role="list">
+    <div class="
+    {{ $bouteilles->isEmpty() 
+            ? 'flex justify-center' 
+            : 'grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5' }} gap-4 mt-6" role="list">
         @forelse ($bouteilles as $bouteille)
             <x-bouteille-card-block 
                 :id="$bouteille->id" 
@@ -12,9 +15,10 @@
                 :prix="$bouteille->prix" 
             />
         @empty
-            <p class="mt-4 text-center text-gray-500 col-span-full" role="aucun-resultat">
-                Aucun résultat trouvé.
-            </p>
+            <x-empty-state 
+                title="Aucune bouteille trouvée" 
+                subtitle="Essayez d'ajuster vos filtres ou votre recherche pour trouver des bouteilles."
+            />
         @endforelse
     </div>
 

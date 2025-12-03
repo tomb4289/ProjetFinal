@@ -8,8 +8,13 @@
     <section class="p-4 pt-2" aria-label="Gestion de mes celliers">
         {{-- N'affiche pas le bouton modifier si aucun cellier --}}
         <x-page-header title="Mes Celliers" />
+        
+        
+
         <div 
-            class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3" 
+            class="mt-6 {{ $celliers->isEmpty() 
+            ? 'mt-6 flex justify-center' 
+            : 'mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3' }} gap-3" 
             role="list" 
             aria-label="Liste des celliers"
         >
@@ -22,11 +27,15 @@
                 />
             {{-- Si vide, affiche un message --}}
             @empty
-                <div class="col-span-full p-6 text-center text-text-muted bg-card rounded-lg border border-border-base" role="status">
-                    Vous n'avez aucun cellier pour le moment.
-                </div>
+                <x-empty-state 
+                    title="Vous n'avez pas encore de cellier" 
+                    subtitle="Créez un cellier pour commencer à y ajouter des bouteilles."
+                    actionLabel="Créer un cellier"
+                    actionUrl="{{ route('cellar.create') }}"
+                />
             @endforelse
         </div>
+        
         
         @if(isset($showWelcomeTip) && $showWelcomeTip && isset($welcomeTipCellierId))
             <script>

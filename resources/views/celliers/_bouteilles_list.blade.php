@@ -17,13 +17,17 @@
 <div class="" role="region" aria-label="Contenu du cellier">
     @if ($bottles->isEmpty())
         @if ($hasFilters)
-            <p class="text-text-muted" role="status">
-                Aucun résultat trouvé pour ces filtres.
-            </p>
+            <x-empty-state 
+                title="Aucune bouteille ne correspond aux filtres appliqués" 
+                subtitle="Essayez d'ajuster ou de supprimer certains filtres pour voir plus de bouteilles dans ce cellier."
+            />
         @else
-            <p class="text-text-muted" role="status">
-                Ce cellier est encore vide. Utilisez le bouton « Ajouter une bouteille » pour commencer.
-            </p>
+            <x-empty-state 
+                title="Ce cellier est vide" 
+                subtitle="Ajoutez des bouteilles à ce cellier pour les voir apparaître ici."
+                actionLabel="Explorer le catalogue"
+                actionUrl="{{ route('bouteille.catalogue') }}"
+            />
         @endif
     @else
         <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4" role="list" aria-label="Liste des bouteilles">
