@@ -16,7 +16,6 @@ import "./ui/addToWishlist";
 import "./ui/typewriter-toast";
 import "./ui/shareBottle";
 
-
 /* ============================================================
    MODULE : Toasts – Petites notifications
    ------------------------------------------------------------
@@ -39,7 +38,7 @@ window.showToast = function (message, type = "success") {
     const isSuccess = type === "success";
 
     toast.className = `
-        pointer-events-auto flex items-center gap-4 w-80 select-none
+        pointer-events-auto flex items-center gap-2 justify-between w-full select-none
         bg-white rounded-lg border p-4 shadow-lg
         transition-all duration-300 opacity-0 translate-y-3
         ${isSuccess ? "border-emerald-200" : "border-rose-200"}

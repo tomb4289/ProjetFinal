@@ -10,7 +10,7 @@
    {{-- Permet l'affichage du bouton Ajouter un vin --}}
    @if ($addWineBtn == true)
       <div class="w-full flex justify-end px-4 pointer-events-auto">
-         <button id="addWineToCellar" class="group bg-button-default text-card border-2 border-primary shadow-lg rounded-full p-6 hover:bg-button-hover transition">
+         <button id="addWineToCellar" class="group bg-button-default text-card border-2 border-primary shadow-lg rounded-full p-4 hover:bg-button-hover transition">
             <x-dynamic-component :component="'lucide-plus'" class="w-10 h-10 stroke-primary group-hover:stroke-white transition"/>
          </button>
        </div>

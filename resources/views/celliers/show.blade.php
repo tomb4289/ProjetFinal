@@ -33,7 +33,7 @@
 {{-- Ajout de role="dialog" pour la modale --}}
 <div
     id="addWineBtnContainer"
-    class="fixed z-50 bottom-0 left-0 w-full p-4 py-10 bg-card border border-border-base shadow-lg rounded-t-lg transform translate-y-full transition-transform duration-300"
+    class="fixed z-50 bottom-0 left-0 w-full px-2 sm:px-4 pt-5 pb-10 bg-card border border-border-base shadow-lg rounded-t-lg transform translate-y-full transition-transform duration-300"
     role="dialog"
     aria-modal="true"
     aria-labelledby="titre-ajout-vin"

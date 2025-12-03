@@ -20,6 +20,7 @@
                 {{ $title }}
             </h2>
 
+            {{-- Sous-titre (optionnel) --}}
             @if ($subtitle)
                 <p class="text-sm text-neutral-800">
                     {{ $subtitle }}
