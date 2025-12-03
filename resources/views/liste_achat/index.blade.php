@@ -3,37 +3,120 @@
 @section('title', 'Liste d’achat')
 
 @section('content')
-<div class="p-4">
 
-    <h1 class="text-2xl font-bold text-center mb-6">Ma liste d’achat</h1>
+<div class="p-4 pt-24">
 
+    <h1 class="text-3xl font-bold mb-6">Ma liste d’achat</h1>
+
+    {{-- État vide --}}
     @if ($items->isEmpty())
-        <p class="text-center text-muted mt-20">
-            Votre liste d’achat est vide.<br>
-            Ajoutez des bouteilles depuis le catalogue ou vos celliers.
-        </p>
+        <div class="flex flex-col items-center mt-20 text-center opacity-80">
+            <img src="https://cdn-icons-png.flaticon.com/512/4305/4305434.png" 
+                 class="w-24 h-24 mb-4 opacity-70" 
+                 alt="Liste vide">
+
+            <p class="text-lg font-medium text-gray-700">
+                Votre liste d’achat est vide.
+            </p>
+
+            <p class="text-sm text-gray-500 mt-1">
+                Ajoutez des bouteilles depuis le catalogue ou vos celliers.
+            </p>
+        </div>
     @endif
 
+
+    {{-- Liste d’achat --}}
     @foreach ($items as $item)
-        <div class="p-4 bg-card shadow rounded mb-3 flex justify-between items-center">
-            
+    @php
+        $b = $item->bouteilleCatalogue;
+    @endphp
+
+    <div class="bg-white shadow-md rounded-xl p-4 mb-4 flex items-center justify-between border border-gray-100">
+
+        {{-- Infos bouteille --}}
+        <div class="flex items-start gap-3">
+
+            {{-- Photo réelle de la bouteille --}}
+            <div class="rounded-lg w-14 h-14 bg-gray-50 flex items-center justify-center overflow-hidden shadow-sm">
+                @if ($b->image)
+                    <img src="{{ $b->image }}" 
+                         alt="Image {{ $b->nom }}"
+                         class="w-full h-full object-contain">
+                @else
+                    <x-dynamic-component 
+                        :component="'lucide-wine'" 
+                        class="w-7 h-7 text-primary opacity-60"
+                    />
+                @endif
+            </div>
+
+            {{-- Texte --}}
             <div>
-                <p class="font-semibold">{{ $item->bouteilleCatalogue->nom }}</p>
-                <p class="text-sm text-muted">Quantité : {{ $item->quantite }}</p>
-            </div>
+                <p class="font-semibold text-gray-800 text-sm leading-tight">
+                    {{ $b->nom }}
+                </p>
 
-            <div class="flex items-center gap-3">
-                
-                {{-- Supprimer --}}
-                <form method="POST" action="{{ route('listeAchat.destroy', $item) }}">
-                    @csrf
-                    @method('DELETE')
-                    <button class="text-red-600 font-bold">Supprimer</button>
-                </form>
-            </div>
+                {{-- pays + format (corrigé) --}}
+                <p class="text-xs text-gray-500 mt-1">
+                    {{ $b->pays->nom ?? 'Pays inconnu' }} — 
+                    {{ $b->volume ?? 'Format inconnu' }}
+                </p>
 
+                {{-- prix --}}
+                <p class="text-xs text-gray-600 mt-1">
+                    Prix : 
+                    <span class="font-semibold">
+                        {{ number_format($b->prix, 2, ',', ' ') }} $
+                    </span>
+                </p>
+
+                {{-- quantité --}}
+                <p class="text-xs text-gray-600">
+                    Quantité : <span class="font-semibold">{{ $item->quantite }}</span>
+                </p>
+
+                {{-- sous-total --}}
+                <p class="text-xs text-gray-700 mt-1">
+                    Sous-total : 
+                    <span class="font-semibold">
+                        {{ number_format($b->prix * $item->quantite, 2, ',', ' ') }} $
+                    </span>
+                </p>
+            </div>
         </div>
+
+        {{-- Bouton supprimer --}}
+        <form method="POST" action="{{ route('listeAchat.destroy', $item) }}">
+            @csrf
+            @method('DELETE')
+
+            <button 
+                class="flex items-center gap-1 text-red-600 text-sm font-semibold hover:text-red-700 transition"
+            >
+                <x-dynamic-component component="lucide-trash-2" class="w-4 h-4" />
+                Supprimer
+            </button>
+        </form>
+
+    </div>
     @endforeach
 
+
+    {{-- Total (si items présents) --}}
+    @if (!$items->isEmpty())
+        @php
+            $total = $items->sum(fn($i) => $i->quantite * ($i->bouteilleCatalogue->prix ?? 0));
+        @endphp
+
+        <div class="mt-8 bg-gray-200 text-gray-900 p-5 rounded-2xl shadow-md text-center">
+    <p class="text-xl font-bold">
+        Total estimé : {{ number_format($total, 2, ',', ' ') }} $
+    </p>
 </div>
+
+    @endif
+
+</div>
+
 @endsection
