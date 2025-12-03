@@ -125,8 +125,14 @@ function fetchCatalogue(url = "/catalogue/search") {
         .then((data) => {
             if (container) {
                 container.innerHTML = data.html;
+                window.dispatchEvent(new CustomEvent("catalogueReloaded"));
+
                 // Re-bind pagination links pour AJAX
                 bindPaginationLinks();
+
+                // Rebind les boutons wishlist
+            window.dispatchEvent(new CustomEvent("catalogueReloaded"));
+        
             }
         })
         .catch((err) => {
