@@ -11,11 +11,7 @@
     {{-- État vide --}}
     @if ($items->isEmpty())
         <div class="flex flex-col items-center mt-20 text-center opacity-80">
-            <img src="https://cdn-icons-png.flaticon.com/512/4305/4305434.png" 
-                 class="w-24 h-24 mb-4 opacity-70" 
-                 alt="Liste vide">
-
-            <p class="text-lg font-medium text-gray-700">
+git add             <p class="text-lg font-medium text-gray-700">
                 Votre liste d’achat est vide.
             </p>
 

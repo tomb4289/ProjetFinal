@@ -14,11 +14,11 @@ class ListeAchatController extends Controller
     public function index()
     {
         $items = auth()->user()
-            ->listeAchat()
-            ->with('bouteilleCatalogue')
-            ->orderBy('achete')
-            ->orderBy('date_ajout', 'desc')
-            ->get();
+        ->listeAchat()
+        ->with('bouteilleCatalogue')
+        ->orderBy('achete')
+        ->orderBy('date_ajout', 'desc')
+        ->get();
 
         return view('liste_achat.index', compact('items'));
     }
@@ -63,7 +63,6 @@ class ListeAchatController extends Controller
             'message' => 'Bouteille ajoutée à votre liste d’achat.'
         ]);
     }
-
 
     /**
      * Modifier quantité ou statut acheté
