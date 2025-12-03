@@ -58,8 +58,10 @@
                             <td class="px-4 py-3">{{ $user->id }}</td>
 
                             <td class="px-4 py-3">
-                                <a href="{{ route('admin.users.show', $user->id) }}"
-                                   class="font-semibold text-button-default hover:underline">
+                                <a
+                                    href="{{ route('admin.users.show', $user->id) }}"
+                                    class="font-semibold text-button-default hover:underline"
+                                >
                                     {{ $user->name }}
                                 </a>
                             </td>
@@ -89,10 +91,13 @@
                             </td>
 
                             <td class="px-4 py-3 text-right whitespace-nowrap space-x-2">
+
                                 {{-- Activer / désactiver --}}
-                                <form method="POST"
-                                      action="{{ route('admin.users.toggle-active', $user->id) }}"
-                                      class="inline">
+                                <form
+                                    method="POST"
+                                    action="{{ route('admin.users.toggle-active', $user->id) }}"
+                                    class="inline"
+                                >
                                     @csrf
                                     <x-primary-btn
                                         type="submit"
@@ -101,11 +106,30 @@
                                     />
                                 </form>
 
-                                {{-- Supprimer --}}
-                                <x-delete-btn
-                                    :route="route('admin.users.destroy', $user->id)"
-                                    class="align-middle"
-                                />
+                                {{-- Menu 3 points + "Supprimer" --}}
+                                <div class="relative inline-block text-left group">
+                                    <button
+                                        type="button"
+                                        class="p-2 rounded-full hover:bg-card-hover focus:outline-none"
+                                        aria-label="Actions supplémentaires"
+                                    >
+                                        <x-dynamic-component
+                                            :component="'lucide-more-vertical'"
+                                            class="w-5 h-5 stroke-text-heading"
+                                            aria-hidden="true"
+                                        />
+                                    </button>
+
+                                    <div
+                                        class="absolute right-0 mt-2 hidden group-hover:block group-focus-within:block z-20"
+                                    >
+                                        <x-delete-btn
+                                            :route="route('admin.users.destroy', $user->id)"
+                                            variant="menu"
+                                            label="Supprimer"
+                                        />
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     @empty
@@ -127,8 +151,10 @@
                 {{-- Ligne haut : nom + badges --}}
                 <div class="flex items-start justify-between gap-2">
                     <div>
-                        <a href="{{ route('admin.users.show', $user->id) }}"
-                           class="font-semibold text-button-default hover:underline">
+                        <a
+                            href="{{ route('admin.users.show', $user->id) }}"
+                            class="font-semibold text-button-default hover:underline"
+                        >
                             {{ $user->name }}
                         </a>
                         <p class="text-xs text-text-muted break-all">
@@ -157,8 +183,10 @@
 
                 {{-- Actions --}}
                 <div class="flex items-center justify-between gap-2 pt-2 border-t border-border-base mt-2">
-                    <form method="POST"
-                          action="{{ route('admin.users.toggle-active', $user->id) }}">
+                    <form
+                        method="POST"
+                        action="{{ route('admin.users.toggle-active', $user->id) }}"
+                    >
                         @csrf
                         <x-primary-btn
                             type="submit"
@@ -167,9 +195,29 @@
                         />
                     </form>
 
-                    <x-delete-btn
-                        :route="route('admin.users.destroy', $user->id)"
-                    />
+                    <div class="relative inline-block text-left group">
+                        <button
+                            type="button"
+                            class="p-2 rounded-full hover:bg-card-hover focus:outline-none"
+                            aria-label="Actions supplémentaires"
+                        >
+                            <x-dynamic-component
+                                :component="'lucide-more-vertical'"
+                                class="w-5 h-5 stroke-text-heading"
+                                aria-hidden="true"
+                            />
+                        </button>
+
+                        <div
+                            class="absolute right-0 mt-2 hidden group-hover:block group-focus-within:block z-20"
+                        >
+                            <x-delete-btn
+                                :route="route('admin.users.destroy', $user->id)"
+                                variant="menu"
+                                label="Supprimer"
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
         @empty
