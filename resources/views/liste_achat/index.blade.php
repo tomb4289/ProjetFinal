@@ -7,84 +7,129 @@
 <div class="p-4 lg:p-6 max-w-6xl mx-auto space-y-6">
 
     {{-- En-tête de page --}}
-    <x-page-header 
-        title="Ma liste d’achat" 
-        undertitle="Planifiez vos futurs achats de bouteilles en ajoutant des articles à votre liste d’achat."
-    />
+    <x-page-header
+        title="Ma liste d’achat"
+        undertitle="Planifiez vos futurs achats de bouteilles en ajoutant des articles à votre liste d’achat." />
 
     {{-- État vide --}}
     @if ($items->isEmpty())
-       <x-empty-state 
-           title="Votre liste d’achat est vide" 
-           subtitle="Ajoutez des bouteilles à votre liste pour planifier vos achats futurs."
-           actionLabel="Explorer le catalogue"
-           actionUrl="{{ route('bouteille.catalogue') }}"
-       />
+    <x-empty-state
+        title="Votre liste d’achat est vide"
+        subtitle="Ajoutez des bouteilles à votre liste pour planifier vos achats futurs."
+        actionLabel="Explorer le catalogue"
+        actionUrl="{{ route('bouteille.catalogue') }}" />
     @endif
 
     {{-- Liste d’achat --}}
     <section class="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         @foreach ($items as $item)
-            @php
-                $b = $item->bouteilleCatalogue;
-            @endphp
+        @php
+        $b = $item->bouteilleCatalogue;
+        @endphp
 
-            <div class="relative flex flex-col rounded-2xl border border-gray-200 bg-white/80 shadow-sm 
+        <div class="relative flex flex-col rounded-2xl border border-gray-200 bg-white/80 shadow-sm 
                         hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden">
 
-                {{-- Bouton d’action (menu) --}}
-                    <x-dropdown-action 
-                        :item="$item" 
-                        deleteUrl="{{ route('listeAchat.destroy', $item) }}"
-                    />
+            {{-- Bouton d’action (menu) --}}
+            <x-dropdown-action
+                :item="$item"
+                deleteUrl="{{ route('listeAchat.destroy', $item) }}" />
 
-                {{-- Image --}}
-                <div class="max-h-[160px] bg-gray-50 border-b border-gray-100 flex items-center justify-center 
+            {{-- Image --}}
+            <div class="max-h-[160px] bg-gray-50 border-b border-gray-100 flex items-center justify-center 
                             overflow-hidden aspect-3/4 py-3">
-                    @if ($b->image)
-                        <img src="{{ $b->image }}" 
-                             alt="Image {{ $b->nom }}"
-                             class="max-w-[96px] max-h-[160px] object-contain">
-                    @else
-                        <x-dynamic-component 
-                            :component="'lucide-wine'" 
-                            class="w-7 h-7 text-primary/60"
-                        />
-                    @endif
+                @if ($b->image)
+                <img src="{{ $b->image }}"
+                    alt="Image {{ $b->nom }}"
+                    class="max-w-[96px] max-h-[160px] object-contain">
+                @else
+                <x-dynamic-component
+                    :component="'lucide-wine'"
+                    class="w-7 h-7 text-primary/60" />
+                @endif
+            </div>
+
+            {{-- Texte --}}
+            <div class="flex-1 p-4 flex flex-col gap-2">
+                {{-- Marquer comme acheté --}}
+                <div class="flex items-center gap-2">
+                    <input
+                        type="checkbox"
+                        class="wishlist-check-achete"
+                        data-url="{{ route('listeAchat.update', $item) }}"
+                        data-item-id="{{ $item->id }}"
+                        @checked($item->achete)
+                    >
+                    <span class="{{ $item->achete ? 'line-through text-gray-400' : '' }} text-xs font-medium">
+                        Acheté
+                    </span>
                 </div>
 
-                {{-- Texte --}}
-                <div class="flex-1 p-4 flex flex-col gap-2">
-                    <p class="font-semibold text-gray-900 text-sm leading-tight line-clamp-2">
-                        {{ $b->nom }}
+                <p class="font-semibold text-gray-900 text-sm leading-tight line-clamp-2">
+                    {{ $b->nom }}
+                </p>
+
+                {{-- pays + format --}}
+                <p class="text-xs text-gray-500">
+                    {{ $b->pays->nom ?? 'Pays inconnu' }} —
+                    {{ $b->volume ?? 'Format inconnu' }}
+                </p>
+
+                {{-- prix / quantité / sous-total --}}
+                <div class="mt-2 space-y-1 text-xs">
+                    <p class="text-gray-600">
+                        Prix : <span class="font-semibold">{{ number_format($b->prix, 2, ',', ' ') }} $</span>
                     </p>
 
-                    {{-- pays + format --}}
-                    <p class="text-xs text-gray-500">
-                        {{ $b->pays->nom ?? 'Pays inconnu' }} — 
-                        {{ $b->volume ?? 'Format inconnu' }}
+                    <p class="text-gray-700">
+                        Sous-total :
+                        <span class="font-semibold">
+                            {{ number_format($b->prix * $item->quantite, 2, ',', ' ') }} $
+                        </span>
                     </p>
 
-                    {{-- prix / quantité / sous-total --}}
-                    <div class="mt-2 space-y-1 text-xs">
-                        <p class="text-gray-600">
-                            Prix : <span class="font-semibold">{{ number_format($b->prix, 2, ',', ' ') }} $</span>
-                        </p>
+                    {{-- CONTRÔLE QUANTITÉ --}}
+                    <div
+                        class="flex items-center justify-between bg-neutral-50 border border-border-base rounded-full 
+                                   p-0.5 sm:p-1 shadow-sm w-full max-w-[120px] sm:max-w-[150px]">
 
-                        <p class="text-gray-600">
-                            Quantité : <span class="font-semibold">{{ $item->quantite }}</span>
-                        </p>
+                        {{-- Bouton - --}}
+                        <button
+                            type="button"
+                            class="wishlist-qty-btn flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full 
+                                       text-text-muted hover:text-danger hover:bg-white hover:shadow-sm transition-all duration-200 
+                                       active:scale-95"
+                            data-direction="down"
+                            data-url="{{ route('listeAchat.update', $item) }}"
+                            data-item-id="{{ $item->id }}">
+                            <x-dynamic-component :component="'lucide-minus'" class="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                        </button>
 
-                        <p class="text-gray-700">
-                            Sous-total : 
-                            <span class="font-semibold">
-                                {{ number_format($b->prix * $item->quantite, 2, ',', ' ') }} $
-                            </span>
-                        </p>
+                        {{-- Affichage quantité --}}
+                        <div
+                            class="wishlist-qty-display text-xs sm:text-sm font-bold text-text-heading text-center select-none px-1"
+                            data-item-id="{{ $item->id }}"
+                            data-url="{{ route('listeAchat.update', $item) }}">
+                            {{ $item->quantite }}
+                        </div>
+
+                        {{-- Bouton + --}}
+                        <button
+                            type="button"
+                            class="wishlist-qty-btn flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full 
+                                       text-text-muted hover:text-primary hover:bg-white hover:shadow-sm transition-all duration-200 
+                                       active:scale-95"
+                            data-direction="up"
+                            data-url="{{ route('listeAchat.update', $item) }}"
+                            data-item-id="{{ $item->id }}">
+                            <x-dynamic-component :component="'lucide-plus'" class="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                        </button>
+
                     </div>
                 </div>
-
             </div>
+
+        </div>
         @endforeach
     </section>
     {{-- Pagination --}}
@@ -93,7 +138,7 @@
     </div>
 
     {{-- Total --}}
-   @if (!$items->isEmpty())
+    @if (!$items->isEmpty())
     <div class="mt-10">
         <div class="bg-white border border-gray-200 shadow-sm rounded-2xl p-6 md:p-8">
 
@@ -131,7 +176,7 @@
 
         </div>
     </div>
-@endif
+    @endif
 </div>
 
 @endsection
