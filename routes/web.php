@@ -38,6 +38,12 @@ Route::middleware('auth')->group(function () {
     // Suggestions de recherche
     Route::get('/catalogue/suggest', [CatalogueController::class, 'suggest']);
 
+    // API pour trouver une bouteille du catalogue par code SAQ
+    Route::get('/api/catalogue/by-code-saq/{codeSaq}', [CatalogueController::class, 'findByCodeSaq']);
+    
+    // API pour trouver une bouteille du catalogue par nom (fallback)
+    Route::get('/api/catalogue/by-name/{nom}', [CatalogueController::class, 'findByName']);
+
     // Détails d'une bouteille du catalogue
     Route::get('/catalogue/{bouteilleCatalogue}', [CatalogueController::class, 'show'])
         ->name('catalogue.show');

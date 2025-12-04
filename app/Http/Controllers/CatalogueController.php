@@ -131,4 +131,54 @@ class CatalogueController extends Controller
 
         return response()->json($results);
     }
+
+    /**
+     * Trouve une bouteille du catalogue par son code SAQ.
+     * Utilisé pour ajouter une bouteille du cellier à la liste d'achat.
+     * 
+     * @param string $codeSaq Le code SAQ de la bouteille
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function findByCodeSaq(string $codeSaq)
+    {
+        // Chercher d'abord par code_saQ
+        $bouteille = BouteilleCatalogue::where('code_saQ', $codeSaq)->first();
+
+        if (!$bouteille) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Bouteille du catalogue non trouvée'
+            ], 404);
+        }
+
+        return response()->json([
+            'id' => $bouteille->id,
+            'nom' => $bouteille->nom
+        ]);
+    }
+
+    /**
+     * Trouve une bouteille du catalogue par son nom.
+     * Utilisé comme fallback si le code_saq n'est pas disponible.
+     * 
+     * @param string $nom Le nom de la bouteille
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function findByName(string $nom)
+    {
+        // Chercher par nom exact (première correspondance)
+        $bouteille = BouteilleCatalogue::where('nom', $nom)->first();
+
+        if (!$bouteille) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Bouteille du catalogue non trouvée'
+            ], 404);
+        }
+
+        return response()->json([
+            'id' => $bouteille->id,
+            'nom' => $bouteille->nom
+        ]);
+    }
 }

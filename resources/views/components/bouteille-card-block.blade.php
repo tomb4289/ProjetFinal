@@ -179,7 +179,8 @@
             data-bouteille-id="{{ $bouteilleId }}"
             data-quantite="{{ $quantite }}"
             data-code-saq="{{ $codeSaq ?? '' }}"
-            aria-label="Ajouter à la liste d’achat"
+            data-nom="{{ $nom }}"
+            aria-label="Ajouter à la liste d'achat"
         >
             <x-dynamic-component 
                 :component="'lucide-shopping-cart'" 
