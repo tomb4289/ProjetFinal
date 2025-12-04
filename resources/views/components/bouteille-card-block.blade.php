@@ -109,7 +109,7 @@
 
                 {{-- Badge quantité --}}
                 <div
-                    class="qty-display bottle-qty-value text-xs sm:text-sm font-bold text-text-heading flex-1 text-center select-none px-1"
+                    class="qty-display bottle-qty-value text-xs sm:text-sm font-bold text-primary rounded-full px-2 py-0.5 flex-1 text-center select-none"
                     data-bouteille="{{ $bouteilleId }}"
                     data-qty-value="{{ $bouteilleId }}"
                     aria-label="Quantité actuelle : {{ $quantite ?? 1 }}"
