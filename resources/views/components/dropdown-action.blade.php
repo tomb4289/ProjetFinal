@@ -3,6 +3,9 @@
     'isModifiable' => null,
     'deleteUrl' => null,
     'editUrl' => null,
+    {{-- AJOUT TRANSFERT --}}
+    'transferUrl' => null,
+    'item' => null,
 ])
 
 <div class="group absolute top-0 right-0 p-2 cursor-pointer z-20 ">
@@ -22,6 +25,19 @@
             <a href="{{ $editUrl }}" class="block px-2 py-1 text-sm hover:bg-gray-100 rounded transition-colors mb-1" role="menuitem">
                 Modifier
             </a>
+        @endif
+
+        {{-- AJOUT TRANSFERT – Option TRANSFÉRER --}}
+        @if($transferUrl)
+            <button
+                type="button"
+                class="wishlist-transfer-btn block w-full text-left px-2 py-1 text-sm hover:bg-gray-100 rounded transition-colors mb-1"
+                data-item-id="{{ $item->id }}"
+                data-url="{{ $transferUrl }}"
+                role="menuitem"
+            >
+                Transférer au cellier
+            </button>
         @endif
 
         {{-- Option Supprimer --}}
