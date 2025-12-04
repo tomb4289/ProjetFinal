@@ -135,7 +135,7 @@
                         @if(!$isCatalogue && isset($donnees['quantite']))
                             <div>
                                 <span class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">En stock</span>
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium {{ $donnees['quantite'] > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium text-primary">
                                     {{ $donnees['quantite'] }} {{ $donnees['quantite'] > 1 ? 'bouteilles' : 'bouteille' }}
                                 </span>
                             </div>
