@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-
-    document.querySelectorAll(".wishlist-transfer-btn").forEach(btn => {
-
+    document.querySelectorAll(".wishlist-transfer-btn").forEach((btn) => {
         if (btn.dataset.jsBound === "true") return;
         btn.dataset.jsBound = "true";
 
@@ -9,12 +7,15 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
                 // Charger celliers
                 const response = await fetch("/api/celliers");
-                
+
                 if (!response.ok) {
-                    showToast("Erreur lors du chargement des celliers", "error");
+                    showToast(
+                        "Erreur lors du chargement des celliers",
+                        "error"
+                    );
                     return;
                 }
-                
+
                 const celliers = await response.json();
 
                 if (!celliers || !Array.isArray(celliers) || !celliers.length) {
@@ -26,40 +27,48 @@ document.addEventListener("DOMContentLoaded", () => {
                 showCellierSelectionModal(celliers, (selectedCellierId) => {
                     if (!selectedCellierId) return;
 
-                    // FORM DATA 
+                    // FORM DATA
                     const formData = new FormData();
                     formData.append("cellier_id", selectedCellierId);
 
                     fetch(btn.dataset.url, {
                         method: "POST",
                         headers: {
-                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
-                            "Accept": "application/json",
+                            "X-CSRF-TOKEN": document.querySelector(
+                                'meta[name="csrf-token"]'
+                            ).content,
+                            Accept: "application/json",
                         },
-                        body: formData
+                        body: formData,
                     })
-                    .then(async res => {
-                        let data = {};
+                        .then(async (res) => {
+                            let data = {};
 
-                        try { 
-                            data = await res.json(); 
-                        } catch (e) {
-                            console.error("Erreur parsing JSON:", e);
-                            showToast("Erreur lors du transfert", "error");
-                            return;
-                        }
+                            try {
+                                data = await res.json();
+                            } catch (e) {
+                                console.error("Erreur parsing JSON:", e);
+                                showToast("Erreur lors du transfert", "error");
+                                return;
+                            }
 
-                        if (res.ok && data.success) {
-                            showToast(data.message || "Transfert réussi", "success");
-                            setTimeout(() => location.reload(), 1000);
-                        } else {
-                            showToast(data.message || "Erreur lors du transfert", "error");
-                        }
-                    })
-                    .catch((error) => {
-                        console.error("Erreur:", error);
-                        showToast("Erreur réseau", "error");
-                    });
+                            if (res.ok && data.success) {
+                                showToast(
+                                    data.message || "Transfert réussi",
+                                    "success"
+                                );
+                                setTimeout(() => location.reload(), 1000);
+                            } else {
+                                showToast(
+                                    data.message || "Erreur lors du transfert",
+                                    "error"
+                                );
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("Erreur:", error);
+                            showToast("Erreur réseau", "error");
+                        });
                 });
             } catch (error) {
                 console.error("Erreur:", error);
@@ -73,13 +82,14 @@ document.addEventListener("DOMContentLoaded", () => {
      */
     function showCellierSelectionModal(celliers, onSelect) {
         // Créer l'overlay
-        const overlay = document.createElement('div');
-        overlay.className = 'fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4';
-        overlay.id = 'cellier-selection-modal';
+        const overlay = document.createElement("div");
+        overlay.className =
+            "fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4";
+        overlay.id = "cellier-selection-modal";
 
         // Créer la modal
-        const modal = document.createElement('div');
-        modal.className = 'bg-white rounded-lg shadow-xl max-w-md w-full p-6 max-h-[80vh] overflow-y-auto';
+        const modal = document.createElement("div");
+        modal.className = "bg-white rounded-lg shadow-xl max-w-md w-full p-6";
 
         modal.innerHTML = `
             <div class="flex items-center justify-between mb-4">
@@ -90,15 +100,19 @@ document.addEventListener("DOMContentLoaded", () => {
                     </svg>
                 </button>
             </div>
-            <div class="space-y-2">
-                ${celliers.map(cellier => `
+            <div class="space-y-2 overflow-y-auto max-h-[80vh]">
+                ${celliers
+                    .map(
+                        (cellier) => `
                     <button 
                         class="cellier-option w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:border-primary hover:bg-primary/5 transition-all"
                         data-cellier-id="${cellier.id}"
                     >
                         <div class="font-medium text-gray-900">${cellier.nom}</div>
                     </button>
-                `).join('')}
+                `
+                    )
+                    .join("")}
             </div>
         `;
 
@@ -111,16 +125,18 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         // Gérer la fermeture
-        modal.querySelector('.cellier-modal-close').addEventListener('click', closeModal);
-        overlay.addEventListener('click', (e) => {
+        modal
+            .querySelector(".cellier-modal-close")
+            .addEventListener("click", closeModal);
+        overlay.addEventListener("click", (e) => {
             if (e.target === overlay) {
                 closeModal();
             }
         });
 
         // Gérer la sélection
-        modal.querySelectorAll('.cellier-option').forEach(option => {
-            option.addEventListener('click', () => {
+        modal.querySelectorAll(".cellier-option").forEach((option) => {
+            option.addEventListener("click", () => {
                 const cellierId = option.dataset.cellierId;
                 closeModal();
                 onSelect(cellierId);
@@ -129,12 +145,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Fermer avec Échap
         const handleEscape = (e) => {
-            if (e.key === 'Escape') {
+            if (e.key === "Escape") {
                 closeModal();
-                document.removeEventListener('keydown', handleEscape);
+                document.removeEventListener("keydown", handleEscape);
             }
         };
-        document.addEventListener('keydown', handleEscape);
+        document.addEventListener("keydown", handleEscape);
     }
-
 });
