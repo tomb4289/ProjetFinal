@@ -30,7 +30,7 @@ class ListeAchatController extends Controller
             ->with('bouteilleCatalogue')
             ->get();
 
-        $totalPrice = $allItems->sum(function($item) {
+        $totalPrice = $allItems->sum(function ($item) {
             if (!$item->bouteilleCatalogue) {
                 return 0;
             }
@@ -224,61 +224,55 @@ class ListeAchatController extends Controller
 
     public function search(Request $request)
     {
-        $user = auth()->user();
+        $query = ListeAchat::select('liste_achat.*')
+            ->join('bouteille_catalogue', 'liste_achat.bouteille_catalogue_id', '=', 'bouteille_catalogue.id')
+            ->where('liste_achat.user_id', auth()->id())
+            ->with('bouteilleCatalogue');
 
-        $query = $user->listeAchat()->with('bouteilleCatalogue');
-
-        // SEARCH TEXT
         if ($request->search) {
-            $query->whereHas('bouteilleCatalogue', function ($q) use ($request) {
-                $q->where('nom', 'like', '%' . $request->search . '%');
-            });
+            $query->where('bouteille_catalogue.nom', 'like', '%' . $request->search . '%');
         }
 
-        // PAYS
         if ($request->pays) {
-            $query->whereHas('bouteilleCatalogue', function ($q) use ($request) {
-                $q->where('id_pays', $request->pays);
-            });
+            $query->where('bouteille_catalogue.id_pays', $request->pays);
         }
 
-        // TYPE
         if ($request->type) {
-            $query->whereHas('bouteilleCatalogue', function ($q) use ($request) {
-                $q->where('id_type_vin', $request->type);
-            });
+            $query->where('bouteille_catalogue.id_type_vin', $request->type);
         }
 
-        // REGION
         if ($request->region) {
-            $query->whereHas('bouteilleCatalogue', function ($q) use ($request) {
-                $q->where('id_region', $request->region);
-            });
+            $query->where('bouteille_catalogue.id_region', $request->region);
         }
 
-        // MILLÉSIMES
         if ($request->millesime) {
-            $query->whereHas('bouteilleCatalogue', function ($q) use ($request) {
-                $q->where('millesime', $request->millesime);
-            });
+            $query->where('bouteille_catalogue.millesime', $request->millesime);
         }
 
-        // PRIX MIN / MAX
-        if ($request->prix_min || $request->prix_max) {
-            $query->whereHas('bouteilleCatalogue', function ($q) use ($request) {
-                if ($request->prix_min) $q->where('prix', '>=', $request->prix_min);
-                if ($request->prix_max) $q->where('prix', '<=', $request->prix_max);
-            });
+        if ($request->prix_min && $request->prix_max) {
+            $query->whereBetween('bouteille_catalogue.prix', [$request->prix_min, $request->prix_max]);
+        } elseif ($request->prix_min) {
+            $query->where('bouteille_catalogue.prix', '>=', $request->prix_min);
+        } elseif ($request->prix_max) {
+            $query->where('bouteille_catalogue.prix', '<=', $request->prix_max);
         }
 
-        // SORTING
-        if ($request->sort_by && in_array($request->sort_direction, ['asc', 'desc'])) {
-            $query->whereHas('bouteilleCatalogue', function ($q) use ($request) {
-                $q->orderBy($request->sort_by, $request->sort_direction);
-            });
+        $sortBy = $request->sort_by;
+        $sortDirection = $request->sort_direction;
+
+        if ($sortBy && in_array($sortDirection, ['asc', 'desc'])) {
+            if (in_array($sortBy, ['nom', 'prix', 'millesime'])) {
+                $query->orderBy('bouteille_catalogue.' . $sortBy, $sortDirection);
+            } else {
+                $query->orderBy('liste_achat.' . $sortBy, $sortDirection);
+            }
+        } else {
+            $query->orderBy('liste_achat.achete', 'asc')
+                ->orderBy('liste_achat.date_ajout', 'desc');
         }
 
         $items = $query->paginate(10);
+
         $count = $items->total();
 
         return response()->json([

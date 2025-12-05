@@ -32,6 +32,11 @@ const suggestionUrl =
 const suggestionsBox = document.getElementById("suggestionsBox");
 let suggestionTimeout = null;
 
+let isListeAchat = false;
+if (containerId === "listeAchatContainer") {
+    isListeAchat = true;
+}
+
 // Reset des filtres
 function resetFilters() {
     if (searchInput) searchInput.value = "";
@@ -41,7 +46,10 @@ function resetFilters() {
     if (millesimeFilter) millesimeFilter.value = "";
     if (priceMinFilter) priceMinFilter.value = "";
     if (priceMaxFilter) priceMaxFilter.value = "";
-    if (sortFilter) sortFilter.value = "date_import-desc";
+    if (sortFilter)
+        sortFilter.value = isListeAchat
+            ? "date_ajout-desc"
+            : "date_import-desc";
     fetchCatalogue(); // Call sans arg → baseUrl utilisé
 }
 
@@ -127,7 +135,7 @@ function fetchCatalogue(customUrl = baseUrl) {
                 // Rebind les boutons wishlist
                 window.dispatchEvent(new CustomEvent("catalogueReloaded"));
             }
-            
+
             // Masquer l'overlay de chargement après le chargement AJAX
             const overlay = document.getElementById("page-loading-overlay");
             if (overlay) {
@@ -138,7 +146,7 @@ function fetchCatalogue(customUrl = baseUrl) {
         })
         .catch((err) => {
             console.error("Erreur lors du fetch catalogue :", err);
-            
+
             // Masquer l'overlay même en cas d'erreur
             const overlay = document.getElementById("page-loading-overlay");
             if (overlay) {

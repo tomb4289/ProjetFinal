@@ -129,6 +129,9 @@
 
     {{-- Pagination --}}
     <div class="mt-6" role="pagination">
-        {{ $items->appends(request()->query())->links('vendor.pagination.tailwind') }}
+        {{ $items
+            ->appends(request()->query())
+            ->withPath(route('listeAchat.search'))
+            ->links('vendor.pagination.tailwind') }}
     </div>
 </div>
