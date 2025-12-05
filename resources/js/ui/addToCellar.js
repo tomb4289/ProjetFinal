@@ -70,11 +70,13 @@ if (boutonFermer && panneauCellier) {
 
     // Afficher un message de chargement
     function afficherChargement(container) {
-        container.innerHTML = `
-            <div class="py-4 text-center text-gray-400 animate-pulse">
-                Chargement des celliers...
-            </div>
-        `;
+        const template = document.getElementById("loading-template");
+        if (!template) {
+            return;
+        }
+        const clone = template.content.cloneNode(true);
+        container.innerHTML = "";
+        container.appendChild(clone);
     }
 
     function peuplerOptionsCelliers(celliers) {
@@ -82,42 +84,43 @@ if (boutonFermer && panneauCellier) {
         listeCelliers.innerHTML = "";
 
         if (celliers.length === 0) {
-            listeCelliers.innerHTML = `
-                <p class="text-gray-400 italic">
-                    Vous n'avez pas encore de cellier. Veuillez en créer un d'abord.
-                </p>
-                <a href="/celliers/create" class="bg-button-default border-2 border-primary text-primary hover:text-white px-4 py-2 rounded-lg w-40 text-center hover:bg-button-hover transition">Créer un cellier</a>
-            `;
+            const emptyTemplate = document.getElementById("empty-cellars-template");
+            if (emptyTemplate) {
+                const clone = emptyTemplate.content.cloneNode(true);
+                listeCelliers.appendChild(clone);
+            }
             return;
         }
+
+        const itemTemplate = document.getElementById("cellar-item-template");
+        if (!itemTemplate) {
+            return;
+        }
+
         celliers.forEach((cellier) => {
-            listeCelliers.innerHTML += `
-                <a 
-                    href="#"
-                    class="cellar-box block p-3 bg-card rounded-lg shadow-md border border-border-base hover:shadow-sm cursor-pointer"
-                    data-cellar-id="${cellier.id}"
-                    data-bottle-id="${idBouteilleActive}"
-                    data-quantity="${quantiteActive}"
-                >
-                    <div class="flex justify-between">
-                        <div class="flex flex-col gap-1">
-                            <h2 class="text-2xl font-semibold">${
-                                cellier.nom
-                            }</h2>
-                            ${
-                                cellier.total_bouteilles == 0 ||
-                                cellier.total_bouteilles === null
-                                    ? `<p class="text-gray-400 italic">Aucune bouteille</p>`
-                                    : `${cellier.total_bouteilles} Bouteille${
-                                          cellier.total_bouteilles > 1
-                                              ? "s"
-                                              : ""
-                                      }`
-                            }
-                        </div>
-                    </div>
-                </a>
-            `;
+            const clone = itemTemplate.content.cloneNode(true);
+            const link = clone.querySelector(".cellar-box");
+            const name = clone.querySelector(".cellar-name");
+            const count = clone.querySelector(".cellar-count");
+
+            link.dataset.cellarId = cellier.id;
+            link.dataset.bottleId = idBouteilleActive;
+            link.dataset.quantity = quantiteActive;
+            name.textContent = cellier.nom;
+
+            if (
+                cellier.total_bouteilles == 0 ||
+                cellier.total_bouteilles === null
+            ) {
+                count.textContent = "Aucune bouteille";
+                count.classList.add("text-gray-400", "italic");
+            } else {
+                count.textContent = `${cellier.total_bouteilles} Bouteille${
+                    cellier.total_bouteilles > 1 ? "s" : ""
+                }`;
+            }
+
+            listeCelliers.appendChild(clone);
         });
     }
 

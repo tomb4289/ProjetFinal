@@ -391,16 +391,17 @@ class CellierController extends Controller
             'quantite'         => $bouteille->quantite,
             'date_ajout'       => $bouteille->created_at,
             'format'           => $bouteille->format,
-            'type'             => null,
-            'millesime'        => null,
+            'type'             => $bouteille->type, // Read from manual bottle
+            'millesime'        => $bouteille->millesime, // Read from manual bottle
             'image'            => null,
             'note_degustation' => $bouteille->note_degustation,
             'rating'           => $bouteille->rating,
         ];
 
         if ($bouteilleCatalogue) {
-            $donnees['type']      = $bouteilleCatalogue->typeVin ? $bouteilleCatalogue->typeVin->nom : null;
-            $donnees['millesime'] = $bouteilleCatalogue->millesime;
+            // Override with catalogue data if available (catalogue takes precedence)
+            $donnees['type']      = $bouteilleCatalogue->typeVin ? $bouteilleCatalogue->typeVin->nom : $donnees['type'];
+            $donnees['millesime'] = $bouteilleCatalogue->millesime ?? $donnees['millesime'];
             $donnees['image']     = $bouteilleCatalogue->image;
             $donnees['url_saq']   = $bouteilleCatalogue->url_saq;
 

@@ -31,6 +31,10 @@
         @endif
     </head>
     <body class="bg-body">
+        {{-- Page Loading Overlay --}}
+        {{-- Covers entire viewport, header (z-50) and navigation (z-30) stay on top --}}
+        <div id="page-loading-overlay" class="fixed inset-0 bg-gray-50 z-[25] flex items-center justify-center hidden" aria-hidden="true" aria-label="Chargement de la page"></div>
+
         <x-header :logoPath='asset("images/logo_vino.png")' />
         
         <main class="bg-body mb-30" role="main" aria-label="Contenu principal">
@@ -47,6 +51,21 @@
         <x-confirm-delete-modal />
         <x-modal-pick-cellar />
         <x-share-modal />
+
+        {{-- Shared HTML Templates --}}
+        <template id="spinner-inline-template">
+            <div 
+                class="inline-block w-6 h-6 border-2 border-neutral-200 border-t-primary rounded-full animate-spin" 
+                role="status" 
+                aria-label="Loading..."
+            ></div>
+        </template>
+
+        <template id="loading-spinner-template">
+            <div class="flex items-center justify-center py-8">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            </div>
+        </template>
 
         @if(session('success') || session('error'))
             <script>

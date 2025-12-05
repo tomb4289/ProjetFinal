@@ -24,13 +24,21 @@ if (buttons.length) {
 
             const oldText = display.textContent;
             // Indicateur de chargement (Spinner)
-            display.innerHTML = `
-                <div 
-                    class="inline-block w-6 h-6 border-2 border-neutral-200 border-t-primary rounded-full animate-spin" 
-                    role="status" 
-                    aria-label="Loading..."
-                ></div>
-            `;
+            const spinnerTemplate = document.getElementById("spinner-inline-template");
+            if (spinnerTemplate) {
+                const clone = spinnerTemplate.content.cloneNode(true);
+                display.innerHTML = "";
+                display.appendChild(clone);
+            } else {
+                // Fallback if template doesn't exist
+                display.innerHTML = `
+                    <div 
+                        class="inline-block w-6 h-6 border-2 border-neutral-200 border-t-primary rounded-full animate-spin" 
+                        role="status" 
+                        aria-label="Loading..."
+                    ></div>
+                `;
+            }
             // Appel API pour mettre à jour la quantité
             fetch(url, {
                 method: "PATCH",

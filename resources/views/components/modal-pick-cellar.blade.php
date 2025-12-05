@@ -29,3 +29,39 @@
         aria-label="Liste des options d'ajout"
     ></div>
 </div>
+
+{{-- HTML Templates for dynamic content --}}
+<template id="loading-template">
+    <div class="py-4 text-center text-gray-400 animate-pulse">
+        <div class="flex items-center justify-center gap-2">
+            <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-primary"></div>
+            <span>Chargement...</span>
+        </div>
+    </div>
+</template>
+
+<template id="empty-cellars-template">
+    <div class="flex flex-col items-center gap-4">
+        <p class="text-gray-400 italic">
+            Vous n'avez pas encore de cellier. Veuillez en créer un d'abord.
+        </p>
+        <a href="/celliers/create" class="bg-button-default border-2 border-primary text-primary hover:text-white px-4 py-2 rounded-lg w-40 text-center hover:bg-button-hover transition">Créer un cellier</a>
+    </div>
+</template>
+
+<template id="cellar-item-template">
+    <a 
+        href="#"
+        class="cellar-box block p-3 bg-card rounded-lg shadow-md border border-border-base hover:shadow-sm cursor-pointer"
+        data-cellar-id=""
+        data-bottle-id=""
+        data-quantity=""
+    >
+        <div class="flex justify-between">
+            <div class="flex flex-col gap-1">
+                <h2 class="text-2xl font-semibold cellar-name"></h2>
+                <p class="cellar-count"></p>
+            </div>
+        </div>
+    </a>
+</template>
