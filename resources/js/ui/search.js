@@ -134,12 +134,27 @@ function fetchCatalogue(url = "/catalogue/search") {
                 bindPaginationLinks();
 
                 // Rebind les boutons wishlist
-            window.dispatchEvent(new CustomEvent("catalogueReloaded"));
-        
+                window.dispatchEvent(new CustomEvent("catalogueReloaded"));
+            }
+            
+            // Masquer l'overlay de chargement après le chargement AJAX
+            const overlay = document.getElementById("page-loading-overlay");
+            if (overlay) {
+                overlay.classList.add("hidden");
+                overlay.setAttribute("aria-hidden", "true");
+                overlay.innerHTML = "";
             }
         })
         .catch((err) => {
             console.error("Erreur lors du fetch catalogue :", err);
+            
+            // Masquer l'overlay même en cas d'erreur
+            const overlay = document.getElementById("page-loading-overlay");
+            if (overlay) {
+                overlay.classList.add("hidden");
+                overlay.setAttribute("aria-hidden", "true");
+                overlay.innerHTML = "";
+            }
         });
 }
 

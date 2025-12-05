@@ -115,6 +115,12 @@ if (overlay) {
             return;
         }
 
+        // Ignorer les liens de pagination du catalogue (gérés par AJAX)
+        // Les liens de pagination ont "page=" dans leur href et sont dans un élément avec role="pagination"
+        if (link.href && link.href.includes("page=") && link.closest('[role="pagination"]')) {
+            return;
+        }
+
         // Mettre à jour l'état actif du nav item avant de charger
         updateActiveNavItem(link);
 
