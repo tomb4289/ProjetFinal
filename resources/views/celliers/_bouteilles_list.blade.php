@@ -12,21 +12,29 @@
         || request()->filled('millesime')
         || request()->filled('prix_min')
         || request()->filled('prix_max');
+
+    // Nombre total de bouteilles dans le cellier (sans filtres)
+    $totalBottlesCount = $totalBottlesCount ?? ($cellier->bouteilles()->count() ?? 0);
+    $isCellierEmpty = $totalBottlesCount === 0;
 @endphp
 
 <div class="" role="region" aria-label="Contenu du cellier">
     @if ($bottles->isEmpty())
-        @if ($hasFilters)
-            <x-empty-state 
-                title="Aucune bouteille ne correspond aux filtres appliqués" 
-                subtitle="Essayez d'ajuster ou de supprimer certains filtres pour voir plus de bouteilles dans ce cellier."
-            />
-        @else
+        {{-- Toujours afficher "Ce cellier est vide" si le cellier est vide --}}
+        @if ($isCellierEmpty)
             <x-empty-state 
                 title="Ce cellier est vide" 
                 subtitle="Ajoutez des bouteilles à ce cellier pour les voir apparaître ici."
                 actionLabel="Explorer le catalogue"
                 actionUrl="{{ route('bouteille.catalogue') }}"
+            />
+        @endif
+
+        {{-- Afficher "Aucune bouteille ne correspond aux filtres" si des filtres sont actifs --}}
+        @if ($hasFilters)
+            <x-empty-state 
+                title="Aucune bouteille ne correspond aux filtres appliqués" 
+                subtitle="Essayez d'ajuster ou de supprimer certains filtres pour voir plus de bouteilles dans ce cellier."
             />
         @endif
     @else

@@ -20,17 +20,17 @@ $isCatalogueMode = $mode === 'catalogue';
 {{-- Carte de bouteille --}}
 <div class='relative flex flex-col justify-between bg-card rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden' role="article" aria-label="Carte de la bouteille {{ $nom }}">
 
-    {{-- BOUTON PANIER : Ajouter à la liste d’achat --}}
+    {{-- BOUTON PANIER : Ajouter à la liste d'achat --}}
     @if($isCatalogueMode)
     <button
         type="button"
-        class="flex border border-border-base items-center justify-center absolute top-2 right-2 bg-white/90 hover:bg-white/30 active:bg-white/10 shadow-md 
-               p-2 rounded-full transition z-20 add-to-wishlist"
+        class="group flex items-center justify-center absolute top-2 right-2 bg-button-default hover:bg-button-hover hover:text-white active:bg-primary-active shadow-md 
+               p-2 rounded-full transition-colors duration-300 z-20 add-to-wishlist"
         data-id="{{ $id }}"
-        aria-label="Ajouter à la liste d’achat">
+        aria-label="Ajouter à la liste d'achat">
         <x-dynamic-component
             :component="'lucide-shopping-cart'"
-            class="w-5 h-5 text-primary" />
+            class="w-5 h-5 text-primary group-hover:text-white transition-colors duration-300" />
     </button>
     @endif
 
@@ -178,9 +178,9 @@ $isCatalogueMode = $mode === 'catalogue';
             @if($isCellierMode && !empty($codeSaq))
             <button
                 type="button"
-                class="add-to-wishlist-cellar flex items-center justify-center absolute top-10 right-1 
-                bg-white/90 hover:bg-white/40 active:bg-white/20 shadow-md border border-border-base 
-                p-2 rounded-full transition z-10"
+                class="group add-to-wishlist-cellar flex items-center justify-center absolute top-10 right-1 
+                bg-button-default hover:bg-button-hover hover:text-white active:bg-primary-active shadow-md 
+                p-2 rounded-full transition-colors duration-300 z-10"
                 data-bouteille-id="{{ $bouteilleId }}"
                 data-quantite="{{ $quantite }}"
                 data-code-saq="{{ $codeSaq ?? '' }}"
@@ -188,7 +188,7 @@ $isCatalogueMode = $mode === 'catalogue';
                 aria-label="Ajouter à la liste d'achat">
                 <x-dynamic-component
                     :component="'lucide-shopping-cart'"
-                    class="w-5 h-5 text-primary" />
+                    class="w-5 h-5 text-primary group-hover:text-white transition-colors duration-300" />
             </button>
             @endif
 

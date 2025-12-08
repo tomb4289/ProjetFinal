@@ -150,8 +150,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/liste-achat/{item}', [ListeAchatController::class, 'destroy'])
         ->name('listeAchat.destroy');
 
+    Route::delete('/liste-achat', [ListeAchatController::class, 'destroyAll'])
+        ->name('listeAchat.destroyAll');
+
     Route::post('/liste-achat/{item}/transfer', [ListeAchatController::class, 'transfer'])
         ->name('listeAchat.transfer');
+
+    Route::post('/liste-achat/transfer-all', [ListeAchatController::class, 'transferAll'])
+        ->name('listeAchat.transferAll');
 
     Route::get('/liste-achat/search', [ListeAchatController::class, 'search'])
         ->name('listeAchat.search');

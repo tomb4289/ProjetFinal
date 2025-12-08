@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     .map(
                         (cellier) => `
                     <button 
-                        class="cellier-option w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:border-primary hover:bg-primary/5 transition-all"
+                        class="cellier-option w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:border-primary hover:bg-primary/5 transition-all cursor-pointer"
                         data-cellier-id="${cellier.id}"
                     >
                         <div class="font-medium text-gray-900">${cellier.nom}</div>
@@ -152,4 +152,93 @@ document.addEventListener("DOMContentLoaded", () => {
         };
         document.addEventListener("keydown", handleEscape);
     }
+
+    // Gestion du transfert de toutes les bouteilles de la liste d'achat
+    document.querySelectorAll(".wishlist-transfer-all-btn").forEach((btn) => {
+        if (btn.dataset.jsBound === "true") return;
+        btn.dataset.jsBound = "true";
+
+        btn.addEventListener("click", async () => {
+            try {
+                // Charger celliers
+                const response = await fetch("/api/celliers");
+
+                if (!response.ok) {
+                    showToast(
+                        "Erreur lors du chargement des celliers",
+                        "error"
+                    );
+                    return;
+                }
+
+                const celliers = await response.json();
+
+                if (!celliers || !Array.isArray(celliers) || !celliers.length) {
+                    showToast("Aucun cellier disponible", "error");
+                    return;
+                }
+
+                // Créer une modal pour sélectionner le cellier
+                showCellierSelectionModal(celliers, (selectedCellierId) => {
+                    if (!selectedCellierId) return;
+
+                    // FORM DATA
+                    const formData = new FormData();
+                    formData.append("cellier_id", selectedCellierId);
+
+                    // Désactiver le bouton pendant la requête
+                    btn.disabled = true;
+                    btn.classList.add("opacity-50", "cursor-not-allowed");
+
+                    fetch(btn.dataset.url, {
+                        method: "POST",
+                        headers: {
+                            "X-CSRF-TOKEN": document.querySelector(
+                                'meta[name="csrf-token"]'
+                            ).content,
+                            Accept: "application/json",
+                        },
+                        body: formData,
+                    })
+                        .then(async (res) => {
+                            let data = {};
+
+                            try {
+                                data = await res.json();
+                            } catch (e) {
+                                console.error("Erreur parsing JSON:", e);
+                                showToast("Erreur lors du transfert", "error");
+                                btn.disabled = false;
+                                btn.classList.remove("opacity-50", "cursor-not-allowed");
+                                return;
+                            }
+
+                            if (res.ok && data.success) {
+                                showToast(
+                                    data.message || "Transfert réussi",
+                                    "success"
+                                );
+                                setTimeout(() => location.reload(), 1000);
+                            } else {
+                                showToast(
+                                    data.message || "Erreur lors du transfert",
+                                    "error"
+                                );
+                                btn.disabled = false;
+                                btn.classList.remove("opacity-50", "cursor-not-allowed");
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("Erreur:", error);
+                            showToast("Erreur réseau", "error");
+                            btn.disabled = false;
+                            btn.classList.remove("opacity-50", "cursor-not-allowed");
+                        });
+                });
+            } catch (error) {
+                console.error("Erreur:", error);
+                showToast("Erreur réseau", "error");
+            }
+        });
+    });
 });

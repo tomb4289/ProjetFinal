@@ -154,9 +154,15 @@
                 </div>
             </div>
         @empty
-            <x-empty-state 
-                title="Aucune bouteille trouvée"
-                subtitle="Essayez d'ajuster vos filtres ou votre recherche." />
+            @php
+                // Afficher "Aucune bouteille trouvée" seulement si une recherche/filtre est active
+                $isSearching = $isSearching ?? false;
+            @endphp
+            @if($isSearching)
+                <x-empty-state 
+                    title="Aucune bouteille trouvée"
+                    subtitle="Essayez d'ajuster vos filtres ou votre recherche." />
+            @endif
         @endforelse
     </div>
 
