@@ -26,7 +26,7 @@
 
 
 @section('content')
-<div class="min-h-screen bg-gray-50/50 pt-24 pb-12" role="main" aria-label="Détails de la bouteille">
+<div class="min-h-screen  pt-24 pb-12" role="main" aria-label="Détails de la bouteille">
     <section class="container max-w-5xl mx-auto px-4 sm:px-6">
 
         {{-- En-tête simplifié --}}
