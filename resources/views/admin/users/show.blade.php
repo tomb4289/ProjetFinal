@@ -42,7 +42,7 @@
         {{-- Identité & Actions --}}
         <div class="lg:col-span-4 space-y-6">
             
-            {{-- Carte : Informations de contact --}}
+            {{-- Informations de contact --}}
             <div class="bg-card rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <div class="bg-gray-50/50 px-4 py-3 border-b border-gray-100">
                     <h2 class="text-base font-semibold text-gray-800">Profil & Coordonnées</h2>
@@ -79,7 +79,7 @@
                 </div>
             </div>
 
-            {{-- Carte : Zone Administrative --}}
+            {{-- Zone Administrative --}}
             <div class="bg-card rounded-xl shadow-sm border border-gray-100">
                 <div class="bg-gray-50/50 px-4 py-3 border-b border-gray-100 flex justify-between items-center">
                     <h2 class="text-base font-semibold text-gray-800">Administration</h2>
@@ -122,7 +122,7 @@
             </div>
         </div>
 
-        {{-- COLONNE DROITE (8 cols) : Contenu (Celliers) --}}
+        {{--  Contenu (Celliers) --}}
         <div class="lg:col-span-8">
             <div class="bg-card rounded-xl shadow-sm border border-gray-100 h-full">
                 <div class="bg-gray-50/50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">

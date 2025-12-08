@@ -4,108 +4,117 @@
 @section('title', 'Gestion des usagers')
 
 @section('content')
-<div class="max-w-6xl mx-auto px-4 space-y-6">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
 
-    {{-- Titre de page --}}
-    <div class="pt-5 pb-2">
-        <x-page-header
-            title="Gestion des usagers"
-            undertitle="Consulter, rechercher et gérer les comptes (activation, désactivation, suppression)."
-        />
-    </div>
-
-
-    {{-- Barre de recherche --}}
-    <x-search-form
-        :action="route('admin.users.index')"
-        name="q"
-        label="Rechercher un usager"
-        :value="$search"
-        class="mt-2"
+    {{-- En-tête --}}
+    <x-page-header
+        title="Gestion des usagers"
+        undertitle="Consulter, rechercher et gérer les comptes membres."
     />
 
-    {{-- ====== VERSION TABLE (TABLETTE / DESKTOP) ====== --}}
-    <div class="hidden md:block">
-        <div class="bg-card rounded-xl shadow mt-4">
-            <table class="min-w-full text-sm">
-                <thead class="bg-muted">
-                    <tr class="text-left text-xs font-semibold text-text-muted uppercase">
-                        <th class="px-4 py-3">ID</th>
-                        <th class="px-4 py-3">Nom</th>
-                        <th class="px-4 py-3">Courriel</th>
-                        <th class="px-4 py-3">Inscription</th>
-                        <th class="px-4 py-3 text-center">Celliers</th>
-                        <th class="px-4 py-3">Rôle</th>
-                        <th class="px-4 py-3">État</th>
-                        <th class="px-4 py-3 text-center">Actions</th>
+    {{-- Conteneur Principal  --}}
+    <div class="bg-card border border-border-base rounded-xl shadow-sm overflow-hidden">
+        
+        {{-- Barre d'outils / Recherche --}}
+        <div class="p-4 border-b border-border-base bg-muted/30 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="w-full md:w-96">
+                <x-search-form
+                    :action="route('admin.users.index')"
+                    name="q"
+                    label="Rechercher par nom ou courriel..."
+                    :value="$search"
+                    class="w-full"
+                />
+            </div>
+            <div class="text-sm text-text-muted hidden md:block">
+                {{ $users->total() }} usagers trouvés
+            </div>
+        </div>
+
+        {{--DESKTOP  --}}
+        <div class="hidden md:block overflow-x-auto">
+            <table class="w-full text-left text-sm">
+                <thead class="bg-muted text-text-muted font-medium uppercase text-xs tracking-wider">
+                    <tr>
+                        <th class="px-6 py-4">Utilisateur</th>
+                        <th class="px-6 py-4 text-center">Rôle</th>
+                        <th class="px-6 py-4 text-center">État</th>
+                        <th class="px-6 py-4 text-center">Celliers</th>
+                        <th class="px-6 py-4 text-right">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="divide-y divide-border-base bg-card">
                     @forelse($users as $user)
-                        <tr class="border-t border-border-base hover:bg-card-hover">
-                            <td class="px-4 py-3">{{ $user->id }}</td>
-
-                            <td class="px-4 py-3">
-                                <a
-                                    href="{{ route('admin.users.show', $user->id) }}"
-                                    class="font-semibold text-button-default hover:underline"
-                                >
-                                    {{ $user->name }}
-                                </a>
+                        <tr class="hover:bg-card-hover transition-colors">
+                            {{-- Utilisateur --}}
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="h-10 w-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm shrink-0">
+                                        {{ substr($user->name, 0, 1) }}
+                                    </div>
+                                    <div>
+                                        <a href="{{ route('admin.users.show', $user->id) }}" class="font-semibold text-text-main hover:text-primary transition-colors">
+                                            {{ $user->name }}
+                                        </a>
+                                        <div class="text-xs text-text-muted">{{ $user->email }}</div>
+                                        <div class="text-[10px] text-text-light mt-0.5">
+                                            Inscrit le {{ optional($user->created_at)->format('Y-m-d') }}
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
 
-                            <td class="px-4 py-3">{{ $user->email }}</td>
-
-                            <td class="px-4 py-3">
-                                {{ optional($user->created_at)->format('Y-m-d') }}
-                            </td>
-
-                            <td class="px-4 py-3 text-center">
-                                {{ $user->celliers_count ?? 0 }}
-                            </td>
-
-                            <td class="px-4 py-3">
-                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs
-                                    {{ $user->is_admin ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-600' }}">
+                            {{-- Rôle --}}
+                            <td class="px-6 py-4 text-center">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border
+                                    {{ $user->is_admin ? 'bg-purple-50 text-purple-700 border-purple-200' : 'bg-gray-50 text-gray-600 border-gray-200' }}">
                                     {{ $user->is_admin ? 'Admin' : 'Usager' }}
                                 </span>
                             </td>
 
-                            <td class="px-4 py-3">
-                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs
-                                    {{ $user->is_active ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
+                            {{-- État --}}
+                            <td class="px-6 py-4 text-center">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border
+                                    {{ $user->is_active ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-700 border-red-200' }}">
+                                    <span class="relative flex h-2 w-2">
+                                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 {{ $user->is_active ? 'bg-green-400' : 'hidden' }}"></span>
+                                      <span class="relative inline-flex rounded-full h-2 w-2 {{ $user->is_active ? 'bg-green-500' : 'bg-red-500' }}"></span>
+                                    </span>
                                     {{ $user->is_active ? 'Actif' : 'Inactif' }}
                                 </span>
                             </td>
 
-                            <td class="flex items-center px-4 py-3 whitespace-nowrap ">
+                            {{-- Celliers --}}
+                            <td class="px-6 py-4 text-center font-medium text-text-secondary">
+                                {{ $user->celliers_count ?? 0 }}
+                            </td>
 
-                                {{-- Activer / désactiver --}}
-                                <form
-                                    method="POST"
-                                    action="{{ route('admin.users.toggle-active', $user->id) }}"
-                                    class="inline flex-1 text-center"
-                                >
-                                    @csrf
-                                    <x-primary-btn
-                                        type="submit"
-                                        :label="$user->is_active ? 'Désactiver' : 'Activer'"
-                                        class="!inline-block !py-1 !px-3 text-xs"
+                            {{-- Actions  --}}
+                            <td class="px-6 py-4 text-right">
+                                <div class="flex items-center justify-end gap-3">
+                                    {{-- Toggle Actif/Inactif --}}
+                                    <form method="POST" action="{{ route('admin.users.toggle-active', $user->id) }}">
+                                        @csrf
+                                        <x-primary-btn
+                                            type="submit"
+                                            :label="$user->is_active ? 'Désactiver' : 'Activer'"
+                                            class="!py-1.5 !px-3 !text-xs"
+                                        />
+                                    </form>
+
+                                    {{-- Supprimer --}}
+                                    <x-delete-btn
+                                        :route="route('admin.users.destroy', $user->id)"
+                                        variant="icon"
+                                        label="Supprimer"
+                                        class="text-text-muted hover:text-red-600 transition-colors"
                                     />
-                                </form>
-
-                                {{-- Menu 3 points + "Supprimer" --}}
-                                <x-dropdown-action
-                                    :id="$user->id"
-                                    :deleteUrl="route('admin.users.destroy', $user->id)"
-                                    :item="$user"
-                                    :absolute="false"
-                                />
+                                </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="px-4 py-6 text-center text-text-muted">
+                            <td colspan="5" class="px-6 py-12 text-center text-text-muted">
                                 Aucun usager trouvé.
                             </td>
                         </tr>
@@ -113,78 +122,77 @@
                 </tbody>
             </table>
         </div>
-    </div>
 
-    {{-- ====== VERSION MOBILE (CARDS) ====== --}}
-    <div class="md:hidden mt-4 space-y-3">
-        @forelse($users as $user)
-            <div class="bg-card rounded-xl shadow p-4 text-sm space-y-2">
-                {{-- Ligne haut : nom + badges --}}
-                <div class="flex items-start justify-between gap-2">
-                    <div>
-                        <a
-                            href="{{ route('admin.users.show', $user->id) }}"
-                            class="font-semibold text-button-default hover:underline"
-                        >
-                            {{ $user->name }}
-                        </a>
-                        <p class="text-xs text-text-muted break-all">
-                            {{ $user->email }}
-                        </p>
+        {{-- VUE MOBILE--}}
+        <div class="md:hidden">
+            <div class="divide-y divide-border-base">
+                @forelse($users as $user)
+                    <div class="p-4 bg-card space-y-4">
+                        
+                        {{-- Info User --}}
+                        <div class="flex justify-between items-start">
+                            <div class="flex items-center gap-3">
+                                <div class="h-10 w-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm">
+                                    {{ substr($user->name, 0, 1) }}
+                                </div>
+                                <div>
+                                    <a href="{{ route('admin.users.show', $user->id) }}" class="font-semibold text-text-main block">
+                                        {{ $user->name }}
+                                    </a>
+                                    <span class="text-xs text-text-muted">{{ $user->email }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{--  Badges & Stats --}}
+                        <div class="flex items-center justify-between text-xs">
+                            <div class="flex gap-2">
+                                <span class="px-2 py-1 rounded-md bg-gray-100 border border-gray-200 text-gray-700">
+                                    {{ $user->is_admin ? 'Admin' : 'Usager' }}
+                                </span>
+                                <span class="px-2 py-1 rounded-md {{ $user->is_active ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border-red-200' }}">
+                                    {{ $user->is_active ? 'Actif' : 'Inactif' }}
+                                </span>
+                            </div>
+                            <div class="text-text-muted font-medium">
+                                {{ $user->celliers_count ?? 0 }} cellier(s)
+                            </div>
+                        </div>
+
+                        {{--  Actions  --}}
+                        <div class="flex items-center gap-2 pt-2 border-t border-border-base">
+                            <form method="POST" action="{{ route('admin.users.toggle-active', $user->id) }}" class="flex-1">
+                                @csrf
+                                <button type="submit" class="w-full py-2 px-3 text-xs font-medium text-center border rounded-md transition-colors
+                                    {{ $user->is_active 
+                                        ? 'border-border-base text-text-main hover:bg-muted' 
+                                        : 'bg-primary text-white border-transparent hover:bg-primary-dark' }}">
+                                    {{ $user->is_active ? 'Désactiver' : 'Activer' }}
+                                </button>
+                            </form>
+                            
+                            {{-- Bouton Supprimer  --}}
+                            <div class="flex-none">
+                                <x-delete-btn
+                                    :route="route('admin.users.destroy', $user->id)"
+                                    variant="icon"
+                                    class="p-2 text-text-muted hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                                />
+                            </div>
+                        </div>
                     </div>
-
-                    <div class="flex flex-col items-end gap-1">
-                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs
-                            {{ $user->is_admin ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-600' }}">
-                            {{ $user->is_admin ? 'Admin' : 'Usager' }}
-                        </span>
-
-                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs
-                            {{ $user->is_active ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
-                            {{ $user->is_active ? 'Actif' : 'Inactif' }}
-                        </span>
+                @empty
+                    <div class="p-8 text-center text-text-muted">
+                        Aucun usager trouvé.
                     </div>
-                </div>
-
-                {{-- Infos secondaires --}}
-                <div class="flex justify-between text-xs text-text-muted mt-1">
-                    <span>Inscription : {{ optional($user->created_at)->format('Y-m-d') }}</span>
-                    <span>Celliers : {{ $user->celliers_count ?? 0 }}</span>
-                </div>
-
-                {{-- Actions --}}
-                <div class="flex items-center justify-between gap-2 pt-2 border-t border-border-base mt-2">
-                    <form
-                        method="POST"
-                        action="{{ route('admin.users.toggle-active', $user->id) }}"
-                    >
-                        @csrf
-                        <x-primary-btn
-                            type="submit"
-                            :label="$user->is_active ? 'Désactiver' : 'Activer'"
-                            class="!py-1 !px-3 text-xs"
-                        />
-                    </form>
-
-                    <x-dropdown-action
-                        :id="$user->id"
-                        :deleteUrl="route('admin.users.destroy', $user->id)"
-                        :item="$user"
-                        :absolute="false"
-                    />
-                </div>
+                @endforelse
             </div>
-        @empty
-            <p class="text-center text-text-muted text-sm">
-                Aucun usager trouvé.
-            </p>
-        @endforelse
-    </div>
+        </div>
 
-    {{-- Pagination --}}
-    <div class="mt-4">
-        {{ $users->links() }}
+        {{-- Pagination --}}
+        <div class="bg-card px-4 py-3 border-t border-border-base">
+            {{ $users->links() }}
+        </div>
     </div>
-
 </div>
 @endsection
