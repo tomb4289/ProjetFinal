@@ -1,13 +1,38 @@
+// Fonction pour mettre à jour le sous-total d'un item
+function updateItemSubtotal(itemId, quantity) {
+    // Trouver la carte de l'item
+    const card = document.querySelector(`[data-id="${itemId}"]`);
+    if (!card) return;
+
+    // Trouver le prix et le sous-total
+    const priceElement = card.querySelector(`[data-item-price]`);
+    const subtotalElement = card.querySelector(`.wishlist-subtotal[data-item-id="${itemId}"]`);
+
+    if (!priceElement || !subtotalElement) return;
+
+    // Récupérer le prix depuis l'attribut data
+    const price = parseFloat(priceElement.dataset.itemPrice);
+    if (isNaN(price)) return;
+
+    // Calculer le nouveau sous-total
+    const newSubtotal = price * quantity;
+
+    // Formater et mettre à jour le sous-total (format français: 1 234,56)
+    const formattedSubtotal = newSubtotal.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    subtotalElement.textContent = `${formattedSubtotal} $`;
+}
+
 // Gestion des quantités de bouteilles dans la liste d'achat
 // Utilise la même logique que bottleQuantity.js du cellier
-const wishlistButtons = document.querySelectorAll(".wishlist-qty-btn");
-if (wishlistButtons.length) {
-    const csrfMeta = document.querySelector('meta[name="csrf-token"]');
-    const csrfToken = csrfMeta ? csrfMeta.getAttribute("content") : "";
+function initWishlistManage() {
+    const wishlistButtons = document.querySelectorAll(".wishlist-qty-btn");
+    if (wishlistButtons.length) {
+        const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+        const csrfToken = csrfMeta ? csrfMeta.getAttribute("content") : "";
 
-    // Ajout des écouteurs d'événements aux boutons
-    wishlistButtons.forEach((btn) => {
-        btn.addEventListener("click", () => {
+        // Ajout des écouteurs d'événements aux boutons
+        wishlistButtons.forEach((btn) => {
+            btn.addEventListener("click", () => {
             const url = btn.dataset.url;
             const direction = btn.dataset.direction;
             const itemId = btn.dataset.itemId;
@@ -73,6 +98,9 @@ if (wishlistButtons.length) {
                     console.log("Données JSON:", data);
                     if (data.success && typeof data.quantite !== "undefined") {
                         display.textContent = `${data.quantite}`;
+                        
+                        // Mettre à jour le sous-total de l'item
+                        updateItemSubtotal(itemId, data.quantite);
                     } else {
                         display.textContent = oldText;
                     }
@@ -88,11 +116,18 @@ if (wishlistButtons.length) {
                     display.dataset.loading = "false";
                     showToast("Erreur réseau", "error");
                 });
+            });
         });
-    });
+    }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+// Initialisation au chargement
+initWishlistManage();
+
+// Réinitialisation après un chargement AJAX (catalogue ou liste d'achat)
+window.addEventListener("catalogueReloaded", initWishlistManage);
+
+function initWishlistCheckboxes() {
     /* ============================================================
        CHECKBOX : MARQUER COMME ACHETÉ
        ============================================================ */
@@ -130,7 +165,48 @@ document.addEventListener("DOMContentLoaded", () => {
                 .catch(() => showToast("Erreur réseau", "error"));
         });
     });
-});
+}
+
+// Initialisation au chargement
+initWishlistCheckboxes();
+
+// Réinitialisation après un chargement AJAX
+window.addEventListener("catalogueReloaded", initWishlistCheckboxes);
+
+// Gestion des spinners de chargement pour les images
+function initImageSpinners() {
+    const images = document.querySelectorAll(".wishlist-image");
+    
+    images.forEach((img) => {
+        const spinner = img.closest("div").querySelector(".wishlist-image-spinner");
+        
+        if (!spinner) return;
+        
+        // Fonction pour cacher le spinner et afficher l'image
+        const hideSpinner = () => {
+            spinner.classList.add("hidden");
+            img.classList.remove("opacity-0");
+            img.classList.add("opacity-100");
+        };
+        
+        // Si l'image est déjà chargée (en cache), cacher le spinner immédiatement
+        if (img.complete && img.naturalHeight !== 0) {
+            hideSpinner();
+        } else {
+            // Sinon, attendre le chargement
+            img.addEventListener("load", hideSpinner);
+            img.addEventListener("error", () => {
+                spinner.classList.add("hidden");
+            });
+        }
+    });
+}
+
+// Initialisation au chargement
+initImageSpinners();
+
+// Réinitialisation après un chargement AJAX
+window.addEventListener("catalogueReloaded", initImageSpinners);
 
 async function refreshStats() {
     const response = await fetch("/api/listeAchat/stats");

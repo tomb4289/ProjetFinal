@@ -70,7 +70,11 @@
         <div class="flex gap-3 my-4 flex-wrap flex-col sm:flex-row">
             {{-- Select pour trier --}}
             <select id="sortFilter" class="border w-full px-5 py-2 rounded-lg flex-1" aria-label="Trier par">
-                <option value="date_import-desc" selected>Trier par...</option>
+                @php
+                    // Pour la liste d'achat, utiliser date_ajout, sinon date_import
+                    $defaultSort = str_contains($url, 'liste-achat') ? 'date_ajout-desc' : 'date_import-desc';
+                @endphp
+                <option value="{{ $defaultSort }}" selected>Trier par...</option>
                 <option value="prix-asc">Prix (le moins cher)</option>
                 <option value="prix-desc">Prix (le plus cher)</option>
                 <option value="nom-asc">Nom (A - Z)</option>

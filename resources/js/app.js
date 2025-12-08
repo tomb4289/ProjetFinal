@@ -11,7 +11,6 @@ import "./ui/addToCellar";
 import "./ui/search";
 import "./ui/stopLinkPropagation";
 import "./ui/starRating";
-import "./ui/searchCellier";
 import "./ui/addToWishlist";
 import "./ui/typewriter-toast";
 import "./ui/shareBottle";

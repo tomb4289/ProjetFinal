@@ -339,6 +339,11 @@ class ListeAchatController extends Controller
         $sortDirection = $request->sort_direction;
 
         if ($sortBy && in_array($sortDirection, ['asc', 'desc'])) {
+            // Convertir date_import en date_ajout pour la liste d'achat
+            if ($sortBy === 'date_import') {
+                $sortBy = 'date_ajout';
+            }
+            
             if (in_array($sortBy, ['nom', 'prix', 'millesime'])) {
                 $query->orderBy('bouteille_catalogue.' . $sortBy, $sortDirection);
             } else {

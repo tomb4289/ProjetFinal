@@ -1,3 +1,6 @@
+// Fichier unifié pour la recherche (catalogue, liste d'achat, et cellier)
+// Détecte automatiquement le contexte et adapte le comportement
+
 // Champs du DOM
 const searchInput = document.getElementById("searchInput");
 const paysFilter = document.getElementById("paysFilter");
@@ -11,7 +14,6 @@ const sortFilter = document.getElementById("sortFilter");
 // Boutons
 const resetFiltersBtn = document.getElementById("resetFiltersBtn");
 const applyFiltersBtn = document.getElementById("applyFiltersBtn");
-const searchWrapper = document.querySelector("[data-container]");
 
 // Bottom sheet filtres
 const sortOptionsBtn = document.getElementById("sortOptionsBtn");
@@ -19,16 +21,34 @@ const filtersContainer = document.getElementById("filtersContainer");
 const filtersOverlay = document.getElementById("filtersOverlay");
 const dragHandle = document.getElementById("dragHandle");
 
-// Conteneur des cartes (catalogue ou liste d’achat)
-const containerId = searchWrapper?.dataset.container || "catalogueContainer";
-const container = document.getElementById(containerId);
+// Détection du contexte
+// Cellier : utilise data-search-url et data-target-container
+const cellierRoot = document.querySelector("[data-search-url][data-target-container='cellarBottlesContainer']");
+// Catalogue/Liste d'achat : utilise data-container
+const catalogueRoot = document.querySelector("[data-container]");
 
-// URL API (catalogue ou liste d’achat)
-const baseUrl = searchWrapper?.dataset.url || "/catalogue/search";
-const suggestionUrl =
-    searchWrapper?.dataset.suggestionUrl || "/catalogue/suggest";
+let isCellier = false;
+let containerId, container, baseUrl, suggestionUrl;
 
-// Suggestions
+if (cellierRoot) {
+    // Mode cellier
+    isCellier = true;
+    containerId = cellierRoot.dataset.targetContainer || "cellarBottlesContainer";
+    container = document.getElementById(containerId);
+    baseUrl = cellierRoot.dataset.searchUrl;
+    suggestionUrl = null; // Pas de suggestions pour le cellier
+} else if (catalogueRoot) {
+    // Mode catalogue ou liste d'achat
+    containerId = catalogueRoot.dataset.container || "catalogueContainer";
+    container = document.getElementById(containerId);
+    baseUrl = catalogueRoot.dataset.url || "/catalogue/search";
+    suggestionUrl = catalogueRoot.dataset.suggestionUrl || "/catalogue/suggest";
+} else {
+    // Aucun contexte trouvé, on sort
+    console.warn("search.js : aucun contexte trouvé (cellier ou catalogue)");
+}
+
+// Suggestions (uniquement pour catalogue/liste d'achat)
 const suggestionsBox = document.getElementById("suggestionsBox");
 let suggestionTimeout = null;
 
@@ -46,11 +66,20 @@ function resetFilters() {
     if (millesimeFilter) millesimeFilter.value = "";
     if (priceMinFilter) priceMinFilter.value = "";
     if (priceMaxFilter) priceMaxFilter.value = "";
-    if (sortFilter)
-        sortFilter.value = isListeAchat
-            ? "date_ajout-desc"
-            : "date_import-desc";
-    fetchCatalogue(); // Call sans arg → baseUrl utilisé
+    if (sortFilter) {
+        if (isCellier) {
+            sortFilter.value = "";
+        } else {
+            sortFilter.value = isListeAchat
+                ? "date_ajout-desc"
+                : "date_import-desc";
+        }
+    }
+    if (isCellier) {
+        fetchCellier();
+    } else {
+        fetchCatalogue();
+    }
 }
 
 // Ouverture / fermeture panel
@@ -88,9 +117,71 @@ function debounce(fn, delay = 300) {
     };
 }
 
-// Fetch catalogue / liste d’achat
+// Traduire "prix-asc", "nom-desc"... pour le backend cellier
+function buildSortForCellier() {
+    if (!sortFilter || !sortFilter.value) {
+        return { sort: "nom", direction: "asc" };
+    }
+
+    const [sortBy, sortDir] = sortFilter.value.split("-");
+    let sort = "nom";
+
+    switch (sortBy) {
+        case "prix":
+            sort = "prix";
+            break;
+        case "millesime":
+            sort = "millesime";
+            break;
+        case "date_import":
+        case "date_ajout":
+            sort = "date_ajout";
+            break;
+        case "nom":
+        default:
+            sort = "nom";
+    }
+
+    const direction = sortDir === "desc" ? "desc" : "asc";
+    return { sort, direction };
+}
+
+// Fetch cellier
+function fetchCellier(url) {
+    if (!container) return;
+
+    const { sort, direction } = buildSortForCellier();
+
+    const params = new URLSearchParams({
+        nom: searchInput?.value || "",
+        pays: paysFilter?.value || "",
+        type: typeFilter?.value || "",
+        region: regionFilter?.value || "",
+        millesime: millesimeFilter?.value || "",
+        sort,
+        direction,
+    });
+
+    if (priceMinFilter?.value) params.append("prix_min", priceMinFilter.value);
+    if (priceMaxFilter?.value) params.append("prix_max", priceMaxFilter.value);
+
+    const baseUrlFinal = url || baseUrl;
+    const finalUrl = baseUrlFinal.includes("?")
+        ? `${baseUrlFinal}&${params.toString()}`
+        : `${baseUrlFinal}?${params.toString()}`;
+
+    fetch(finalUrl)
+        .then((res) => res.json())
+        .then((data) => {
+            container.innerHTML = data.html;
+            bindPaginationLinks();
+            window.dispatchEvent(new CustomEvent("cellierReloaded"));
+        })
+        .catch((err) => console.error("Erreur fetch cellier :", err));
+}
+
+// Fetch catalogue / liste d'achat
 function fetchCatalogue(customUrl = baseUrl) {
-    // customUrl = lien de pagination OU baseUrl
     if (!container) return;
 
     // Tri
@@ -131,9 +222,6 @@ function fetchCatalogue(customUrl = baseUrl) {
 
                 // Re-bind pagination links pour AJAX
                 bindPaginationLinks();
-
-                // Rebind les boutons wishlist
-                window.dispatchEvent(new CustomEvent("catalogueReloaded"));
             }
 
             // Masquer l'overlay de chargement après le chargement AJAX
@@ -157,7 +245,7 @@ function fetchCatalogue(customUrl = baseUrl) {
         });
 }
 
-// Suggestions recherche
+// Suggestions recherche (uniquement catalogue/liste d'achat)
 function renderSuggestions(items) {
     if (!suggestionsBox) return;
 
@@ -182,38 +270,52 @@ function renderSuggestions(items) {
         el.addEventListener("click", () => {
             searchInput.value = el.dataset.value;
             suggestionsBox.classList.add("hidden");
-            debouncedFetch(); // Relance fetchCatalogue()
+            if (isCellier) {
+                debouncedFetchCellier();
+            } else {
+                debouncedFetchCatalogue();
+            }
         });
     });
 }
 
-// DebouncedFetch sans param → fetchCatalogue() utilisera baseUrl
-const debouncedFetch = debounce(() => fetchCatalogue(), 300);
+// DebouncedFetch
+const debouncedFetchCatalogue = debounce(() => fetchCatalogue(), 300);
+const debouncedFetchCellier = debounce(() => fetchCellier(), 300);
 
 // Écoute entrée recherche
 if (searchInput) {
-    searchInput.addEventListener("input", () => debouncedFetch());
+    if (isCellier) {
+        searchInput.addEventListener("input", () => debouncedFetchCellier());
+    } else {
+        searchInput.addEventListener("input", () => debouncedFetchCatalogue());
 
-    searchInput.addEventListener("input", (e) => {
-        const query = e.target.value.trim();
-        if (query.length < 1) {
-            if (suggestionsBox) suggestionsBox.classList.add("hidden");
-            return;
-        }
+        // Suggestions (uniquement pour catalogue/liste d'achat)
+        searchInput.addEventListener("input", (e) => {
+            const query = e.target.value.trim();
+            if (query.length < 1) {
+                if (suggestionsBox) suggestionsBox.classList.add("hidden");
+                return;
+            }
 
-        clearTimeout(suggestionTimeout);
-        suggestionTimeout = setTimeout(() => {
-            fetch(`${suggestionUrl}?search=${encodeURIComponent(query)}`)
-                .then((res) => res.json())
-                .then((items) => renderSuggestions(items));
-        }, 150);
-    });
+            clearTimeout(suggestionTimeout);
+            suggestionTimeout = setTimeout(() => {
+                fetch(`${suggestionUrl}?search=${encodeURIComponent(query)}`)
+                    .then((res) => res.json())
+                    .then((items) => renderSuggestions(items));
+            }, 150);
+        });
+    }
 }
 
 // Boutons appliquer / reset
 if (applyFiltersBtn) {
     applyFiltersBtn.addEventListener("click", () => {
-        fetchCatalogue(); // BaseUrl + filtres
+        if (isCellier) {
+            fetchCellier();
+        } else {
+            fetchCatalogue();
+        }
         toggleSortOptions(); // Ferme le panneau
     });
 }
@@ -222,8 +324,8 @@ if (resetFiltersBtn) {
     resetFiltersBtn.addEventListener("click", resetFilters);
 }
 
-// Cacher suggestions au clic
-if (searchInput && suggestionsBox) {
+// Cacher suggestions au clic (uniquement catalogue/liste d'achat)
+if (searchInput && suggestionsBox && !isCellier) {
     document.addEventListener("click", (e) => {
         if (
             !searchInput.contains(e.target) &&
@@ -241,10 +343,16 @@ function bindPaginationLinks() {
     links.forEach((link) => {
         link.addEventListener("click", (e) => {
             e.preventDefault();
-            fetchCatalogue(link.href); // Ici on passe l’URL de la page
+            if (isCellier) {
+                fetchCellier(link.href);
+            } else {
+                fetchCatalogue(link.href);
+            }
         });
     });
 }
-document.addEventListener("DOMContentLoaded", () => {
-    if (container) bindPaginationLinks();
-});
+
+// Initialisation
+if (container) {
+    bindPaginationLinks();
+}
