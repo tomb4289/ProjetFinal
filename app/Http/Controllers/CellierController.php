@@ -104,10 +104,14 @@ class CellierController extends Controller
 
         $bouteilles = $query->orderBy($sortColumn, $direction)->get();
 
+        // Nombre total de bouteilles dans le cellier (sans filtres)
+        $totalBottlesCount = $cellier->bouteilles()->count();
+
         return response()->json([
             'html' => view('celliers._bouteilles_list', [
                 'cellier'    => $cellier,
                 'bouteilles' => $bouteilles,
+                'totalBottlesCount' => $totalBottlesCount, // Nombre total de bouteilles dans le cellier
             ])->render(),
         ]);
     }
