@@ -28,7 +28,7 @@ Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');
 
 // Routes protégées : seulement accessibles si la session est ouverte
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'active'])->group(function () {
     Route::get('/', [CatalogueController::class, 'index'])->name('bouteille.catalogue');
 
     // Catalogue de bouteilles
@@ -202,7 +202,7 @@ Route::get('/partage/{token}', [PartageController::class, 'show'])
     ->name('partage.show');
 
 // Routes d'administration (réservées aux admins)
-Route::middleware(['auth', 'is_admin'])
+Route::middleware(['auth', 'active', 'is_admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {

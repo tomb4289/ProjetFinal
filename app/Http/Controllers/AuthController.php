@@ -62,6 +62,7 @@ class AuthController extends Controller
             'name'     => $validated['name'],
             'email'    => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'is_active' => true,
         ]);
 
         // 2.5) Création d'un cellier par défaut pour le nouvel utilisateur.
@@ -105,35 +106,45 @@ class AuthController extends Controller
      */
     public function login(Request $request): RedirectResponse
     {
-        // 1) Validation de base des champs.
+        // Validation
         $credentials = $request->validate([
             'email'    => 'required|email',
             'password' => 'required',
         ]);
 
-        // 2) Tentative de connexion avec les identifiants fournis.
+        // Récupérer l'utilisateur
+        $user = User::where('email', $credentials['email'])->first();
+
+        // Si le compte existe mais est désactivé
+        if ($user && ! $user->is_active) {
+            return back()
+                ->with('error', 'Votre compte a été désactivé. Veuillez contacter un administrateur.')
+                ->onlyInput('email');
+        }
+
+        // Tentative de connexion
         if (Auth::attempt($credentials)) {
-            // 3) Si connexion réussie, on régénère la session.
             $request->session()->regenerate();
 
+            /** @var \App\Models\User $user */
             $user = Auth::user();
-            $user->update([
-                'last_login_at' => now(),
-            ]);
+            $user->last_login_at = now();   
+            $user->save();                  
 
-            // 4) Redirection vers la page des celliers
+
             return redirect()
                 ->intended(route('cellar.index'))
                 ->with('success', 'Connexion réussie.');
         }
 
-        // 5) Si échec : retour au formulaire avec un message d'erreur.
+        // Mauvais identifiants
         return back()
             ->withErrors([
                 'email' => 'Les identifiants sont incorrects.',
             ])
-            ->onlyInput('email'); // on garde l'email, pas le mot de passe
+            ->onlyInput('email');
     }
+
 
     /**
      * Déconnecte l'utilisateur actuellement connecté.
