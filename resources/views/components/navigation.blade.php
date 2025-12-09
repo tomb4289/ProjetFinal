@@ -1,10 +1,21 @@
-@props(['addCellarBtn' => false, 'addWineBtn' => false])
+@props(['addCellarBtn' => false, 'addWineBtn' => false, 'canCreateMore' => true])
 {{-- Barre de navigation principale --}}
 <section class="w-full fixed bottom-0 left-0 flex flex-col gap-4 items-center z-30" aria-label="Barre d'actions et de navigation">
    {{-- Permet l'affichage du bouton Ajouter un cellier --}}
    @if ($addCellarBtn == true)
    <div class="w-full max-w-md px-4 pointer-events-auto">
-      <x-primary-btn type="href" label="+ Créer un nouveau cellier" route="cellar.create" class="w-full py-3 shadow-lg" />
+      @if($canCreateMore)
+         <x-primary-btn type="href" label="+ Créer un nouveau cellier" route="cellar.create" class="w-full py-3 shadow-lg" />
+      @else
+         <button 
+            type="button"
+            id="create-cellar-disabled-btn"
+            class="w-full py-3 shadow-lg bg-gray-300 border-2 border-gray-400 text-gray-500 font-bold rounded-lg cursor-not-allowed opacity-60"
+            aria-label="Créer un nouveau cellier (limite atteinte)"
+         >
+            + Créer un nouveau cellier
+         </button>
+      @endif
    </div>
    @endif
    {{-- Permet l'affichage du bouton Ajouter un vin --}}

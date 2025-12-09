@@ -159,10 +159,22 @@ class CellierController extends Controller
     /**
      * Affiche le formulaire de création d'un nouveau cellier.
      * 
-     * @return View La vue du formulaire de création
+     * @return View|RedirectResponse La vue du formulaire de création ou redirection si limite atteinte
      */
-    public function create(): View
+    public function create()
     {
+        $user = Auth::user();
+        $celliersCount = $user->celliers()->count();
+
+        // Limite de 6 celliers par utilisateur
+        if ($celliersCount >= 6) {
+            $message = 'Vous avez atteint la limite maximale de 6 celliers. Veuillez supprimer un cellier existant avant d\'en créer un nouveau.';
+            
+            return redirect()
+                ->route('cellar.index')
+                ->with('error', $message);
+        }
+
         return view('cellar.create');
     }
 

@@ -17,6 +17,7 @@
     <x-page-header
         :title="$cellier->nom"
         :undertitle="$undertitle"
+        marginTop="mt-2"
     />
     {{-- Composant de recherche / filtres / tri (mode cellier) --}}
     <x-search-filter
