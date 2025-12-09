@@ -67,9 +67,18 @@
     </main>
 
     {{-- Envoie quelle bouton a afficher sur la page. Voir navigation.blade.php --}}
+    @php
+        $canCreateMore = true;
+        if (Auth::check() && $__env->hasSection('add-cellar-btn')) {
+            $user = Auth::user();
+            $celliersCount = $user->celliers()->count();
+            $canCreateMore = $celliersCount < 6;
+        }
+    @endphp
     <x-navigation
         :addCellarBtn="$__env->hasSection('add-cellar-btn')"
-        :addWineBtn="$__env->hasSection('add-wine-btn')" />
+        :addWineBtn="$__env->hasSection('add-wine-btn')"
+        :canCreateMore="$canCreateMore" />
     <x-toast />
     <x-typewriter-toast />
     <x-confirm-delete-modal />

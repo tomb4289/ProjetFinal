@@ -2,6 +2,7 @@ const boutonsAjouterCellier = document.querySelectorAll(".add-to-cellar-btn");
 const boutonFermer = document.getElementById("closeAddWine");
 const panneauCellier = document.getElementById("addWineBtnContainer");
 const overlay = document.getElementById("addWineOverlay");
+const boutonCreateCellierDisabled = document.getElementById("create-cellar-disabled-btn");
 
 // Vérifier que les éléments existent avant de continuer
 if (boutonFermer && panneauCellier) {
@@ -11,7 +12,9 @@ if (boutonFermer && panneauCellier) {
     let chargementEnCours = false;
 
     // Précharger les celliers
-    obtenirCelliers().then((data) => (celliersPrecharges = data));
+    obtenirCelliers().then((data) => {
+        celliersPrecharges = data;
+    });
     boutonFermer.addEventListener("click", fermerPanneau);
 
     // Ouvrir le panneau quand on clique sur Ajouter
@@ -44,7 +47,8 @@ if (boutonFermer && panneauCellier) {
 
             if (!chargementEnCours) {
                 chargementEnCours = true;
-                celliersPrecharges = await obtenirCelliers();
+                const data = await obtenirCelliers();
+                celliersPrecharges = data;
                 chargementEnCours = false;
             }
         }
@@ -65,7 +69,10 @@ if (boutonFermer && panneauCellier) {
                 Accept: "application/json",
             },
         });
-        return reponse.json();
+        const data = await reponse.json();
+        // Si la réponse contient un objet avec celliers, utiliser cette structure
+        // Sinon, retourner directement (pour compatibilité)
+        return data.celliers !== undefined ? data : { celliers: data, canCreateMore: true };
     }
 
     // Afficher un message de chargement
@@ -79,14 +86,41 @@ if (boutonFermer && panneauCellier) {
         container.appendChild(clone);
     }
 
-    function peuplerOptionsCelliers(celliers) {
+    function peuplerOptionsCelliers(data) {
         const listeCelliers = document.getElementById("cellar-list");
         listeCelliers.innerHTML = "";
+
+        // Gérer la nouvelle structure de réponse
+        const celliers = data.celliers || data;
+        const canCreateMore = data.canCreateMore !== undefined ? data.canCreateMore : true;
 
         if (celliers.length === 0) {
             const emptyTemplate = document.getElementById("empty-cellars-template");
             if (emptyTemplate) {
                 const clone = emptyTemplate.content.cloneNode(true);
+                const createButton = clone.querySelector('a[href="/celliers/create"]');
+                
+                // Si l'utilisateur ne peut pas créer plus de celliers, griser le bouton
+                if (!canCreateMore && createButton) {
+                    createButton.classList.add('opacity-50', 'cursor-not-allowed', 'bg-gray-300', 'border-gray-400', 'text-gray-500');
+                    createButton.classList.remove('bg-button-default', 'border-primary', 'text-primary', 'hover:bg-button-hover', 'hover:text-white');
+                    createButton.style.pointerEvents = 'auto';
+                    createButton.href = '#';
+                    createButton.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        if (window.showToast) {
+                            window.showToast(
+                                "Vous avez atteint la limite maximale de 6 celliers. Veuillez supprimer un cellier existant avant d'en créer un nouveau.",
+                                "error"
+                            );
+                        }
+                    });
+                    const message = clone.querySelector('p');
+                    if (message) {
+                        message.textContent = "Vous avez atteint la limite maximale de 6 celliers. Veuillez supprimer un cellier existant avant d'en créer un nouveau.";
+                    }
+                }
+                
                 listeCelliers.appendChild(clone);
             }
             return;
@@ -127,7 +161,8 @@ if (boutonFermer && panneauCellier) {
     // Clique sur un cellier dans le panneau
     document.addEventListener("click", async (e) => {
         // Recharger les celliers pour s'assurer qu'on a les dernières données
-        obtenirCelliers().then((data) => (celliersPrecharges = data));
+        const data = await obtenirCelliers();
+        celliersPrecharges = data;
 
         const boite = e.target.closest(".cellar-box");
         if (!boite || !boite.dataset.cellarId) return;
@@ -176,4 +211,17 @@ if (boutonFermer && panneauCellier) {
 
         fermerPanneau();
     });
+
+    // Gestionnaire pour le bouton désactivé dans la navigation
+    if (boutonCreateCellierDisabled) {
+        boutonCreateCellierDisabled.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (window.showToast) {
+                window.showToast(
+                    "Vous avez atteint la limite maximale de 6 celliers. Veuillez supprimer un cellier existant avant d'en créer un nouveau.",
+                    "error"
+                );
+            }
+        });
+    }
 }

@@ -76,10 +76,16 @@ Route::middleware(['auth', 'active'])->group(function () {
         /** @var User $user */
         $user = Auth::user();
 
-        return $user->celliers()
+        $celliers = $user->celliers()
             ->withCount('bouteilles')
             ->withSum('bouteilles as total_bouteilles', 'quantite')
             ->get();
+
+        return response()->json([
+            'celliers' => $celliers,
+            'celliersCount' => $celliers->count(),
+            'canCreateMore' => $celliers->count() < 6
+        ]);
     })->name('api.celliers');
 
     // Recherche des bouteilles dans un cellier.

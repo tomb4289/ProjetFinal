@@ -16,7 +16,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
 
-                const celliers = await response.json();
+                const data = await response.json();
+                // Gérer le nouveau format de réponse
+                const celliers = data.celliers || data;
 
                 if (!celliers || !Array.isArray(celliers) || !celliers.length) {
                     showToast("Aucun cellier disponible", "error");
@@ -246,7 +248,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
 
-                const celliers = await response.json();
+                const data = await response.json();
+                // Gérer le nouveau format de réponse
+                const celliers = data.celliers || data;
 
                 if (!celliers || !Array.isArray(celliers) || !celliers.length) {
                     showToast("Aucun cellier disponible", "error");
