@@ -73,6 +73,7 @@ class AdminController extends Controller
     /**
      * Supprimer un usager.
      */
+
     public function destroy($id)
     {
         $user = User::findOrFail($id);
@@ -84,10 +85,12 @@ class AdminController extends Controller
                 ->with('error', 'Vous ne pouvez pas supprimer votre propre compte.');
         }
 
-        $user->delete();
+        // On considère la "suppression" comme une désactivation
+        $user->is_active = false;
+        $user->save();
 
         return redirect()
             ->route('admin.users.index')
-            ->with('success', 'Usager supprimé.');
+            ->with('success', 'Compte utilisateur désactivé.');
     }
 }
