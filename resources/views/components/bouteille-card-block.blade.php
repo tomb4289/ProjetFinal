@@ -79,7 +79,7 @@ $isCatalogueMode = $mode === 'catalogue';
 
         <div class='p-3 sm:p-4 flex flex-col gap-2'>
             <div class="flex flex-col items-start  ">
-                <span class="font-semibold text-text-title text-sm sm:text-lg truncate overflow-hidden text-ellipsis whitespace-nowrap w-full block" title="{{ $nom }}">
+                <span class="font-semibold text-text-title text-sm sm:text-lg truncate overflow-hidden text-ellipsis whitespace-nowrap w-full block" aria-label="{{ $nom }}">
                     {{ $nom }}
                 </span>
 

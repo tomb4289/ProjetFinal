@@ -6,7 +6,7 @@
     @endphp
 
     {{-- Nombre de résultats --}}
-    <p class="mb-2 text-md" role="nombre-resultats">
+    <p class="mb-2 text-md">
         <span class="font-semibold">{{ $count }}</span>
         résultat{{ $count > 1 ? 's' : '' }} trouvé{{ $count > 1 ? 's' : '' }}
     </p>
@@ -14,7 +14,7 @@
     {{-- La grille de cartes --}}
     <div class="{{ $items->isEmpty() 
             ? 'flex justify-center' 
-            : 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4' }} mt-6" role="list">
+            : 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4' }} mt-6">
 
         @forelse ($items as $item)
             @php
@@ -79,8 +79,11 @@
 
                     {{-- Marquer comme acheté --}}
                     <div class="flex items-center gap-2">
+                        <label for="achete-{{ $item->id }}" class="sr-only" aria-label="Marquer la bouteille {{ $b->nom }} comme achetée">
+                        </label>
                         <input
                             type="checkbox"
+                            id="achete-{{ $item->id }}"
                             class="wishlist-check-achete"
                             data-url="{{ route('listeAchat.update', $item) }}"
                             data-item-id="{{ $item->id }}"
@@ -127,7 +130,8 @@
                                            active:scale-95"
                                 data-direction="down"
                                 data-url="{{ route('listeAchat.update', $item) }}"
-                                data-item-id="{{ $item->id }}">
+                                data-item-id="{{ $item->id }}"
+                                aria-label="Diminuer la quantité">
                                 <x-dynamic-component :component="'lucide-minus'" class="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                             </button>
 
@@ -147,7 +151,8 @@
                                            active:scale-95"
                                 data-direction="up"
                                 data-url="{{ route('listeAchat.update', $item) }}"
-                                data-item-id="{{ $item->id }}">
+                                data-item-id="{{ $item->id }}"
+                                aria-label="Augmenter la quantité">
                                 <x-dynamic-component :component="'lucide-plus'" class="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                             </button>
                         </div>
@@ -168,7 +173,7 @@
     </div>
 
     {{-- Pagination --}}
-    <div class="mt-6" role="pagination">
+    <div class="mt-6">
         {{ $items
             ->appends(request()->query())
             ->withPath(route('listeAchat.search'))

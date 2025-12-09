@@ -30,7 +30,7 @@
 
 
 @section('content')
-<div class="min-h-screen  pt-24 pb-12" role="main" aria-label="Détails de la bouteille">
+<div class="min-h-screen  pt-24 pb-12" aria-label="Détails de la bouteille">
     <section class="container max-w-5xl mx-auto px-4 sm:px-6">
 
         {{-- En-tête simplifié --}}
@@ -90,12 +90,12 @@
                             <h1 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">
                                 {{ $donnees['nom'] }}
                             </h1>
-                            <div class="flex items-center flex-wrap gap-2 mt-2 text-sm text-gray-500">
+                            <div class="flex items-center flex-wrap gap-2 mt-2 text-sm text-gray-700">
                                 @if($donnees['pays'])
                                 <span>{{ $donnees['pays'] }}</span>
                                 @endif
                                 @if(isset($donnees['region']) && $donnees['region'])
-                                <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+                                <span class="w-1 h-1 bg-gray-600 rounded-full"></span>
                                 <span>{{ $donnees['region'] }}</span>
                                 @endif
                             </div>
@@ -115,42 +115,42 @@
 
                         @if(isset($donnees['type']) && $donnees['type'])
                         <div>
-                            <span class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Type</span>
+                            <span class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1">Type</span>
                             <span class="text-gray-900 font-medium">{{ $donnees['type'] }}</span>
                         </div>
                         @endif
 
                         @if($donnees['pays'])
                         <div>
-                            <span class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Pays</span>
+                            <span class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1">Pays</span>
                             <span class="text-gray-900 font-medium">{{ $donnees['pays'] }}</span>
                         </div>
                         @endif
 
                         @if(isset($donnees['region']) && $donnees['region'])
                         <div>
-                            <span class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Région</span>
+                            <span class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1">Région</span>
                             <span class="text-gray-900 font-medium">{{ $donnees['region'] }}</span>
                         </div>
                         @endif
 
                         @if($donnees['millesime'])
                         <div>
-                            <span class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Millésime</span>
+                            <span class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1">Millésime</span>
                             <span class="text-gray-900 font-medium">{{ $donnees['millesime'] }}</span>
                         </div>
                         @endif
 
                         @if(isset($donnees['format']) && $donnees['format'])
                         <div>
-                            <span class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">{{ $isCatalogue ? 'Volume' : 'Format' }}</span>
+                            <span class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1">{{ $isCatalogue ? 'Volume' : 'Format' }}</span>
                             <span class="text-gray-900 font-medium">{{ $donnees['format'] }}</span>
                         </div>
                         @endif
 
                         @if(isset($donnees['code_saq']) && $donnees['code_saq'])
                         <div>
-                            <span class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Code SAQ</span>
+                            <span class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1">Code SAQ</span>
                             <span class="font-mono text-gray-600 bg-gray-100 px-2 py-1 rounded text-sm inline-block">{{ $donnees['code_saq'] }}</span>
                         </div>
                         @endif
@@ -175,7 +175,7 @@
 
                         @if(!$isCatalogue && isset($donnees['quantite']))
                         <div>
-                            <span class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">En stock</span>
+                            <span class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1">En stock</span>
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium text-primary">
                                 {{ $donnees['quantite'] }} {{ $donnees['quantite'] > 1 ? 'bouteilles' : 'bouteille' }}
                             </span>
@@ -184,7 +184,7 @@
 
                         @if(!$isCatalogue && isset($donnees['date_ajout']) && $donnees['date_ajout'])
                         <div class="col-span-2">
-                            <span class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Ajouté le</span>
+                            <span class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1">Ajouté le</span>
                             <span class="text-gray-700">{{ $donnees['date_ajout']->format('d F Y') }}</span>
                         </div>
                         @endif
@@ -199,11 +199,14 @@
                             <input type="hidden" name="bottle_id" value="{{ $bouteilleCatalogue->id }}">
 
                             <div class="w-full sm:w-32">
-                                <label class="block text-xs font-semibold text-gray-500 mb-1.5 ml-1">Quantité</label>
+                                <label class="block text-xs font-semibold text-gray-500 mb-1.5 ml-1" for="quantity">Quantité</label>
                                 <div class="relative">
                                     <input
                                         type="number"
                                         name="quantity"
+                                        label="Quantité"
+                                        id="quantity"
+                                        aria-label="Quantité"
                                         min="1" max="10" value="1"
                                         class="block w-full text-center rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2.5">
                                 </div>
@@ -221,7 +224,7 @@
                             {{-- Note et Avis --}}
                             <div class="bg-gray-50 rounded-xl p-5 border border-gray-100 relative">
                                 <div class="flex justify-between items-center mb-3">
-                                    <h3 class="font-semibold text-gray-900">Notes de dégustation</h3>
+                                    <h2 class="font-semibold text-gray-900">Notes de dégustation</h2>
                                     @if(isset($donnees['note_degustation']) || isset($donnees['rating']))
                                     <x-dropdown-action
                                         :id="'note-' . $bouteille->id"
@@ -241,7 +244,7 @@
                                 @if(isset($donnees['note_degustation']) && $donnees['note_degustation'])
                                 <p class="text-sm text-gray-600 italic leading-relaxed">"{{ $donnees['note_degustation'] }}"</p>
                                 @else
-                                <p class="text-sm text-gray-400 italic">Aucune note écrite pour le moment.</p>
+                                <p class="text-sm text-gray-600 italic">Aucune note écrite pour le moment.</p>
                                 @endif
                             </div>
 

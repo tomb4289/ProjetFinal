@@ -18,7 +18,7 @@
     $isCellierEmpty = $totalBottlesCount === 0;
 @endphp
 
-<div class="" role="region" aria-label="Contenu du cellier">
+<div aria-label="Contenu du cellier">
     @if ($bottles->isEmpty())
         {{-- Toujours afficher "Ce cellier est vide" si le cellier est vide --}}
         @if ($isCellierEmpty)
@@ -38,7 +38,7 @@
             />
         @endif
     @else
-        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4" role="list" aria-label="Liste des bouteilles">
+        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4" aria-label="Liste des bouteilles">
             @foreach ($bottles as $bouteille)
                 <x-bouteille-card-block 
                     :id="$bouteille->id" 

@@ -35,8 +35,6 @@
         </div>
     </div>
 
-
-
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         {{-- Identité & Actions --}}
@@ -49,7 +47,7 @@
                 </div>
                 <div class="p-5">
                     <div class="flex items-center space-x-4 mb-6">
-                        <div class="h-12 w-12 rounded-full bg-button-default text-white flex items-center justify-center text-xl font-bold uppercase">
+                        <div class="h-12 w-12 rounded-full bg-gray-400 text-white flex items-center justify-center text-xl font-bold uppercase">
                             {{-- Obtien la premiere lettre du nom --}}
                             {{ substr($user->name, 0, 1) }}
                         </div>
@@ -59,23 +57,37 @@
                         </div>
                     </div>
 
-                    <dl class="space-y-4 text-sm">
+                    {{-- ✅ Remplacement de <dl>/<dt>/<dd> par des <div>/<p> --}}
+                    <div class="space-y-4 text-sm">
                         <div class="flex flex-col">
-                            <dt class="text-xs uppercase tracking-wider text-text-muted font-medium mb-1">Courriel</dt>
-                            <dd class="font-medium text-gray-800 break-all">{{ $user->email }}</dd>
+                            <p class="text-xs uppercase tracking-wider text-text-muted font-medium mb-1">
+                                Courriel
+                            </p>
+                            <p class="font-medium text-gray-800 break-all">
+                                {{ $user->email }}
+                            </p>
                         </div>
                         
                         <div class="grid grid-cols-2 gap-4 pt-2">
                             <div>
-                                <dt class="text-xs uppercase tracking-wider text-text-muted font-medium mb-1">Inscription</dt>
-                                <dd class="text-gray-700">{{ optional($user->created_at)->format('Y-m-d') }}</dd>
+                                <p class="text-xs uppercase tracking-wider text-text-muted font-medium mb-1">
+                                    Inscription
+                                </p>
+                                <p class="text-gray-700">
+                                    {{ optional($user->created_at)->format('Y-m-d') }}
+                                </p>
                             </div>
                             <div>
-                                <dt class="text-xs uppercase tracking-wider text-text-muted font-medium mb-1">Dernier accès</dt>
-                                <dd class="text-gray-700">{{ $user->last_login_at ? $user->last_login_at->format('Y-m-d') : '-' }}</dd>
+                                <p class="text-xs uppercase tracking-wider text-text-muted font-medium mb-1">
+                                    Dernier accès
+                                </p>
+                                <p class="text-gray-700">
+                                    {{ $user->last_login_at ? $user->last_login_at->format('Y-m-d') : '-' }}
+                                </p>
                             </div>
                         </div>
-                    </dl>
+                    </div>
+                    {{-- ✅ Fin du bloc corrigé --}}
                 </div>
             </div>
 

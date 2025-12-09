@@ -1,12 +1,12 @@
 <div>
-<p class="mb-2 text-md" role="nombre-resultats">
+<p class="mb-2 text-md">
     <span class="font-semibold">{{ $count }}</span> résultat{{ $count > 1 ? 's' : '' }} trouvé{{ $count > 1 ? 's' : '' }}
 </p>   
  {{-- La grille --}}
     <div class="
     {{ $bouteilles->isEmpty() 
             ? 'flex justify-center' 
-            : 'grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5' }} gap-4 mt-6" role="list">
+            : 'grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5' }} gap-4 mt-6">
         @forelse ($bouteilles as $bouteille)
             <x-bouteille-card-block 
                 :id="$bouteille->id" 
@@ -23,7 +23,7 @@
     </div>
 
     {{-- La pagination mise à jour --}}
-    <div class="mt-6" role="pagination">
+    <div class="mt-6">
         {{ $bouteilles
             ->appends(request()->query())
             ->withPath(route('catalogue.search'))

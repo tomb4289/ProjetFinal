@@ -36,7 +36,7 @@
 
             {{-- 2. LIGNE DU TEXTE (En dessous) --}}
             <div class="mt-3 text-center">
-                <p class="text-sm text-gray-500" role="status" aria-live="polite">
+                <p class="text-sm text-gray-500">
                 <span class="font-medium text-gray-900">{{ $paginator->firstItem() }}</span>
                 <span class="text-gray-400 mx-1"> à</span>
                 <span class="font-medium text-gray-900">{{ $paginator->lastItem() }}</span>
@@ -71,13 +71,13 @@
                 <span class="inline-flex rounded-md shadow-sm">
                     {{-- Bouton Précédent Desktop --}}
                     @if ($paginator->onFirstPage())
-                        <span class="px-3 py-2 bg-white text-gray-400 border border-gray-300 rounded-l-md cursor-default" aria-disabled="true" aria-label="Page précédente">
+                        <span class="px-3 py-2 bg-white text-gray-400 border border-gray-300 rounded-l-md cursor-default" aria-hidden="true" aria-label="Page précédente">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                                 <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"/>
                             </svg>
                         </span>
                     @else
-                        <a href="{{ $paginator->previousPageUrl() }}" class="px-3 py-2 bg-white text-gray-800 border border-gray-300 rounded-l-md hover:bg-gray-100 transition" aria-label="Page précédente" rel="prev">
+                        <a href="{{ $paginator->previousPageUrl() }}" class="px-3 py-2 bg-white text-gray-800 border border-gray-300 rounded-l-md hover:bg-gray-100 transition" aria-hidden="true" aria-label="Page précédente" rel="prev">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                                 <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"/>
                             </svg>

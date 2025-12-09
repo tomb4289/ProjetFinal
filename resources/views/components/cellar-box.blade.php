@@ -21,7 +21,7 @@
         <div class="flex flex-col gap-1">
             <h2 id="cellier-title-{{ $id }}" class="text-2xl text-neutral font-semibold">{{ $name }}</h2>
             @if ($amount == 0)
-                <p class="text-gray-400 italic">Aucune bouteille</p>
+                <p class="text-gray-600 italic">Aucune bouteille</p>
             @elseif ($amount == 1)
                 <p class="text-gray-600">1 bouteille</p>
             @else

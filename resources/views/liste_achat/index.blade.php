@@ -71,9 +71,9 @@
         <div class="mt-10">
             <div class="bg-white border border-gray-200 shadow-sm rounded-2xl p-6 md:p-8">
 
-                <h3 class="text-xl font-semibold text-gray-800 mb-4">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">
                     Résumé de votre liste
-                </h3>
+                </h2>
 
                 <div class="grid gap-4 sm:grid-cols-3">
 

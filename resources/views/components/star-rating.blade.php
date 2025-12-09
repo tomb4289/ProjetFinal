@@ -37,7 +37,7 @@
             @else
                 {{-- En lecture seule, on masque les étoiles individuelles car le conteneur a déjà le label global --}}
                 <span 
-                    class="star-display transition-colors duration-200 flex-1 {{ $i <= $currentRating ? 'text-primary' : 'text-gray-300' }}"
+                    class="star-display transition-colors duration-200 flex-1 {{ $i <= $currentRating ? 'text-primary' : 'text-gray-400' }}"
                     aria-hidden="true"
                 >
                     <svg class="w-full h-12" fill="currentColor" viewBox="0 0 20 20" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
@@ -47,7 +47,7 @@
             @endif
         @endfor
         @if($editable)
-            <input type="hidden" name="{{ $name }}" value="{{ $currentRating }}" id="{{ $uniqueId }}-input">
+            <input type="hidden" name="{{ $name }}" value="{{ $currentRating }}" id="{{ $uniqueId }}">
             <span class="ml-2 text-sm text-text-muted whitespace-nowrap" aria-live="polite">{{ $currentRating > 0 ? $currentRating . '/5' : '0/5' }}</span>
             @if($currentRating > 0)
                 <button

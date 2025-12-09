@@ -1,5 +1,6 @@
 @props([
     'label' => null,
+    'hiddenLabel' => false,
     'name' => '',
     'type' => 'text',
     'value' => null,
@@ -13,7 +14,7 @@
 {{-- Champ de formulaire réutilisable --}}
 <div class="flex flex-col gap-1 flex-1 {{ $size === 'full' ? 'w-full' : '' }}">
     @if($label)
-        <label for="{{ $name }}" class="text-sm font-medium text-text-muted">
+        <label for="{{ $name }}" class="{{ $hiddenLabel ? 'sr-only' : 'text-sm font-medium text-text-muted' }}">
             {{ $label }}
         </label>
     @endif

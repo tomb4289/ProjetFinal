@@ -7,16 +7,15 @@ const formRegister = document.getElementById("registerForm");
 
 // Vérifier que les éléments existent avant de continuer
 if (btnLogin && btnRegister && formLogin && formRegister) {
-
     // Fonctions d'affichage du formulaire login
     function showLogin() {
         formLogin.classList.remove("hidden");
         formRegister.classList.add("hidden");
 
         btnLogin.classList.add("text-primary", "border-primary");
-        btnLogin.classList.remove("text-neutral-600", "border-neutral-600");
+        btnLogin.classList.remove("text-neutral-700", "border-neutral-600");
 
-        btnRegister.classList.add("text-neutral-600", "border-neutral-600");
+        btnRegister.classList.add("text-neutral-700", "border-neutral-600");
         btnRegister.classList.remove("text-primary", "border-primary");
 
         window.history.pushState({}, "", "/login");
@@ -28,9 +27,9 @@ if (btnLogin && btnRegister && formLogin && formRegister) {
         formLogin.classList.add("hidden");
 
         btnRegister.classList.add("text-primary", "border-primary");
-        btnRegister.classList.remove("text-neutral-600", "border-neutral-600");
+        btnRegister.classList.remove("text-neutral-700", "border-neutral-600");
 
-        btnLogin.classList.add("text-neutral-600", "border-neutral-600");
+        btnLogin.classList.add("text-neutral-700", "border-neutral-600");
         btnLogin.classList.remove("text-primary", "border-primary");
 
         window.history.pushState({}, "", "/register");

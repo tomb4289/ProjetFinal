@@ -20,6 +20,8 @@
             type="text" 
             name="searchInput"
             id="searchInput"
+            label="Rechercher des vins"
+            hiddenLabel="true"
             placeholder="Rechercher..."
         />
         
@@ -63,7 +65,7 @@
         <div id="dragHandle" class="w-20 h-2 bg-gray-200 rounded-full mx-auto mb-4" aria-hidden="true"></div>
 
         <div class="flex justify-between items-center my-6">
-            <h3 id="filter-title" class="text-xl font-bold">Options de filtre</h3>
+            <h2 id="filter-title" class="text-xl font-bold">Options de filtre</h2>
         </div>
 
         {{-- Contenu des filtres --}}
@@ -135,6 +137,8 @@
                     type="number" 
                     name="priceMin"
                     id="priceMin"
+                    label="Prix minimum"
+                    hiddenLabel="true"
                     placeholder="Prix min" 
                     min="0"
                     size="full"
@@ -145,6 +149,8 @@
                     type="number" 
                     name="priceMax"
                     id="priceMax"
+                    label="Prix maximum"
+                    hiddenLabel="true"
                     size="full"
                     placeholder="Prix max" 
                     min="0"

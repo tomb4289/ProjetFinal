@@ -28,8 +28,8 @@
                 @method('PUT')
 
                 {{-- Champ notation par étoiles --}}
-                <div role="group" aria-labelledby="label-rating">
-                    <label id="label-rating" class="block text-sm font-medium text-text-body mb-2">
+                <div role="group" aria-labelledby="rating">
+                    <label id="rating" class="block text-sm font-medium text-text-body mb-2">
                         Note (étoiles)
                     </label>
                     {{-- Composant intact --}}
@@ -37,6 +37,7 @@
                         :rating="old('rating', $bouteille->rating)" 
                         :editable="true"
                         name="rating"
+                        id="rating"
                     />
                     @error('rating')
                         <p class="mt-1 text-sm text-red-600" role="alert">{{ $message }}</p>

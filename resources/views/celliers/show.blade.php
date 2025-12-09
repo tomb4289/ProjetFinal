@@ -32,28 +32,25 @@
 
     {{-- Conteneur mis à jour par AJAX --}}
     {{-- Ajout de aria-live="polite" pour que les lecteurs d'écran annoncent les changements AJAX --}}
-    <div id="cellarBottlesContainer" role="region" aria-live="polite" aria-label="Liste des bouteilles">
+    <div id="cellarBottlesContainer" aria-live="polite" aria-label="Liste des bouteilles">
         @include('celliers._bouteilles_list', ['cellier' => $cellier])
     </div>
 </section>
 
 {{-- Fenêtre flottante "Ajouter un vin" --}}
-{{-- Ajout de role="dialog" pour la modale --}}
 <div
     id="addWineBtnContainer"
     class="fixed z-50 bottom-0 left-0 w-full px-2 sm:px-4 pt-5 pb-10 bg-card border border-border-base shadow-lg rounded-t-lg transform translate-y-full transition-transform duration-300"
-    role="dialog"
     aria-modal="true"
     aria-labelledby="titre-ajout-vin"
     aria-hidden="true"
 >
     <span class="flex items-center justify-between mb-4">
-        {{-- Ajout d'un ID pour lier le titre au role="dialog" --}}
         <h1 id="titre-ajout-vin" class="text-3xl text-heading font-heading">Ajouter un vin</h1>
         <x-dynamic-component :component="'lucide-x'" id="closeAddWine" class="w-6 h-6" />
     </span>
 
-    <div class="flex flex-col gap-4" role="group" aria-label="Options d'ajout">
+    <div class="flex flex-col gap-4" aria-label="Options d'ajout">
         <x-icon-text-btn
             :href="route('bouteille.catalogue')"
             icon="wine"
