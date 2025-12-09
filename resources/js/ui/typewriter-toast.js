@@ -52,8 +52,9 @@ window.showTypewriterToast = function(message, options = {}) {
     // Conteneur pour le texte
     const textContainer = document.createElement("span");
     textContainer.className = "typewriter-text-content";
+    const fontSpecial = getComputedStyle(document.documentElement).getPropertyValue('--font-special').trim();
     textContainer.style.cssText = `
-        font-family: "Caveat", cursive;
+        font-family: ${fontSpecial || '"Caveat", cursive'};
         font-size: ${fontSize};
         font-weight: 500;
         color: #7a1f3d;

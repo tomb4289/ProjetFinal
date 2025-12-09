@@ -134,8 +134,9 @@
                     // Premier paragraphe
                     const paragraph1 = document.createElement("p");
                     paragraph1.className = "typewriter-text-content";
+                    const fontSpecial = getComputedStyle(document.documentElement).getPropertyValue('--font-special').trim();
                     paragraph1.style.cssText = `
-                        font-family: "Caveat", cursive;
+                        font-family: ${fontSpecial || '"Caveat", cursive'};
                         font-size: 1.3rem;
                         font-weight: 500;
                         color: #7a1f3d;
@@ -150,7 +151,7 @@
                     const paragraph2 = document.createElement("p");
                     paragraph2.className = "typewriter-text-content";
                     paragraph2.style.cssText = `
-                        font-family: "Caveat", cursive;
+                        font-family: ${fontSpecial || '"Caveat", cursive'};
                         font-size: 1.3rem;
                         font-weight: 500;
                         color: #7a1f3d;
