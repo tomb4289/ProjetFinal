@@ -77,9 +77,10 @@
         || request()->filled('prix_min')
         || request()->filled('prix_max');
     $isCellierEmpty = $bottles->isEmpty() && !$hasFilters;
+    $isMonCellier = $cellier->nom === 'Mon cellier';
 @endphp
 
-@if($isCellierEmpty)
+@if($isCellierEmpty && $isMonCellier)
     <script>
         (function() {
             function initEmptyCellierToast() {
