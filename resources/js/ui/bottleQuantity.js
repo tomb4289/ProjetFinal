@@ -82,8 +82,14 @@ function initBottleQuantity() {
                             typeof data.quantite !== "undefined"
                         ) {
                             display.textContent = `${data.quantite}`;
+                            showToast("Quantité mise à jour", "success");
                         } else {
                             display.textContent = oldText; // Restaure si anomalie
+                            showToast(
+                                data.message ||
+                                    "Impossible de mettre à jour la quantité",
+                                "error"
+                            );
                         }
 
                         // Autoriser de nouveau les interactions
