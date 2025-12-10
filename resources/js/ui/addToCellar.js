@@ -23,14 +23,9 @@ if (boutonFermer && panneauCellier) {
     // Attacher l'événement de fermeture au bouton dédié
     boutonFermer.addEventListener("click", fermerPanneau);
 
-    // Écouteur global pour détecter les clics sur les boutons "Ajouter au cellier"
-    // Utilisation de la délégation d'événements car les boutons peuvent être dynamiques
-    document.addEventListener("click", async (e) => {
-        const bouton = e.target.closest(".add-to-cellar-btn");
-        if (!bouton) return; // Si ce n'est pas un bouton d'ajout, on ignore
-        e.preventDefault(); // Empêcher la soumission standard du formulaire
-
-        // Récupération des données depuis le formulaire parent du bouton cliqué
+    // Fonction pour gérer l'ajout au cellier (réutilisable pour clic et Enter)
+    async function handleAddToCellar(bouton) {
+        // Récupération des données depuis le formulaire parent du bouton
         const formulaire = bouton.closest("form");
 
         // Chaque bouton lié possède un input contenant l'ID de la bouteille
@@ -46,6 +41,47 @@ if (boutonFermer && panneauCellier) {
 
         // Lancer l'ouverture du panneau latéral
         await ouvrirPanneau();
+    }
+
+    // Écouteur global pour détecter les clics sur les boutons "Ajouter au cellier"
+    // Utilisation de la délégation d'événements car les boutons peuvent être dynamiques
+    document.addEventListener("click", async (e) => {
+        const bouton = e.target.closest(".add-to-cellar-btn");
+        if (!bouton) return; // Si ce n'est pas un bouton d'ajout, on ignore
+        e.preventDefault(); // Empêcher la soumission standard du formulaire
+        await handleAddToCellar(bouton);
+    });
+
+    // Écouteur global pour détecter la touche Enter dans les champs de quantité
+    // Utilisation de la délégation d'événements pour les éléments dynamiques
+    document.addEventListener("keydown", async (e) => {
+        // Vérifier si c'est la touche Enter et si l'input est dans un formulaire d'ajout au cellier
+        if (e.key === "Enter" || e.keyCode === 13) {
+            const input = e.target;
+            const formulaire = input.closest(".add-to-cellar-form");
+            
+            if (formulaire && input.name === "quantity") {
+                e.preventDefault(); // Empêcher la soumission du formulaire
+                e.stopPropagation(); // Empêcher la propagation de l'événement
+                const bouton = formulaire.querySelector(".add-to-cellar-btn");
+                if (bouton) {
+                    await handleAddToCellar(bouton);
+                }
+            }
+        }
+    });
+
+    // Écouteur pour empêcher la soumission du formulaire (sécurité supplémentaire)
+    document.addEventListener("submit", (e) => {
+        const formulaire = e.target;
+        if (formulaire && formulaire.classList.contains("add-to-cellar-form")) {
+            e.preventDefault();
+            e.stopPropagation();
+            const bouton = formulaire.querySelector(".add-to-cellar-btn");
+            if (bouton) {
+                handleAddToCellar(bouton);
+            }
+        }
     });
 
     // Fonction pour ouvrir le panneau et charger les données si nécessaire
