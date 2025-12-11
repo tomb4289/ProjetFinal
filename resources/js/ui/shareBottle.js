@@ -160,18 +160,18 @@ document.addEventListener("DOMContentLoaded", function () {
      */
     function setupShareLinkEvents(url) {
         const copyBtn = document.getElementById("copyShareLinkBtn");
-        const copyText = document.getElementById("copyShareLinkText");
         const shareLinkInput = document.getElementById("shareLinkInput");
 
-        // Copier le lien via bouton ou texte cliquable
+        // Copier le lien via le bouton
         if (copyBtn && shareLinkInput) {
             copyBtn.addEventListener("click", function () {
                 copyToClipboard(url, shareLinkInput);
             });
         }
 
-        if (copyText && shareLinkInput) {
-            copyText.addEventListener("click", function () {
+        // Permettre de copier en cliquant sur l'input
+        if (shareLinkInput) {
+            shareLinkInput.addEventListener("click", function () {
                 copyToClipboard(url, shareLinkInput);
             });
         }
