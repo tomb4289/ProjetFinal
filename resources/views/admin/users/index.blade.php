@@ -12,6 +12,16 @@
         undertitle="Consulter, rechercher et gérer les comptes membres."
     />
 
+    {{-- Bouton vers le tableau de bord des statistiques --}}
+    <div class="flex justify-end">
+        <a href="{{ route('admin.statistics.index') }}"
+           class="inline-flex items-center px-4 py-2 mb-2 rounded-lg text-sm font-medium
+                  text-white bg-primary hover:bg-primary-hover
+                  border border-transparent shadow-sm transition-colors">
+            Voir les statistiques
+        </a>
+    </div>
+
     {{-- Conteneur Principal  --}}
     <div class="bg-card border border-border-base rounded-xl shadow-sm overflow-hidden">
         
