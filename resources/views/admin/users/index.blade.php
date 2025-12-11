@@ -5,13 +5,31 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    <div class="flex  gap-3 items-end justify-between flex-wrap">
+        {{-- En-tête --}}
+        <x-page-header
+            title="Gestion des usagers"
+            undertitle="Consulter, rechercher et gérer les comptes membres."
+        />
+        <div class="flex items-center">
+        <a href="{{ route('admin.signalements.index') }}" 
+           class="group relative inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 text-sm font-medium shadow-sm hover:bg-gray-50 hover:text-primary transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            
+            {{-- Ping rouge seulement s'il y a des signalements non lus --}}
+        @if($nonLus > 0)
+            <span class="absolute top-0 right-0 -mt-1 -mr-1 flex h-3 w-3">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+            </span>
+        @endif
 
-    {{-- En-tête --}}
-    <x-page-header
-        title="Gestion des usagers"
-        undertitle="Consulter, rechercher et gérer les comptes membres."
-    />
-
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 group-hover:text-primary transition-colors">
+                <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                <line x1="4" x2="4" y1="22" y2="15"></line>
+            </svg>
+        </a>
+    </div>
+    </div>
     {{-- Conteneur Principal  --}}
     <div class="bg-card border border-border-base rounded-xl shadow-sm overflow-hidden">
         
@@ -31,7 +49,7 @@
             </div>
         </div>
 
-        {{--DESKTOP  --}}
+        
         <div class="hidden md:block overflow-x-auto">
             <table class="w-full text-left text-sm">
                 <thead class="bg-muted text-text-muted font-medium uppercase text-xs tracking-wider">

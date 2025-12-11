@@ -13,6 +13,7 @@ class Signalement extends Model
         'bouteille_catalogue_id',
         'nom',
         'description',
+        'is_read',
     ];
 
     public function bouteilleCatalogue()

@@ -40,10 +40,6 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::post('/catalogue/{bouteille}/signaler', [SignalementController::class, 'store'])
         ->name('signalement.store');
 
-    // Suppression d'un signalement
-    Route::delete('/signalement/{signalement}', [SignalementController::class, 'destroy'])
-        ->name('signalement.destroy');
-
     // Catalogue de bouteilles
     Route::get('/catalogue/search', [CatalogueController::class, 'search'])
         ->name('catalogue.search');
@@ -239,4 +235,19 @@ Route::middleware(['auth', 'active', 'is_admin'])
         // Supprimer un usager
         Route::delete('/users/{id}', [AdminController::class, 'destroy'])
             ->name('users.destroy');
+
+        Route::get('/signalements/{signalement}', [SignalementController::class, 'show'])
+            ->name('signalements.show');
+
+        // Liste des signalements
+        Route::get('/signalements', [SignalementController::class, 'index'])
+            ->name('signalements.index');
+
+        // Marquer un signalement comme lu
+        Route::patch('/signalements/{signalement}/read', [SignalementController::class, 'markAsRead'])
+            ->name('signalements.read');
+
+        // Suppression d'un signalement
+        Route::delete('/signalements/{signalement}', [SignalementController::class, 'destroy'])
+            ->name('signalements.destroy');
     });
