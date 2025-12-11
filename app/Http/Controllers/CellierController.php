@@ -33,6 +33,8 @@ class CellierController extends Controller
         'pays'       => 'pays',
         'type'       => 'type',
         'quantite'   => 'quantite',
+        'millesime'  => 'millesime',
+        'region'     => 'region',
         'format'     => 'format',
         'prix'       => 'prix',
         'date_ajout' => 'created_at',

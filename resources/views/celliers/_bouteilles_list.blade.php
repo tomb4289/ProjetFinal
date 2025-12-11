@@ -11,7 +11,8 @@
         || request()->filled('type')
         || request()->filled('millesime')
         || request()->filled('prix_min')
-        || request()->filled('prix_max');
+        || request()->filled('prix_max')
+        || request()->filled('region');
 
     // Nombre total de bouteilles dans le cellier (sans filtres)
     $totalBottlesCount = $totalBottlesCount ?? ($cellier->bouteilles()->count() ?? 0);
