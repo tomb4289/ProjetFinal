@@ -257,5 +257,12 @@ Route::middleware(['auth', 'active', 'is_admin'])
         // Suppression d'un signalement
         Route::delete('/signalements/{signalement}', [SignalementController::class, 'destroy'])
             ->name('signalements.destroy');
+
+        // Édition d'une bouteille du catalogue
+        Route::get('/catalogue/{bouteilleCatalogue}/edit', [AdminController::class, 'editCatalogueBottle'])
+            ->name('catalogue.edit');
+
+        Route::put('/catalogue/{bouteilleCatalogue}', [AdminController::class, 'updateCatalogueBottle'])
+            ->name('catalogue.update');
             
     });

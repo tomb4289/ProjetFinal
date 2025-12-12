@@ -25,8 +25,8 @@
         $backRoute = $previousUrl;
         $backLabel = 'Retour aux signalements';
     } elseif ($isCatalogue) {
-        // Cas catalogue : on revient au catalogue (page précédente)
-        $backRoute = $previousUrl;
+        // Cas catalogue : on revient au catalogue
+        $backRoute = route('bouteille.catalogue');
         $backLabel = 'Retour au catalogue';
     } else {
         // Cas cellier : toujours retourner au cellier, pas à la page précédente
@@ -224,7 +224,12 @@
                                 Ajouter au cellier
                             </button>
                         </form>
-                        <a href="{{ route('signalement.create', $bouteilleCatalogue->id) }}" class="inline-block mt-4 text-base font-semibold text-primary hover:text-primary-active hover:underline transition-colors px-3 py-2 rounded-lg hover:bg-primary/10">Signaler un problème</a>
+                        <div class="flex items-center gap-4 mt-4">
+                            <a href="{{ route('signalement.create', $bouteilleCatalogue->id) }}" class="inline-block text-base font-semibold text-primary hover:text-primary-active hover:underline transition-colors px-3 py-2 rounded-lg hover:bg-primary/10">Signaler un problème</a>
+                            @if(auth()->user()->is_admin ?? false)
+                                <a href="{{ route('admin.catalogue.edit', $bouteilleCatalogue) }}" class="inline-block text-base font-semibold text-primary hover:text-primary-active hover:underline transition-colors px-3 py-2 rounded-lg hover:bg-primary/10">Modifier</a>
+                            @endif
+                        </div>
 
                         {{-- Cellier (Notes & Modif) --}}
                         @else

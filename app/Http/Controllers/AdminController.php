@@ -8,6 +8,10 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Signalement;
+use App\Models\BouteilleCatalogue;
+use App\Models\Pays;
+use App\Models\TypeVin;
+use App\Models\Region;
 
 class AdminController extends Controller
 {
@@ -205,5 +209,48 @@ class AdminController extends Controller
         }
 
         return [$start, $end];
+    }
+
+    /**
+     * Affiche le formulaire d'édition d'une bouteille du catalogue.
+     */
+    public function editCatalogueBottle(BouteilleCatalogue $bouteilleCatalogue)
+    {
+        $bouteilleCatalogue->load(['pays', 'typeVin', 'region']);
+        
+        $pays = Pays::orderBy('nom')->get();
+        $types = TypeVin::orderBy('nom')->get();
+        $regions = Region::orderBy('nom')->get();
+
+        return view('admin.catalogue.edit', [
+            'bouteille' => $bouteilleCatalogue,
+            'pays' => $pays,
+            'types' => $types,
+            'regions' => $regions,
+        ]);
+    }
+
+    /**
+     * Met à jour une bouteille du catalogue.
+     */
+    public function updateCatalogueBottle(Request $request, BouteilleCatalogue $bouteilleCatalogue)
+    {
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+            'prix' => 'required|numeric|min:0',
+            'millesime' => 'nullable|integer',
+            'volume' => 'nullable|string|max:50',
+            'id_pays' => 'nullable|exists:pays,id',
+            'id_type_vin' => 'nullable|exists:type_vin,id',
+            'id_region' => 'nullable|exists:regions,id',
+            'code_saQ' => 'nullable|string|max:50',
+            'url_saq' => 'nullable|url|max:500',
+        ]);
+
+        $bouteilleCatalogue->update($validated);
+
+        return redirect()
+            ->route('catalogue.show', $bouteilleCatalogue)
+            ->with('success', 'La bouteille du catalogue a été mise à jour avec succès.');
     }
 }
