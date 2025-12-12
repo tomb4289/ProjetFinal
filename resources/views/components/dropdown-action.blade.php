@@ -13,13 +13,13 @@
 <div class="group {{ $absolute ? 'absolute top-0 right-0' : 'relative' }} p-2 cursor-pointer z-20 ">
 
     {{-- Bouton --}}
-    <button class="cursor-pointer" aria-haspopup="true" aria-label="Options">
+    <button type="button" class="cursor-pointer" aria-haspopup="true" aria-label="Options" onclick="event.stopPropagation(); toggleDropdown('dropdownActionBtn-{{ $id }}')">
         <x-dynamic-component :component="'lucide-more-vertical'" class="w-6 stroke-text-heading"/>
     </button>
 
     {{-- Menu Déroulant --}}
     <div id="dropdownActionBtn-{{ $id }}" 
-        class="hidden group-hover:block group-focus-within:block absolute right-0 top-6 z-40 p-2 rounded-lg border border-border-base bg-card min-w-[120px] shadow-lg"
+        class="hidden absolute right-0 top-6 z-40 p-2 rounded-lg border border-border-base bg-card min-w-[120px] shadow-lg"
         role="menu"
     >
         {{-- Option Modifier --}}

@@ -102,6 +102,35 @@ window.showToast = function (message, type = "success") {
 };
 
 /* ============================================================
+   MODULE : Dropdown Toggle
+   ------------------------------------------------------------
+   Simple toggle function for dropdown menus (three dots)
+   ============================================================ */
+window.toggleDropdown = function(dropdownId) {
+    const dropdown = document.getElementById(dropdownId);
+    if (!dropdown) return;
+    
+    // Close all other dropdowns
+    document.querySelectorAll('[role="menu"]').forEach(menu => {
+        if (menu.id !== dropdownId) {
+            menu.classList.add('hidden');
+        }
+    });
+    
+    // Toggle current dropdown
+    dropdown.classList.toggle('hidden');
+};
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('[aria-haspopup="true"]') && !e.target.closest('[role="menu"]')) {
+        document.querySelectorAll('[role="menu"]').forEach(menu => {
+            menu.classList.add('hidden');
+        });
+    }
+});
+
+/* ============================================================
    MODULE : Gestion de Quantité
    ------------------------------------------------------------
    La gestion de quantité est maintenant gérée par bottleQuantity.js
